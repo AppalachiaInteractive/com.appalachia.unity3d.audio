@@ -1,0 +1,20 @@
+LIBRARY
+EXPORTS
+    ChannelMonitor_GetLoudness_Momentary
+    ChannelMonitor_GetLoudness_ShortTerm
+    ChannelMonitor_GetLoudness_Integrated
+    ConvolutionReverb_GetSampleName
+    ConvolutionReverb_UploadSample
+    Granulator_DebugGetGrainCount
+    Granulator_GetSampleName
+    Granulator_UploadSample
+    ImpactGenerator_AddImpact
+    PitchDetectorDebug
+    PitchDetectorGetFreq
+    RoutingDemo_GetData
+    TeleportFeed
+    TeleportGetNumBuffered
+    TeleportGetParameter
+    TeleportRead
+    TeleportSetParameter
+    UnityGetAudioEffectDefinitions

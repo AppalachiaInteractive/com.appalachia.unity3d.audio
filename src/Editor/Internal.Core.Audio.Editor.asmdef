@@ -1,0 +1,12 @@
+{
+    "name": "Internal.Core.Audio.Editor",
+    "references": [
+        "Internal.Core.Audio"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
