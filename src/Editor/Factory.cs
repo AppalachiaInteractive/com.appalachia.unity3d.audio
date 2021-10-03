@@ -1,12 +1,12 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 public static class Factory {
@@ -68,7 +68,7 @@ public static class Factory {
         }
     }
 
-    [MenuItem("Assets/Create/Internal.Core.Audio Patch")]
+    [MenuItem("Assets/Create/Appalachia.Core.Audio Patch")]
     static void CreateAudioProgram() {
         Create<Patch, AudioClip>((a, c) => {
             if (a.program == null)
@@ -82,5 +82,5 @@ public static class Factory {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

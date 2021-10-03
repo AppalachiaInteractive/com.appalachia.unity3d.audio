@@ -1,11 +1,11 @@
-
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 public class Monitor : EditorWindow {
@@ -66,13 +66,13 @@ public class Monitor : EditorWindow {
     Vector3 _scrollSynthesizer;
     Vector3 _scrollSequencer;
 
-    [MenuItem("Internal.Core.Audio/Window/Monitor")]
+    [MenuItem("Appalachia.Core.Audio/Window/Monitor")]
     static void Open() {
         ((Monitor) GetWindow(typeof(Monitor))).Show();
     }
 
     protected void OnEnable() {
-        titleContent = new GUIContent("Internal.Core.Audio Monitor", GetIcon());
+        titleContent = new GUIContent("Appalachia.Core.Audio Monitor", GetIcon());
 
         _srcInfo = new List<Synthesizer.ActiveSource>();
 
@@ -568,5 +568,5 @@ public class Monitor : EditorWindow {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

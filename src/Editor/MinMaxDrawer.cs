@@ -1,8 +1,8 @@
-
+using Appalachia.Core.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CustomPropertyDrawer(typeof(MinMaxAttribute))]
@@ -53,5 +53,5 @@ public class MinMaxDrawer : PropertyDrawer {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

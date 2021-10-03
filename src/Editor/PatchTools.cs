@@ -1,12 +1,12 @@
-
 using System.Collections.Generic;
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio.Editor {
+namespace Appalachia.Core.Audio {
 
 public static class Tools {
-    [MenuItem("Internal.Core.Audio/Tools/Find Patches Without AudioClips")]
+    [MenuItem("Appalachia.Core.Audio/Tools/Find Patches Without AudioClips")]
     static void FindPatchWithoutAudioClips() {
         var root = "Assets/Audio";
         var guids = AssetDatabase.FindAssets("t:Object", new[]{root});
@@ -38,7 +38,7 @@ public static class Tools {
             count + (count == 1 ? " patch" : " patches"));
     }
 
-    [MenuItem("Internal.Core.Audio/Tools/Find Unused AudioClips")]
+    [MenuItem("Appalachia.Core.Audio/Tools/Find Unused AudioClips")]
     static void FindUnusedAudioClips() {
         var root = "Assets/Audio";
         var guids = AssetDatabase.FindAssets("t:Object", new[]{root});
@@ -78,5 +78,5 @@ public static class Tools {
     }
 }
 
-} // Internal.Core.Audio.Editor
+} // Appalachia.Core.Audio.Editor
 

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CustomEditor(typeof(ImportSettings))]
@@ -333,5 +332,5 @@ public class ImportSettingsEditor : UnityEditor.Editor {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

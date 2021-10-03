@@ -1,7 +1,8 @@
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 static class ZoneGizmos {
@@ -11,17 +12,17 @@ static class ZoneGizmos {
     static void InitPrefs() {
         if (!prefsInited) {
             prefsInited = true;
-            alwaysShowZoneGizmosPrefs = EditorPrefs.GetBool("Internal.Core.Audio:alwaysShowZoneGizmos");
+            alwaysShowZoneGizmosPrefs = EditorPrefs.GetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos");
         }
     }
 
-    [PreferenceItem("Internal.Core.Audio")]
+    [PreferenceItem("Appalachia.Core.Audio")]
     static void OnPrefsGUI() {
         InitPrefs();
         alwaysShowZoneGizmosPrefs = EditorGUILayout.Toggle(
             "Always Show Zone Gizmos", alwaysShowZoneGizmosPrefs);
         if (GUI.changed)
-            EditorPrefs.SetBool("Internal.Core.Audio:alwaysShowZoneGizmos", alwaysShowZoneGizmosPrefs);
+            EditorPrefs.SetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos", alwaysShowZoneGizmosPrefs);
     }
 
     [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
@@ -39,7 +40,7 @@ static class ZoneGizmos {
                 if ((t & GizmoType.Selected) != 0)
                     Gizmos.DrawWireCube(e.transform.position, Vector3.one * 5f);
             }
-        Gizmos.DrawIcon(e.transform.position, "Internal.Core.Audio_AudioEmitter.png");
+        Gizmos.DrawIcon(e.transform.position, "Appalachia.Core.Audio_AudioEmitter.png");
     }
 
     [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
@@ -53,7 +54,7 @@ static class ZoneGizmos {
         Gizmos.color = c;
         if ((t & GizmoType.NotInSelectionHierarchy) == 0 || alwaysShowZoneGizmosPrefs)
             DrawZ(s, 1f, t);
-        Gizmos.DrawIcon(s.transform.position, "Internal.Core.Audio_AudioSlapback.png");
+        Gizmos.DrawIcon(s.transform.position, "Appalachia.Core.Audio_AudioSlapback.png");
     }
 
     [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
@@ -95,5 +96,5 @@ static class ZoneGizmos {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

@@ -1,53 +1,56 @@
-using Internal.Core.Audio;
+using Appalachia.Core.Audio.Components;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
-public class ChannelMonitorCustomGUI : IAudioEffectPluginGUI
+namespace Appalachia.Core.Audio
 {
-    public override string Name => "Internal ChannelMonitor";
-
-    public override string Description => "Channel monitor plugin for Unity's audio plugin system";
-
-    public override string Vendor => "Unity";
-
-    //private bool integratedFoldout = true;
-
-    public AudioSignalSmoothAnalyzer loudness;
-    private PropertyTree _loudnessTree;
-
-    public void DrawControl(IAudioEffectPlugin plugin)
+    public class ChannelMonitorCustomGUI : IAudioEffectPluginGUI
     {
-        if (loudness == null)
-        {
-            loudness = new AudioSignalSmoothAnalyzer();
-        }
+        public override string Name => "Internal ChannelMonitor";
 
-        if (_loudnessTree == null)
+        public override string Description => "Channel monitor plugin for Unity's audio plugin system";
+
+        public override string Vendor => "Unity";
+
+        //private bool integratedFoldout = true;
+
+        public AudioSignalSmoothAnalyzer loudness;
+        private PropertyTree _loudnessTree;
+
+        public void DrawControl(IAudioEffectPlugin plugin)
         {
-            _loudnessTree = PropertyTree.Create(loudness);
-        }
+            if (loudness == null)
+            {
+                loudness = new AudioSignalSmoothAnalyzer();
+            }
+
+            if (_loudnessTree == null)
+            {
+                _loudnessTree = PropertyTree.Create(loudness);
+            }
         
-        plugin.GetFloatParameter("Instance", out var instance);
+            plugin.GetFloatParameter("Instance", out var instance);
 
-        var i = GAC.ChannelMonitor_GetLoudnessData_dB((int)instance);
+            var i = GAC.ChannelMonitor_GetLoudnessData_dB((int)instance);
 
-        loudness.Add(GAC.dBToNormalized(i));
+            loudness.Add(GAC.dBToNormalized(i));
 
-        var guie = GUI.enabled;
-        GUI.enabled = true;
-        _loudnessTree.Draw(false);
-        _loudnessTree.ApplyChanges();
-        GUI.enabled = guie;
+            var guie = GUI.enabled;
+            GUI.enabled = true;
+            _loudnessTree.Draw(false);
+            _loudnessTree.ApplyChanges();
+            GUI.enabled = guie;
 
 
-    }
+        }
 
-    public override bool OnGUI(IAudioEffectPlugin plugin)
-    {
-        GUILayout.Space(5f);
-        DrawControl(plugin);
-        GUILayout.Space(5f);
-        return true;
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            GUILayout.Space(5f);
+            DrawControl(plugin);
+            GUILayout.Space(5f);
+            return true;
+        }
     }
 }

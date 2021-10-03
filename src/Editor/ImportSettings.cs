@@ -1,9 +1,9 @@
-
 using System;
+using Appalachia.Core.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 public enum ImportTarget {
@@ -18,7 +18,7 @@ public enum ImportTarget {
 }
 
 public class ImportSettings : ScriptableObject {
-    public static readonly string path = "Assets/Features/Internal.Core.Audio/Editor/ImportSettings.asset";
+    public static readonly string path = "Assets/Features/Appalachia.Core.Audio/Editor/ImportSettings.asset";
 
     public static ImportSettings instance {
         get {
@@ -31,7 +31,7 @@ public class ImportSettings : ScriptableObject {
         }
     }
 
-    [MenuItem("Internal.Core.Audio/Settings/Import Settings")]
+    [MenuItem("Appalachia.Core.Audio/Settings/Import Settings")]
     static void PingImportSettings() {
         EditorGUIUtility.PingObject(instance);
     }
@@ -58,5 +58,5 @@ public class ImportSettings : ScriptableObject {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

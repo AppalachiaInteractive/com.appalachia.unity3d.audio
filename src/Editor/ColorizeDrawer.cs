@@ -1,9 +1,9 @@
-
 using System.Collections.Generic;
+using Appalachia.Core.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CustomPropertyDrawer(typeof(ColorizeAttribute))]
@@ -64,5 +64,5 @@ public class ColorizeDrawer : PropertyDrawer {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

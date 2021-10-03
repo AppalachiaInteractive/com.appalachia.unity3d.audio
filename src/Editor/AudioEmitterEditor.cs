@@ -1,13 +1,14 @@
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CanEditMultipleObjects]
 [CustomEditor(typeof(AudioEmitter))]
 public class AudioEmitterEditor : UnityEditor.Editor {
-    [MenuItem("Internal.Core.Audio/GameObject/Audio Emitter")]
+    [MenuItem("Appalachia.Core.Audio/GameObject/Audio Emitter")]
     static void CreateAudioEmitter() {
         var o = new GameObject("Audio Emitter");
         o.AddComponent<AudioEmitter>();
@@ -50,4 +51,4 @@ public class AudioEmitterEditor : UnityEditor.Editor {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio

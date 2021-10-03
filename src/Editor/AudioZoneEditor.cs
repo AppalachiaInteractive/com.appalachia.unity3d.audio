@@ -1,16 +1,16 @@
-
 using System.Text;
+using Appalachia.Core.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CustomEditor(typeof(AudioZone))]
 public class AudioZoneEditor : UnityEditor.Editor {
     protected static StringBuilder builder = new StringBuilder();
 
-    [MenuItem("Internal.Core.Audio/GameObject/Audio Zone")]
+    [MenuItem("Appalachia.Core.Audio/GameObject/Audio Zone")]
     static void CreateAudioZone() {
         var o = new GameObject("Audio Zone");
         o.AddComponent<AudioZone>();
@@ -129,5 +129,5 @@ public class AudioZoneEditor : UnityEditor.Editor {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

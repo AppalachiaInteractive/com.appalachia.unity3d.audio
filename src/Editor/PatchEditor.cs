@@ -1,9 +1,10 @@
-
 using System;
+using Appalachia.Core.Audio.Components;
+using Appalachia.Core.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Internal.Core.Audio {
+namespace Appalachia.Core.Audio {
 namespace Editor {
 
 [CanEditMultipleObjects]
@@ -108,5 +109,5 @@ public class PatchEditor : UnityEditor.Editor {
 }
 
 } // Editor
-} // Internal.Core.Audio
+} // Appalachia.Core.Audio
 

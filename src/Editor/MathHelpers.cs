@@ -1,6 +1,6 @@
 using System;
 
-namespace MathHelpers
+namespace Appalachia.Core.Audio
 {
     // System.Numerics is not available
     public class ComplexD
