@@ -1,12 +1,12 @@
 #region
 
 using System;
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Utilities;
 using UnityEngine;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     [Serializable]
     public class AudioSequence

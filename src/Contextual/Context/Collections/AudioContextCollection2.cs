@@ -1,12 +1,12 @@
 #region
 
 using System;
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts;
+using Appalachia.Audio.Contextual.Context.Contexts;
 using Appalachia.Core.Collections.NonSerialized;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Collections
+namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
     public abstract class AudioContextCollection2<TEnumPrimary, TEnumSecondary, T> : AudioContextCollection<AudioContext2, AudioContextParameters2, T>

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public static class Sequencer
     {

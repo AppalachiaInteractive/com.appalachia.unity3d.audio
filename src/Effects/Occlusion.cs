@@ -1,8 +1,7 @@
-
-using Appalachia.Core.Audio.Components;
+using Appalachia.Audio.Components;
 using UnityEngine;
 
-namespace Appalachia.Core.Audio.Effects {
+namespace Appalachia.Audio.Effects {
 
 sealed public class Occlusion : MonoBehaviour {
     public AudioParameters.OcclusionParams occlusion;

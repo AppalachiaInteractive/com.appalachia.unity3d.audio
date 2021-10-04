@@ -2,12 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Utilities;
 using UnityEngine;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public abstract class Zone : MonoBehaviour
     {

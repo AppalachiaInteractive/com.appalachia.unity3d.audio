@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Appalachia.Core.Audio
+namespace Appalachia.Audio
 {
     public class ModalFilterCustomGUI : FilterCurveUi
     {

@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace Appalachia.Core.Audio.Utilities {
+namespace Appalachia.Audio.Utilities {
 
 public class MinMaxAttribute : PropertyAttribute {
     public float min;

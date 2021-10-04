@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Appalachia.Core.Audio.Components;
+using Appalachia.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 
 public static class Tools {
     [MenuItem("Appalachia.Core.Audio/Tools/Find Patches Without AudioClips")]

@@ -1,14 +1,14 @@
 #region
 
 using System;
-using Appalachia.Core.Audio.Components;
-using Appalachia.Core.Editing.Attributes;
-using Appalachia.Core.Scriptables;
+using Appalachia.Audio.Components;
+using Appalachia.Base.Scriptables;
+using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata
+namespace Appalachia.Audio.Contextual
 {
     [Serializable]
     public sealed class ContextualAudioPatch : SelfSavingAndIdentifyingScriptableObject<ContextualAudioPatch>

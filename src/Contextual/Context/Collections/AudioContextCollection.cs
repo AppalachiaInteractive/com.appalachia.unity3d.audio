@@ -1,14 +1,14 @@
 #region
 
 using System;
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts;
-using Appalachia.Core.Editing.Attributes;
-using Appalachia.Core.Scriptables;
+using Appalachia.Audio.Contextual.Context.Contexts;
+using Appalachia.Base.Scriptables;
+using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Collections
+namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
     public abstract class AudioContextCollection<TContext, TParams, T> : SelfSavingSingletonScriptableObject<T>

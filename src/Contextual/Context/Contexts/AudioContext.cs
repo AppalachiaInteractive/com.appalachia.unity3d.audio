@@ -1,12 +1,12 @@
 #region
 
 using System;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts
+namespace Appalachia.Audio.Contextual.Context.Contexts
 {
     [Serializable]
     public abstract class AudioContext<T> where T : AudioContextParameters

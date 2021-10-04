@@ -1,15 +1,16 @@
 #region
 
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
+
 #if UNITY_EDITOR
 
 #endif
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public class OcclusionSettings : ScriptableObject
     {

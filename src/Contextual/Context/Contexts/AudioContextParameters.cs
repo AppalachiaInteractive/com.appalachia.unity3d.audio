@@ -1,6 +1,6 @@
 using System;
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts
+namespace Appalachia.Audio.Contextual.Context.Contexts
 {
     [Serializable]
     public abstract class AudioContextParameters

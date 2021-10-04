@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 namespace Editor {
 
 public class Importer : AssetPostprocessor {

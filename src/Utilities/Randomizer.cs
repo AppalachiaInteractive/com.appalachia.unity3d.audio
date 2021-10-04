@@ -1,5 +1,5 @@
 
-namespace Appalachia.Core.Audio.Utilities {
+namespace Appalachia.Audio.Utilities {
 
 public static class Randomizer {
     public const float denominator = 1f / (float) 0x80000000;

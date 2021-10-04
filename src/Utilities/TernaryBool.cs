@@ -1,5 +1,5 @@
 
-namespace Appalachia.Core.Audio.Utilities {
+namespace Appalachia.Audio.Utilities {
 
 [System.Serializable]
 public struct TernaryBool {

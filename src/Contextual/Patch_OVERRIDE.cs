@@ -1,12 +1,12 @@
 #region
 
 using System;
-using Appalachia.Core.Audio.Components;
-using Appalachia.Core.Overridding;
+using Appalachia.Audio.Components;
+using Appalachia.Core.Overrides;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata
+namespace Appalachia.Audio.Contextual
 {
     [Serializable]
     public class Patch_OVERRIDE : Overridable<Patch, Patch_OVERRIDE>

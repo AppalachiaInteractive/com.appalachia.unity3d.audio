@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Appalachia.Core.Audio
+namespace Appalachia.Audio
 {
     public static partial class GAC
     {

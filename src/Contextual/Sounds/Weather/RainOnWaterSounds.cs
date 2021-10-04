@@ -1,8 +1,8 @@
 using System;
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context;
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Collections;
+using Appalachia.Audio.Contextual.Context;
+using Appalachia.Audio.Contextual.Context.Collections;
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Sounds.Weather
+namespace Appalachia.Audio.Contextual.Sounds.Weather
 {
     [Serializable] public class RainOnWaterSounds : AudioContextCollection1<RainStrength_AudioContexts, RainOnWaterSounds>{    }
 }

@@ -1,13 +1,13 @@
 #region
 
 using System;
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Utilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     [AddComponentMenu("Appalachia.Core.Audio/AudioEmitter")]
     public class AudioEmitter : MonoBehaviour

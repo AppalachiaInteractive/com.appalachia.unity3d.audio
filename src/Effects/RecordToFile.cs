@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using Buffer = System.Buffer;
 
-namespace Appalachia.Core.Audio.Effects {
+namespace Appalachia.Audio.Effects {
 
 public sealed class RecordToFile : MonoBehaviour {
     object _locker = 0;

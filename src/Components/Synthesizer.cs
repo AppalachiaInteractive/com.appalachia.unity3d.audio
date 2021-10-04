@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using Appalachia.Core.Audio.Effects;
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Effects;
+using Appalachia.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -15,7 +15,7 @@ using UnityEngine.Audio;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public static class Synthesizer
     {

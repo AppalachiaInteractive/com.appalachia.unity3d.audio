@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Appalachia.Core.Audio.Components;
+using Appalachia.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 namespace Editor {
 
 public static class Factory {

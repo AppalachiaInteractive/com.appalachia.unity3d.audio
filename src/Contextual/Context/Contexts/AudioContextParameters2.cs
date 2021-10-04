@@ -1,9 +1,9 @@
 using System;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts
+namespace Appalachia.Audio.Contextual.Context.Contexts
 {
     [Serializable]
     public sealed class AudioContextParameters2 : AudioContextParameters

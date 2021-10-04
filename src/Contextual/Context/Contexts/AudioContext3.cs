@@ -4,7 +4,7 @@ using System;
 
 #endregion
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts
+namespace Appalachia.Audio.Contextual.Context.Contexts
 {
     [Serializable]
     public sealed class AudioContext3 : AudioContext<AudioContextParameters3>

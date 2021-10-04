@@ -1,11 +1,10 @@
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Collections;
-using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts;
-using Appalachia.Core.Audio;
-using Appalachia.Core.Audio.Components;
-using Appalachia.Core.Behaviours;
+using Appalachia.Audio.Components;
+using Appalachia.Audio.Contextual.Context.Collections;
+using Appalachia.Audio.Contextual.Context.Contexts;
+using Appalachia.Base.Behaviours;
 using UnityEngine;
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Execution
+namespace Appalachia.Audio.Contextual.Execution
 {
     [DisallowMultipleComponent]
     public abstract class AudioExecutionManagerBehaviour<T>: InternalMonoBehaviour

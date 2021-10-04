@@ -1,10 +1,10 @@
 using System;
-using Appalachia.Core.Data;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Core.Types;
+using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Contexts
+namespace Appalachia.Audio.Contextual.Context.Contexts
 {
     [Serializable]
     public sealed class AudioContextType

@@ -1,8 +1,8 @@
-using Appalachia.Core.Audio.Components;
+using Appalachia.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 namespace Editor {
 
 static class ZoneGizmos {

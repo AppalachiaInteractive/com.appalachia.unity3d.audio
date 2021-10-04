@@ -1,10 +1,10 @@
 using System;
-using Appalachia.Core.Audio.Components;
-using Appalachia.Core.Audio.Utilities;
+using Appalachia.Audio.Components;
+using Appalachia.Audio.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 namespace Editor {
 
 [CanEditMultipleObjects]

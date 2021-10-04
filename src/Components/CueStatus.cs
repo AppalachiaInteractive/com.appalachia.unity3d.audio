@@ -1,4 +1,4 @@
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public enum CueStatus
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public class AudioSlapback : Zone
     {

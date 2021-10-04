@@ -1,10 +1,10 @@
-using Appalachia.Core.Audio.Components;
-using Appalachia.Core.Audio.Effects;
+using Appalachia.Audio.Components;
+using Appalachia.Audio.Effects;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Profiling;
 
-namespace Appalachia.Core.Audio {
+namespace Appalachia.Audio {
 
 public class Heartbeat : MonoBehaviour {
     public static Transform hierarchyTransform { get; private set; }

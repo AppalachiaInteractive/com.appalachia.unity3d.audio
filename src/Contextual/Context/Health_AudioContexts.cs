@@ -1,4 +1,4 @@
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context
+namespace Appalachia.Audio.Contextual.Context
 {
     public enum Health_AudioContexts : short
     {

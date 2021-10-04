@@ -1,4 +1,4 @@
-namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context
+namespace Appalachia.Audio.Contextual.Context
 {
     /// <summary>
     ///     Rainfall intensity is classified according to the rate of precipitation, which depends on the considered time.

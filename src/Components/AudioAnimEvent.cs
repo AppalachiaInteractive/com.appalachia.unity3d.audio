@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 #endregion
 
-namespace Appalachia.Core.Audio.Components
+namespace Appalachia.Audio.Components
 {
     public sealed class AudioAnimEvent : StateMachineBehaviour
     {
