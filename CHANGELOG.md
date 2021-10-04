@@ -12,6 +12,12 @@
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| c00979078561520409a33ae6c3b0d87d41c83605 | 2021-10-04 | Chris Schubert | Code cleanup and refactoring |
+
+
+ ## Tag: `v0.1.4`
+| Hash | Date | Author | Changes |
+|------|------|--------|---------|
 | e5794d00f1ed1618761ba7de62b22795fc33c282 | 2021-10-03 | Chris Schubert | Removing extraneous C++ files |
 | dbfc4b10f4b62fe20ccf95a1e87ff2761f917979 | 2021-10-03 | Chris Schubert | Adding npmignore and gitignore changes for C++ libraries |
 

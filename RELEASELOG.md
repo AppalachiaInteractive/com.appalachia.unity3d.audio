@@ -10,7 +10,7 @@
 
 ## Released Changes
 
-`0.1.4`
+`0.1.5`
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
-| e5794d00f1ed1618761ba7de62b22795fc33c282 | 2021-10-03 | Chris Schubert | Removing extraneous C++ files |
+
