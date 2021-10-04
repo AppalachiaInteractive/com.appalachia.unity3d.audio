@@ -1,6 +1,0 @@
-﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  Plugin_ChannelMonitor.cpp
-c:\users\chris\documents\unity3d\trees_final\nativecode\plugin_channelmonitor.cpp(130): warning C4018: '<': signed/unsigned mismatch
-  AudioPluginDemo.vcxproj -> C:\Users\Chris\Documents\Unity3D\Trees_Final\NativeCode\VisualStudio\build\Debug\AudioPluginDemo.dll
-  A subdirectory or file ..\..\Assets\Plugins\x86 already exists.
-          1 file(s) copied.
