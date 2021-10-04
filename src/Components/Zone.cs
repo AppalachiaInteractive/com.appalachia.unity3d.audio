@@ -11,30 +11,48 @@ namespace Appalachia.Audio.Components
 {
     public abstract class Zone : MonoBehaviour
     {
-        public static readonly List<Zone> allZones = new List<Zone>();
+        public static readonly List<Zone> allZones = new();
         public static bool dontProbeZones;
-
-        internal Zone parent;
-        internal List<Zone> children;
 
         public float radius = 5f;
 
         [Range(0, 1)] public float parentExclusion;
 
-        internal float volumeExclusion;
-        internal float volumeInfluence;
+        protected Collider _trigger;
+        protected int _triggerRefs;
+        internal TernaryBool active;
+        internal List<Zone> children;
 
         internal int hash;
         internal bool inited;
-        internal bool wantActive;
-        internal TernaryBool active;
 
-        protected Collider _trigger;
-        protected int _triggerRefs;
+        internal Zone parent;
+
+        internal float volumeExclusion;
+        internal float volumeInfluence;
+        internal bool wantActive;
 
         public bool isVolumeExcluded => volumeExclusion > 0f;
 
         public Collider trigger => inited ? _trigger : FindTrigger(this);
+
+        protected void OnEnable()
+        {
+            if (!inited)
+            {
+                OnInit();
+            }
+
+            allZones.Add(this);
+            OnUpdateActivation(wantActive);
+        }
+
+        protected void OnDisable()
+        {
+            allZones.Remove(this);
+            OnUpdateActivation(false);
+            _triggerRefs = 0;
+        }
 
         public static Collider FindTrigger(Zone z)
         {
@@ -46,17 +64,6 @@ namespace Appalachia.Audio.Components
         {
             var e = c.bounds.extents;
             return Mathf.Max(e.x, e.z);
-        }
-
-        protected void OnEnable()
-        {
-            if (!inited)
-            {
-                OnInit();
-            }
-
-            allZones.Add(this);
-            OnUpdateActivation(wantActive);
         }
 
         protected virtual void OnInit()
@@ -105,13 +112,6 @@ namespace Appalachia.Audio.Components
             }
 
             return null;
-        }
-
-        protected void OnDisable()
-        {
-            allZones.Remove(this);
-            OnUpdateActivation(false);
-            _triggerRefs = 0;
         }
 
         protected void SetActive(bool state)
@@ -258,7 +258,8 @@ namespace Appalachia.Audio.Components
             public Color inactiveColor;
         }
 
-        [Colorize] public GizmoParams gizmo = new GizmoParams {activeColor = Color.magenta, inactiveColor = Color.blue};
+        [Colorize]
+        public GizmoParams gizmo = new() {activeColor = Color.magenta, inactiveColor = Color.blue};
 #endif
 
 #if UNITY_EDITOR

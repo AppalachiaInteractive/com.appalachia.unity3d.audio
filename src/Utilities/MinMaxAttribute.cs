@@ -1,18 +1,17 @@
-
 using UnityEngine;
 
-namespace Appalachia.Audio.Utilities {
+namespace Appalachia.Audio.Utilities
+{
+    public class MinMaxAttribute : PropertyAttribute
+    {
+        public bool colorize;
+        public float max;
+        public float min;
 
-public class MinMaxAttribute : PropertyAttribute {
-    public float min;
-    public float max;
-    public bool colorize;
-
-    public MinMaxAttribute(float mv, float nv) {
-        min = mv;
-        max = nv;
+        public MinMaxAttribute(float mv, float nv)
+        {
+            min = mv;
+            max = nv;
+        }
     }
-}
-
 } // Appalachia.Core.Audio
-

@@ -10,14 +10,7 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public struct Envelope
     {
-        internal enum Cadence
-        {
-            Snappy,
-            Normal,
-            Hesitant
-        }
-
-        public static readonly Envelope instant = new Envelope
+        public static readonly Envelope instant = new()
         {
             attackTime = 0f,
             attackValue = 1f,
@@ -27,13 +20,13 @@ namespace Appalachia.Audio.Components
         };
 
         public float attackTime;
-        internal float attackValue;
-        internal Cadence attackCadence;
 
         public float releaseTime;
-        internal float releaseValue;
 
         public float sustainValue;
+        internal Cadence attackCadence;
+        internal float attackValue;
+        internal float releaseValue;
 
         public void SetAttack(float t)
         {
@@ -89,6 +82,13 @@ namespace Appalachia.Audio.Components
         {
             var speed = releaseTime > 0f ? 1f / releaseTime : Mathf.Infinity;
             return releaseValue = Mathf.Clamp01(releaseValue + (dt * speed));
+        }
+
+        internal enum Cadence
+        {
+            Snappy,
+            Normal,
+            Hesitant
         }
     }
 } // Appalachia.Core.Audio

@@ -8,16 +8,24 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     [Serializable]
     public sealed class AudioContextParameters4 : AudioContextParameters
     {
-        [SerializeField, SmartLabel, InlineProperty] 
+        [SerializeField]
+        [SmartLabel]
+        [InlineProperty]
         public AudioContextType primary;
 
-        [SerializeField, SmartLabel, InlineProperty] 
+        [SerializeField]
+        [SmartLabel]
+        [InlineProperty]
         public AudioContextType secondary;
 
-        [SerializeField, SmartLabel, InlineProperty] 
+        [SerializeField]
+        [SmartLabel]
+        [InlineProperty]
         public AudioContextType tertiary;
 
-        [SerializeField, SmartLabel, InlineProperty] 
+        [SerializeField]
+        [SmartLabel]
+        [InlineProperty]
         public AudioContextType quaternary;
     }
 }

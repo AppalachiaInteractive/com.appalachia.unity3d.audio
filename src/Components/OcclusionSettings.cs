@@ -14,13 +14,14 @@ namespace Appalachia.Audio.Components
 {
     public class OcclusionSettings : ScriptableObject
     {
-        public static readonly string path = "Assets/Features/Appalachia.Core.Audio/Resources/OcclusionSettings.asset";
+        public static readonly string path =
+            "Assets/Features/Appalachia.Core.Audio/Resources/OcclusionSettings.asset";
 
         public LayerMask layerMask = 1;
 
-        [MinMax(0, 22000)] public MinMaxFloat highPassRange = new MinMaxFloat {min = 0, max = 1100};
+        [MinMax(0, 22000)] public MinMaxFloat highPassRange = new() {min = 0, max = 1100};
 
-        [MinMax(0, 22000)] public MinMaxFloat lowPassRange = new MinMaxFloat {min = 4400, max = 22000};
+        [MinMax(0, 22000)] public MinMaxFloat lowPassRange = new() {min = 4400, max = 22000};
 
         public float speedOfSound = 340f;
 

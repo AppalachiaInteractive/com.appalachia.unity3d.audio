@@ -3,80 +3,116 @@ using Appalachia.Audio.Components;
 using UnityEditor;
 using UnityEngine;
 
-namespace Appalachia.Audio {
+namespace Appalachia.Audio
+{
+    public static class Tools
+    {
+        [MenuItem("Appalachia.Core.Audio/Tools/Find Patches Without AudioClips")]
+        private static void FindPatchWithoutAudioClips()
+        {
+            var root = "Assets/Audio";
+            var guids = AssetDatabase.FindAssets("t:Object", new[] {root});
+            var count = 0;
 
-public static class Tools {
-    [MenuItem("Appalachia.Core.Audio/Tools/Find Patches Without AudioClips")]
-    static void FindPatchWithoutAudioClips() {
-        var root = "Assets/Audio";
-        var guids = AssetDatabase.FindAssets("t:Object", new[]{root});
-        int count = 0;
+            Debug.Log("[Find Patches Without AudioClips]: Searching for patches in " + root);
 
-        Debug.Log("[Find Patches Without AudioClips]: Searching for patches in " + root);
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var asset = AssetDatabase.LoadMainAssetAtPath(path);
+                var patch = asset as Patch;
 
-        foreach (var guid in guids) {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            var asset = AssetDatabase.LoadMainAssetAtPath(path);
-            var patch = asset as Patch;
+                if (patch)
+                {
+                    var noClips = false;
+                    if ((patch.program.clips == null) || (patch.program.clips.Length == 0))
+                    {
+                        noClips = true;
+                    }
+                    else
+                    {
+                        foreach (var clip in patch.program.clips)
+                        {
+                            if (!clip.clip)
+                            {
+                                noClips = true;
+                            }
+                        }
+                    }
 
-            if (patch) {
-                bool noClips = false;
-                if (patch.program.clips == null || patch.program.clips.Length == 0)
-                    noClips = true;
-                else
-                    foreach (var clip in patch.program.clips)
-                        if (!clip.clip)
-                            noClips = true;
-                if (noClips)
-                    Debug.LogWarning("[Find Patches Without AudioClips]: Found " + path, asset);
-                ++count;
+                    if (noClips)
+                    {
+                        Debug.LogWarning("[Find Patches Without AudioClips]: Found " + path, asset);
+                    }
+
+                    ++count;
+                }
             }
+
+            Debug.Log(
+                "[Find Patches Without AudioClips]: All done, checked " +
+                count +
+                (count == 1 ? " patch" : " patches")
+            );
         }
 
-        Debug.Log(
-            "[Find Patches Without AudioClips]: All done, checked " +
-            count + (count == 1 ? " patch" : " patches"));
-    }
+        [MenuItem("Appalachia.Core.Audio/Tools/Find Unused AudioClips")]
+        private static void FindUnusedAudioClips()
+        {
+            var root = "Assets/Audio";
+            var guids = AssetDatabase.FindAssets("t:Object", new[] {root});
+            var clips = new HashSet<string>();
+            var patchCount = 0;
+            var clipCount = 0;
 
-    [MenuItem("Appalachia.Core.Audio/Tools/Find Unused AudioClips")]
-    static void FindUnusedAudioClips() {
-        var root = "Assets/Audio";
-        var guids = AssetDatabase.FindAssets("t:Object", new[]{root});
-        var clips = new HashSet<string>();
-        int patchCount = 0;
-        int clipCount = 0;
+            Debug.Log("[Find Unused AudioClips]: Searching for patches in " + root);
 
-        Debug.Log("[Find Unused AudioClips]: Searching for patches in " + root);
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var asset = AssetDatabase.LoadMainAssetAtPath(path);
+                var patch = asset as Patch;
 
-        foreach (var guid in guids) {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            var asset = AssetDatabase.LoadMainAssetAtPath(path);
-            var patch = asset as Patch;
+                if (patch)
+                {
+                    if (patch.program.clips != null)
+                    {
+                        foreach (var clip in patch.program.clips)
+                        {
+                            if (clip.clip)
+                            {
+                                clips.Add(AssetDatabase.GetAssetPath(clip.clip));
+                            }
+                        }
+                    }
 
-            if (patch) {
-                if (patch.program.clips != null)
-                    foreach (var clip in patch.program.clips)
-                        if (clip.clip)
-                            clips.Add(AssetDatabase.GetAssetPath(clip.clip));
-                ++patchCount;
+                    ++patchCount;
+                }
             }
+
+            guids = AssetDatabase.FindAssets("t:AudioClip", new[] {root});
+            clipCount = guids.Length;
+
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!clips.Contains(path))
+                {
+                    Debug.LogWarning(
+                        "[Find Unused AudioClips]: Found " + path,
+                        AssetDatabase.LoadMainAssetAtPath(path)
+                    );
+                }
+            }
+
+            Debug.Log(
+                "[Find Unused AudioClips]: All done, checked " +
+                patchCount +
+                (patchCount == 1 ? " patch " : " patches ") +
+                "and " +
+                clipCount +
+                (clipCount == 1 ? " AudioClip " : " AudioClips")
+            );
         }
-
-        guids = AssetDatabase.FindAssets("t:AudioClip", new[]{root});
-        clipCount = guids.Length;
-
-        foreach (var guid in guids) {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            if (!clips.Contains(path))
-                Debug.LogWarning("[Find Unused AudioClips]: Found " + path, AssetDatabase.LoadMainAssetAtPath(path));
-        }
-
-        Debug.Log(
-            "[Find Unused AudioClips]: All done, checked " +
-            patchCount + (patchCount == 1 ? " patch " : " patches ") + "and " +
-            clipCount + (clipCount == 1 ? " AudioClip " : " AudioClips"));
     }
-}
-
 } // Appalachia.Core.Audio.Editor
-

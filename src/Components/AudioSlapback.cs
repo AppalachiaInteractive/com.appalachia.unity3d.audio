@@ -9,7 +9,19 @@ namespace Appalachia.Audio.Components
 {
     public class AudioSlapback : Zone
     {
-        public static readonly HashSet<AudioSlapback> allSlapbacks = new HashSet<AudioSlapback>();
+        public static readonly HashSet<AudioSlapback> allSlapbacks = new();
+
+        protected new void OnEnable()
+        {
+            base.OnEnable();
+            allSlapbacks.Add(this);
+        }
+
+        protected new void OnDisable()
+        {
+            allSlapbacks.Remove(this);
+            base.OnDisable();
+        }
 
         public static AudioSlapback FindClosest(Vector3 p, out Vector3 rp, out Vector3 rd)
         {
@@ -30,13 +42,22 @@ namespace Appalachia.Audio.Components
 
                 var d = q - p;
                 var e = d.sqrMagnitude;
-                if (dp <= e) continue;
+                if (dp <= e)
+                {
+                    continue;
+                }
 
                 var fwd = t.forward;
-                if (Vector3.Dot(d.normalized, fwd) >= 0f) continue;
+                if (Vector3.Dot(d.normalized, fwd) >= 0f)
+                {
+                    continue;
+                }
 
                 var ld = q - lp;
-                if (Vector3.Dot(ld.normalized, fwd) >= 0f) continue;
+                if (Vector3.Dot(ld.normalized, fwd) >= 0f)
+                {
+                    continue;
+                }
 
                 dp = e;
                 rp = qq;
@@ -45,18 +66,6 @@ namespace Appalachia.Audio.Components
             }
 
             return z;
-        }
-
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            allSlapbacks.Add(this);
-        }
-
-        protected new void OnDisable()
-        {
-            allSlapbacks.Remove(this);
-            base.OnDisable();
         }
     }
 } // Appalachia.Core.Audio

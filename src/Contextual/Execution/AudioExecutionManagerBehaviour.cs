@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Appalachia.Audio.Contextual.Execution
 {
     [DisallowMultipleComponent]
-    public abstract class AudioExecutionManagerBehaviour<T>: InternalMonoBehaviour
+    public abstract class AudioExecutionManagerBehaviour<T> : InternalMonoBehaviour
         where T : AudioExecutionManagerBehaviour<T>
     {
         protected void HandleExecution<TProcessor, TCollection, TContext, TParams>(
@@ -23,7 +23,13 @@ namespace Appalachia.Audio.Contextual.Execution
                 manager.Initialize(owner);
             }
 
-            if (manager.Update(owner, out var patch, out var envelope, out var position, out var volume))
+            if (manager.Update(
+                owner,
+                out var patch,
+                out var envelope,
+                out var position,
+                out var volume
+            ))
             {
                 Synthesizer.KeyOn(out _, patch, envelope, null, position, 0f, volume);
             }

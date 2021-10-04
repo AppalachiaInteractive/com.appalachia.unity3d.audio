@@ -22,39 +22,36 @@ namespace Appalachia.Audio.Components
         [FormerlySerializedAs("assets")]
         public Patch[] patches;
 
-        private uint[] cueHandles;
-
         [Range(0, 1)] public float volume = 1f;
 
         public bool autoCue = true;
         public bool singleShot;
-        private bool cuedOnce;
 
         [HideInInspector] public Controller controller;
 
-        [Colorize] public RandomizationParams randomization = new RandomizationParams {chance = 1f};
+        [Colorize] public RandomizationParams randomization = new() {chance = 1f};
 
-        [Colorize] public ModulationParams modulation = new ModulationParams {volume = new MinMaxFloat {min = 0.95f, max = 1.05f}};
+        [Colorize]
+        public ModulationParams modulation =
+            new() {volume = new MinMaxFloat {min = 0.95f, max = 1.05f}};
 
         [Colorize] public AttachmentParams attachment;
 
         [Colorize] public AuxiliaryParams auxiliary;
 
-        [Colorize] public GizmoParams gizmo = new GizmoParams {color = Color.red};
+        [Colorize] public GizmoParams gizmo = new() {color = Color.red};
+        private bool cuedOnce;
+
+        private uint[] cueHandles;
+        internal bool paused;
 
         internal AudioZone zone;
-        internal bool paused;
 
         public bool isModulated => (modulation.custom != null) || (modulation.period > 0f);
 
-        public void SetPaused(bool p)
+        protected void Awake()
         {
-            paused = p;
-        }
-
-        public bool IsPaused()
-        {
-            return paused;
+            Reset();
         }
 
         protected void Reset()
@@ -65,11 +62,6 @@ namespace Appalachia.Audio.Components
             }
 
             enabled = controller != Controller.Zone;
-        }
-
-        protected void Awake()
-        {
-            Reset();
         }
 
         protected void OnEnable()
@@ -83,6 +75,16 @@ namespace Appalachia.Audio.Components
         protected void OnDisable()
         {
             CueOut();
+        }
+
+        public void SetPaused(bool p)
+        {
+            paused = p;
+        }
+
+        public bool IsPaused()
+        {
+            return paused;
         }
 
         public void CueIn()
@@ -139,6 +141,7 @@ namespace Appalachia.Audio.Components
             [MinMax(0, 2)] public MinMaxFloat volume;
             [Range(0, 1800)] public float period;
             public bool inverted;
+
             // ReSharper disable once UnassignedField.Global
             internal CustomModulator custom;
         }

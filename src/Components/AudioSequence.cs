@@ -17,7 +17,7 @@ namespace Appalachia.Audio.Components
         [MinMax(0, 600, colorize = true)]
         public MinMaxFloat duration;
 
-        [Colorize] public RepeatParams repeat = new RepeatParams {forever = true};
+        [Colorize] public RepeatParams repeat = new() {forever = true};
 
         [NonSerialized] public uint lastHandle;
 

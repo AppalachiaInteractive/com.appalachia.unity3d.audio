@@ -5,6 +5,6 @@ namespace Appalachia.Audio.Contextual.Context
         Normal = 0,
         BeforeInclementWeather = 10,
         DuringInclementWeather = 20,
-        AfterInclementWeather = 30,
+        AfterInclementWeather = 30
     }
 }

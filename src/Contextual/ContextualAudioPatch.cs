@@ -11,15 +11,24 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Audio.Contextual
 {
     [Serializable]
-    public sealed class ContextualAudioPatch : SelfSavingAndIdentifyingScriptableObject<ContextualAudioPatch>
+    public sealed class
+        ContextualAudioPatch : SelfSavingAndIdentifyingScriptableObject<ContextualAudioPatch>
     {
-        [SmartLabel, HorizontalGroup("A", .8f), PropertyOrder(10)]
+        [SmartLabel]
+        [HorizontalGroup("A", .8f)]
+        [PropertyOrder(10)]
         public Patch patch;
 
-        [ToggleLeft, SmartLabel, HorizontalGroup("A", .2f), PropertyOrder(20)]
+        [ToggleLeft]
+        [SmartLabel]
+        [HorizontalGroup("A", .2f)]
+        [PropertyOrder(20)]
         public bool dualPatch;
 
-        [SmartLabel, HorizontalGroup("B"), PropertyOrder(30), ShowIf(nameof(dualPatch))]
+        [SmartLabel]
+        [HorizontalGroup("B")]
+        [PropertyOrder(30)]
+        [ShowIf(nameof(dualPatch))]
         public Patch patch2;
 
         public static Patch operator %(ContextualAudioPatch p, bool first)

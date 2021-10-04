@@ -17,7 +17,7 @@ namespace Appalachia.Audio.Components
 
         [MinMax(0, 600)] public MinMaxFloat delay;
 
-        [Colorize(order = 0)] public RandomizationParams randomization = new RandomizationParams {chance = 1f};
+        [Colorize(order = 0)] public RandomizationParams randomization = new() {chance = 1f};
 
         public float GetDelay()
         {

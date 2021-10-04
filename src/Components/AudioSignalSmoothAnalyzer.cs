@@ -14,44 +14,81 @@ namespace Appalachia.Audio.Components
     {
         [HideInInspector] public int referenceID;
 
-        [FoldoutGroup("Trend")]
-        [HorizontalGroup("Trend/A", .5f), ReadOnly, NonSerialized, ShowInInspector, LabelWidth(70)]
-        public float min = GAC.THRESHOLD_DB_HIGH;
-
-        [HorizontalGroup("Trend/A", .5f), ReadOnly, NonSerialized, ShowInInspector, LabelWidth(70)]
-        public float max = GAC.THRESHOLD_DB_LOW;
-
-        [HorizontalGroup("Trend/B", .5f), ReadOnly, NonSerialized, ShowInInspector, LabelWidth(70)]
-        public float avg;
-
-        [HorizontalGroup("Trend/B", .5f), ReadOnly, NonSerialized, ShowInInspector, LabelWidth(70)]
-        public float realAvg;
-
-        [HorizontalGroup("Trend/C", .5f), ReadOnly, ShowInInspector, LabelWidth(70)]
+        [HorizontalGroup("Trend/C", .5f)]
+        [ReadOnly]
+        [ShowInInspector]
+        [LabelWidth(70)]
         public float last;
 
-        [NonSerialized] public float sum;
-
-        [HorizontalGroup("Trend/C1", .5f), PropertyRange(0.01f, .2f), LabelWidth(70)]
+        [HorizontalGroup("Trend/C1", .5f)]
+        [PropertyRange(0.01f, .2f)]
+        [LabelWidth(70)]
         public float maxStepUp = 0.01f;
 
-        [HorizontalGroup("Trend/C1", .5f), PropertyRange(0.01f, .2f), LabelWidth(70)]
+        [HorizontalGroup("Trend/C1", .5f)]
+        [PropertyRange(0.01f, .2f)]
+        [LabelWidth(70)]
         public float maxStepDown = 0.01f;
 
         [HideInInspector] public float maxStepTarget = 0.01f;
 
-        [HorizontalGroup("Trend/D", .5f), PropertyRange(1, 128), LabelWidth(70), LabelText("Buffer Up")]
+        [HorizontalGroup("Trend/D", .5f)]
+        [PropertyRange(1, 128)]
+        [LabelWidth(70)]
+        [LabelText("Buffer Up")]
         public int bufferSizeUp = 24;
 
-        [HorizontalGroup("Trend/D", .5f), PropertyRange(1, 128), LabelWidth(70), LabelText("Buffer Down")]
+        [HorizontalGroup("Trend/D", .5f)]
+        [PropertyRange(1, 128)]
+        [LabelWidth(70)]
+        [LabelText("Buffer Down")]
         public int bufferSizeDown = 48;
 
-        [HorizontalGroup("Trend/E", .5f), ReadOnly, ShowInInspector, LabelWidth(70), LabelText("Target")]
+        [HorizontalGroup("Trend/E", .5f)]
+        [ReadOnly]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        [LabelText("Target")]
         public int bufferTarget = 24;
 
-        private Queue<float> buffer = new Queue<float>(128);
+        [HorizontalGroup("Trend/B", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        public float avg;
 
-        [HorizontalGroup("Trend/E", .5f), ReadOnly, ShowInInspector, LabelWidth(70), LabelText("Count")]
+        private Queue<float> buffer = new(128);
+
+        [HorizontalGroup("Trend/A", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        public float max = GAC.THRESHOLD_DB_LOW;
+
+        [FoldoutGroup("Trend")]
+        [HorizontalGroup("Trend/A", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        public float min = GAC.THRESHOLD_DB_HIGH;
+
+        [HorizontalGroup("Trend/B", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        public float realAvg;
+
+        [NonSerialized] public float sum;
+
+        [HorizontalGroup("Trend/E", .5f)]
+        [ReadOnly]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        [LabelText("Count")]
         public int bufferCount => buffer?.Count ?? 0;
 
         public void Add(float value)

@@ -12,7 +12,8 @@ namespace Appalachia.Audio
 
         public override string Name => "Demo ConvolutionReverb";
 
-        public override string Description => "Convolution reverb demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Convolution reverb demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -24,6 +25,7 @@ namespace Appalachia.Audio
             float[] curve,
             float yscale,
             Color col,
+
             // ReSharper disable once UnusedParameter.Local
             float labeloffset,
             float wetLevel,
@@ -79,7 +81,10 @@ namespace Appalachia.Audio
                 r2.y += r2.height;
                 DrawCurve(r2, imp2, 1.0f, m_Impulse2Color, 150, wet, gain);
 
-                var name = "Impulse: " + Marshal.PtrToStringAnsi(ConvolutionReverb_GetSampleName((int) useSample));
+                var name = "Impulse: " +
+                           Marshal.PtrToStringAnsi(
+                               ConvolutionReverb_GetSampleName((int) useSample)
+                           );
                 GUIHelpers.DrawText(r2.x + 5, r2.y - 5, r2.width, name, Color.white);
             }
 

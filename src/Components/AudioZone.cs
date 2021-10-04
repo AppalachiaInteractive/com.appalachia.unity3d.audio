@@ -18,31 +18,16 @@ namespace Appalachia.Audio.Components
         public Ownership ownership;
         public LayerMask layerMask = -1;
 
-        [MinMax(0, 1)] public MinMaxFloat peripheralFade = new MinMaxFloat {min = 1f, max = 1f};
+        [MinMax(0, 1)] public MinMaxFloat peripheralFade = new() {min = 1f, max = 1f};
 
         internal AudioEmitter[] emitters;
+
+        private TernaryBool hasEnabledEmitters;
         internal int lastFrame;
         internal float sqrDistance;
         internal float sqrRadius;
 
-        private TernaryBool hasEnabledEmitters;
-
         public bool hasPeripheralFade => peripheralFade.min < 1f;
-
-        public static AudioEmitter[] FindEmitters(AudioZone z)
-        {
-            return z.ownership == Ownership.Local ? z.GetComponents<AudioEmitter>() : z.GetComponentsInChildren<AudioEmitter>();
-        }
-
-        protected override void OnInit()
-        {
-            base.OnInit();
-            emitters = FindEmitters(this);
-            for (int i = 0, n = emitters.Length; i < n; ++i)
-            {
-                emitters[i].zone = this;
-            }
-        }
 
         protected new void OnEnable()
         {
@@ -62,7 +47,9 @@ namespace Appalachia.Audio.Components
 
         protected void OnTriggerEnter(Collider c)
         {
-            if ((_trigger != null) && ((layerMask & (1 << c.gameObject.layer)) != 0) && (_triggerRefs++ == 0))
+            if ((_trigger != null) &&
+                ((layerMask & (1 << c.gameObject.layer)) != 0) &&
+                (_triggerRefs++ == 0))
             {
                 SetActive(true);
             }
@@ -70,9 +57,28 @@ namespace Appalachia.Audio.Components
 
         protected void OnTriggerExit(Collider c)
         {
-            if ((_trigger != null) && ((layerMask & (1 << c.gameObject.layer)) != 0) && (--_triggerRefs == 0))
+            if ((_trigger != null) &&
+                ((layerMask & (1 << c.gameObject.layer)) != 0) &&
+                (--_triggerRefs == 0))
             {
                 SetActive(false);
+            }
+        }
+
+        public static AudioEmitter[] FindEmitters(AudioZone z)
+        {
+            return z.ownership == Ownership.Local
+                ? z.GetComponents<AudioEmitter>()
+                : z.GetComponentsInChildren<AudioEmitter>();
+        }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            emitters = FindEmitters(this);
+            for (int i = 0, n = emitters.Length; i < n; ++i)
+            {
+                emitters[i].zone = this;
             }
         }
 

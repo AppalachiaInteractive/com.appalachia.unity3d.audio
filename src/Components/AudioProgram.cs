@@ -18,17 +18,19 @@ namespace Appalachia.Audio.Components
 
         [Colorize] public bool increment = true;
 
-        [HideInInspector] public WeightedDecay weighted;
-
         [Space(10)] [Colorize] public AudioMixerGroup mixerGroup;
 
-        [Space(10)] [Colorize] public AudioParameters audioParameters = AudioParameters.defaultAudioParameters;
-
-        [NonSerialized] public int lastFrame;
+        [Space(10)]
+        [Colorize]
+        public AudioParameters audioParameters = AudioParameters.defaultAudioParameters;
 
         [NonSerialized] public int clipIndex;
 
+        [NonSerialized] public int lastFrame;
+
         [NonSerialized] public Patch patch;
+
+        [HideInInspector] public WeightedDecay weighted;
 
         public void Initialize()
         {
@@ -86,7 +88,10 @@ namespace Appalachia.Audio.Components
         )
         {
             var delayed = !Mathf.Approximately(ap.delay, 0f);
-            if (delayed || (!randomize && !increment) || (lastFrame != Time.frameCount) || !Application.isPlaying)
+            if (delayed ||
+                (!randomize && !increment) ||
+                (lastFrame != Time.frameCount) ||
+                !Application.isPlaying)
             {
                 if (!delayed)
                 {
@@ -116,7 +121,10 @@ namespace Appalachia.Audio.Components
         )
         {
             var delayed = !Mathf.Approximately(ap.delay, 0f);
-            if (delayed || (!randomize && !increment) || (lastFrame != Time.frameCount) || !Application.isPlaying)
+            if (delayed ||
+                (!randomize && !increment) ||
+                (lastFrame != Time.frameCount) ||
+                !Application.isPlaying)
             {
                 if (!delayed)
                 {

@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Contextual.Execution
         where TCollection : AudioContextCollection<TContext, TParams, TCollection>
         where TContext : AudioContext<TParams>
         where TParams : AudioContextParameters, new()
-        where TOwner: InternalMonoBehaviour
+        where TOwner : InternalMonoBehaviour
     {
         [SerializeField] public TCollection audio;
 
@@ -21,7 +21,10 @@ namespace Appalachia.Audio.Contextual.Execution
 
         public void Initialize(TOwner owner)
         {
-            if (_initialized) return;
+            if (_initialized)
+            {
+                return;
+            }
 
             _initialized = true;
 

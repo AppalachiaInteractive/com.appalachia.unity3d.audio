@@ -8,7 +8,8 @@ namespace Appalachia.Audio
     {
         public override string Name => "Demo LoudnessMeter";
 
-        public override string Description => "Loudness meter demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Loudness meter demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -20,7 +21,8 @@ namespace Appalachia.Audio
             Color col,
             float labeloffset)
         {
-            var numsamples = curve.Length - 1; // the last sample in buffer is counter for how much we could read
+            var numsamples =
+                curve.Length - 1; // the last sample in buffer is counter for how much we could read
             var transitionPixels = 30.0f;
             var x0 = 1.0f - (curve[numsamples] / curve.Length);
             var xr = transitionPixels / r.width;
@@ -50,7 +52,13 @@ namespace Appalachia.Audio
             {
                 var col2 = new Color(col.r, col.g, col.b, 0.7f);
                 GUIHelpers.DrawLine(r.x, peakPos, r.x + r.width, peakPos, col2);
-                GUIHelpers.DrawText((r.x + labeloffset) - 30, peakPos + 6, 60, string.Format("{0:F1} dB", peakVal), col2);
+                GUIHelpers.DrawText(
+                    (r.x + labeloffset) - 30,
+                    peakPos + 6,
+                    60,
+                    string.Format("{0:F1} dB", peakVal),
+                    col2
+                );
             }
         }
 
@@ -82,7 +90,9 @@ namespace Appalachia.Audio
             switch (evt.GetTypeForControl(dragControlID))
             {
                 case EventType.MouseDown:
-                    if ((evt.button == 0) && r.Contains(evt.mousePosition) && (GUIUtility.hotControl == 0))
+                    if ((evt.button == 0) &&
+                        r.Contains(evt.mousePosition) &&
+                        (GUIUtility.hotControl == 0))
                     {
                         GUIUtility.hotControl = dragControlID;
                         evt.Use();
@@ -105,11 +115,19 @@ namespace Appalachia.Audio
                         window = Mathf.Clamp(window + (evt.delta.x * 0.1f), windowMin, windowMax);
                         if (evt.shift)
                         {
-                            yoffset = Mathf.Clamp(yoffset - ((0.5f * evt.delta.y) / yscale), yoffsetMin, yoffsetMax);
+                            yoffset = Mathf.Clamp(
+                                yoffset - ((0.5f * evt.delta.y) / yscale),
+                                yoffsetMin,
+                                yoffsetMax
+                            );
                         }
                         else
                         {
-                            yscale = Mathf.Clamp(yscale - (evt.delta.y * 0.01f), yscaleMin, yscaleMax);
+                            yscale = Mathf.Clamp(
+                                yscale - (evt.delta.y * 0.01f),
+                                yscaleMin,
+                                yscaleMax
+                            );
                         }
 
                         plugin.SetFloatParameter("Window",  window);
@@ -124,7 +142,11 @@ namespace Appalachia.Audio
                     if (r.Contains(evt.mousePosition))
                     {
                         window = Mathf.Clamp(window + (evt.delta.x * 0.1f), windowMin, windowMax);
-                        yoffset = Mathf.Clamp(yoffset - ((0.5f * evt.delta.y) / yscale), yoffsetMin, yoffsetMax);
+                        yoffset = Mathf.Clamp(
+                            yoffset - ((0.5f * evt.delta.y) / yscale),
+                            yoffsetMin,
+                            yoffsetMax
+                        );
                         plugin.SetFloatParameter("Window",  window);
                         plugin.SetFloatParameter("YScale",  yscale);
                         plugin.SetFloatParameter("YOffset", yoffset);
@@ -152,9 +174,30 @@ namespace Appalachia.Audio
                     float[] icurve;
                     plugin.GetFloatBuffer("IntegratedRMS", out icurve, numsamples);
 
-                    DrawCurve(r, mcurve, yoffset, yscaleDraw, new Color(1.0f, 0.0f, 0.0f, blend * 0.5f), 90);
-                    DrawCurve(r, scurve, yoffset, yscaleDraw, new Color(0.0f, 1.0f, 0.0f, blend * 0.3f), 150);
-                    DrawCurve(r, icurve, yoffset, yscaleDraw, new Color(0.0f, 0.0f, 1.0f, blend * 0.3f), 210);
+                    DrawCurve(
+                        r,
+                        mcurve,
+                        yoffset,
+                        yscaleDraw,
+                        new Color(1.0f, 0.0f, 0.0f, blend * 0.5f),
+                        90
+                    );
+                    DrawCurve(
+                        r,
+                        scurve,
+                        yoffset,
+                        yscaleDraw,
+                        new Color(0.0f, 1.0f, 0.0f, blend * 0.3f),
+                        150
+                    );
+                    DrawCurve(
+                        r,
+                        icurve,
+                        yoffset,
+                        yscaleDraw,
+                        new Color(0.0f, 0.0f, 1.0f, blend * 0.3f),
+                        210
+                    );
                 }
                     break;
             }

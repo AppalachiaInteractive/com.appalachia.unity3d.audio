@@ -6,21 +6,22 @@ namespace Appalachia.Audio
 {
     public class MultibandCustomGUI : FilterCurveUi
     {
-        private float masterGain;
-        private float lowGain, midGain, highGain;
-        private float lowFreq, highFreq;
+        private float filterOrder;
         private float lowAttackTime, midAttackTime, highAttackTime;
+        private float lowFreq, highFreq;
+        private float lowGain, midGain, highGain;
+        private float lowKnee, midKnee, highKnee;
+        private float lowRatio, midRatio, highRatio;
         private float lowReleaseTime, midReleaseTime, highReleaseTime;
         private float lowThreshold, midThreshold, highThreshold;
-        private float lowRatio, midRatio, highRatio;
-        private float lowKnee, midKnee, highKnee;
-        private float filterOrder;
-        private bool useLogScale;
+        private float masterGain;
         private bool showSpectrum;
+        private bool useLogScale;
 
         public override string Name => "Demo Multiband";
 
-        public override string Description => "Multiband compressor demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Multiband compressor demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -39,24 +40,32 @@ namespace Appalachia.Audio
 
             AudioCurveRendering.AudioCurveEvaluator d = delegate(float x)
             {
-                var w = ComplexD.Exp(wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true));
+                var w = ComplexD.Exp(
+                    wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true)
+                );
                 var lpf = ComplexD.Pow(
-                    ((w * ((w * coeffs[0]) + coeffs[1])) + coeffs[2]) / ((w * ((w * coeffs[3]) + coeffs[4])) + 1.0f),
+                    ((w * ((w * coeffs[0]) + coeffs[1])) + coeffs[2]) /
+                    ((w * ((w * coeffs[3]) + coeffs[4])) + 1.0f),
                     filterOrder
                 );
                 var bpf1 = ComplexD.Pow(
-                    ((w * ((w * coeffs[5]) + coeffs[6])) + coeffs[7]) / ((w * ((w * coeffs[8]) + coeffs[9])) + 1.0f),
+                    ((w * ((w * coeffs[5]) + coeffs[6])) + coeffs[7]) /
+                    ((w * ((w * coeffs[8]) + coeffs[9])) + 1.0f),
                     filterOrder
                 );
                 var bpf2 = ComplexD.Pow(
-                    ((w * ((w * coeffs[10]) + coeffs[11])) + coeffs[12]) / ((w * ((w * coeffs[13]) + coeffs[14])) + 1.0f),
+                    ((w * ((w * coeffs[10]) + coeffs[11])) + coeffs[12]) /
+                    ((w * ((w * coeffs[13]) + coeffs[14])) + 1.0f),
                     filterOrder
                 );
                 var hpf = ComplexD.Pow(
-                    ((w * ((w * coeffs[15]) + coeffs[16])) + coeffs[17]) / ((w * ((w * coeffs[18]) + coeffs[19])) + 1.0f),
+                    ((w * ((w * coeffs[15]) + coeffs[16])) + coeffs[17]) /
+                    ((w * ((w * coeffs[18]) + coeffs[19])) + 1.0f),
                     filterOrder
                 );
-                var h = (lpf * lowGain).Mag2() + (bpf1 * bpf2 * midGain).Mag2() + (hpf * highGain).Mag2();
+                var h = (lpf * lowGain).Mag2() +
+                        (bpf1 * bpf2 * midGain).Mag2() +
+                        (hpf * highGain).Mag2();
                 var mag = masterGain + (10.0 * Math.Log10(h));
                 return (float) (mag * magScale);
             };
@@ -82,10 +91,24 @@ namespace Appalachia.Audio
             var thr = 4.0f;
             var changed = false;
             var x = evt.mousePosition.x - r.x;
-            if ((evtType == EventType.MouseDown) && r.Contains(evt.mousePosition) && (evt.button == 0))
+            if ((evtType == EventType.MouseDown) &&
+                r.Contains(evt.mousePosition) &&
+                (evt.button == 0))
             {
-                var lf = (float) GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) * r.width;
-                var hf = (float) GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) * r.width;
+                var lf = (float) GUIHelpers.MapNormalizedFrequency(
+                             lowFreq,
+                             samplerate,
+                             useLogScale,
+                             false
+                         ) *
+                         r.width;
+                var hf = (float) GUIHelpers.MapNormalizedFrequency(
+                             highFreq,
+                             samplerate,
+                             useLogScale,
+                             false
+                         ) *
+                         r.width;
                 dragOperation = DragOperation.Mid;
                 if (x < (lf + thr))
                 {
@@ -106,7 +129,12 @@ namespace Appalachia.Audio
                 {
                     lowFreq = Mathf.Clamp(
                         (float) GUIHelpers.MapNormalizedFrequency(
-                            GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) +
+                            GUIHelpers.MapNormalizedFrequency(
+                                lowFreq,
+                                samplerate,
+                                useLogScale,
+                                false
+                            ) +
                             (evt.delta.x / r.width),
                             samplerate,
                             useLogScale,
@@ -131,7 +159,12 @@ namespace Appalachia.Audio
                 {
                     highFreq = Mathf.Clamp(
                         (float) GUIHelpers.MapNormalizedFrequency(
-                            GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) +
+                            GUIHelpers.MapNormalizedFrequency(
+                                highFreq,
+                                samplerate,
+                                useLogScale,
+                                false
+                            ) +
                             (evt.delta.x / r.width),
                             samplerate,
                             useLogScale,
@@ -150,7 +183,9 @@ namespace Appalachia.Audio
                 changed = true;
                 evt.Use();
             }
-            else if ((evtType == EventType.MouseUp) && (evt.button == 0) && (GUIUtility.hotControl == controlID))
+            else if ((evtType == EventType.MouseUp) &&
+                     (evt.button == 0) &&
+                     (GUIUtility.hotControl == controlID))
             {
                 GUIUtility.hotControl = 0;
                 EditorGUIUtility.SetWantsMouseJumping(0);
@@ -168,7 +203,13 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) * r.width,
+                    (float) GUIHelpers.MapNormalizedFrequency(
+                        lowFreq,
+                        samplerate,
+                        useLogScale,
+                        false
+                    ) *
+                    r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) &&
                     ((dragOperation == DragOperation.Low) || (dragOperation == DragOperation.Mid)),
@@ -177,7 +218,13 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) * r.width,
+                    (float) GUIHelpers.MapNormalizedFrequency(
+                        highFreq,
+                        samplerate,
+                        useLogScale,
+                        false
+                    ) *
+                    r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) &&
                     ((dragOperation == DragOperation.High) || (dragOperation == DragOperation.Mid)),
@@ -198,9 +245,15 @@ namespace Appalachia.Audio
                     DrawFilterCurve(
                         r,
                         coeffs,
-                        dragOperation == DragOperation.Low ? Mathf.Pow(10.0f, 0.05f * lowGain) : 0.0f,
-                        dragOperation == DragOperation.Mid ? Mathf.Pow(10.0f, 0.05f * midGain) : 0.0f,
-                        dragOperation == DragOperation.High ? Mathf.Pow(10.0f, 0.05f * highGain) : 0.0f,
+                        dragOperation == DragOperation.Low
+                            ? Mathf.Pow(10.0f, 0.05f * lowGain)
+                            : 0.0f,
+                        dragOperation == DragOperation.Mid
+                            ? Mathf.Pow(10.0f, 0.05f * midGain)
+                            : 0.0f,
+                        dragOperation == DragOperation.High
+                            ? Mathf.Pow(10.0f, 0.05f * highGain)
+                            : 0.0f,
                         new Color(1.0f, 1.0f, 1.0f, 0.2f * blend),
                         true,
                         samplerate,
@@ -272,13 +325,40 @@ namespace Appalachia.Audio
                     float[] spec;
 
                     plugin.GetFloatBuffer("InputSpec", out spec, specLen);
-                    DrawSpectrum(r, useLogScale, spec, dbRange, samplerate, 0.3f, 1.0f, 0.3f, 0.5f * blend, 0.0f);
+                    DrawSpectrum(
+                        r,
+                        useLogScale,
+                        spec,
+                        dbRange,
+                        samplerate,
+                        0.3f,
+                        1.0f,
+                        0.3f,
+                        0.5f * blend,
+                        0.0f
+                    );
 
                     plugin.GetFloatBuffer("OutputSpec", out spec, specLen);
-                    DrawSpectrum(r, useLogScale, spec, dbRange, samplerate, 1.0f, 0.3f, 0.3f, 0.5f * blend, 0.0f);
+                    DrawSpectrum(
+                        r,
+                        useLogScale,
+                        spec,
+                        dbRange,
+                        samplerate,
+                        1.0f,
+                        0.3f,
+                        0.3f,
+                        0.5f * blend,
+                        0.0f
+                    );
                 }
 
-                GUIHelpers.DrawFrequencyTickMarks(r, samplerate, useLogScale, new Color(1.0f, 1.0f, 1.0f, 0.3f * blend));
+                GUIHelpers.DrawFrequencyTickMarks(
+                    r,
+                    samplerate,
+                    useLogScale,
+                    new Color(1.0f, 1.0f, 1.0f, 0.3f * blend)
+                );
             }
 
             AudioCurveRendering.EndCurveFrame();

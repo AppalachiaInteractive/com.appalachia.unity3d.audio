@@ -21,9 +21,9 @@ namespace Appalachia.Audio.Components
     {
         private static float _masterVolume = 1f;
 
-        public static Stack<SourceInfo> freeSources = new Stack<SourceInfo>(64);
-        public static List<ActiveSource> activeSources0 = new List<ActiveSource>(64);
-        public static List<ActiveSource> activeSources1 = new List<ActiveSource>(64);
+        public static Stack<SourceInfo> freeSources = new(64);
+        public static List<ActiveSource> activeSources0 = new(64);
+        public static List<ActiveSource> activeSources1 = new(64);
         public static uint activeHandle;
 #if UNITY_EDITOR
         public static int sourceIndex;
@@ -142,7 +142,9 @@ namespace Appalachia.Audio.Components
                 patch
 #endif
             );
-            if (!looping && (p.occlusion.function != OcclusionFunction.None) && (p.slapback.patch != null))
+            if (!looping &&
+                (p.occlusion.function != OcclusionFunction.None) &&
+                (p.slapback.patch != null))
             {
                 AudioSlapback s;
                 Vector3 pos3, d3;
@@ -235,7 +237,10 @@ namespace Appalachia.Audio.Components
                 patch = patch,
 #endif
                 info = i,
-                target = (ap.transform == null) || ap.transform.gameObject.isStatic ? null : ap.transform,
+                target =
+                    (ap.transform == null) || ap.transform.gameObject.isStatic
+                        ? null
+                        : ap.transform,
                 localPosition = ap.position,
                 volume = p.GetVolume() * Mathf.Clamp01(ap.volume),
                 modVolume = ap.modVolume,
@@ -274,7 +279,15 @@ namespace Appalachia.Audio.Components
                 Debug.LogError("Activate: Null AudioClip from patch: " + patch, patch);
             }
 
-            var looping = ActivateStatic(patch.program.mixerGroup, clip, p, src, delay, volume * (1f + gain), 1f);
+            var looping = ActivateStatic(
+                patch.program.mixerGroup,
+                clip,
+                p,
+                src,
+                delay,
+                volume * (1f + gain),
+                1f
+            );
             return looping;
         }
 
@@ -405,14 +418,16 @@ namespace Appalachia.Audio.Components
             AudioClip c,
             AudioParameters p,
             Transform t = null,
-            Vector3 pos = new Vector3(),
+            Vector3 pos = new(),
             float delay = 0f,
             float volume = 1f,
             float modVolume = 1f)
         {
             if (c == null)
             {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing audio clip reference");
+                Debug.LogErrorFormat(
+                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing audio clip reference"
+                );
                 return 0;
             }
 
@@ -442,7 +457,9 @@ namespace Appalachia.Audio.Components
         {
             if (patch == null)
             {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                Debug.LogErrorFormat(
+                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
+                );
                 return;
             }
 
@@ -453,14 +470,16 @@ namespace Appalachia.Audio.Components
             out bool looping,
             Patch patch,
             Transform t = null,
-            Vector3 pos = new Vector3(),
+            Vector3 pos = new(),
             float delay = 0f,
             float volume = 1f,
             float modVolume = 1f)
         {
             if (patch == null)
             {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                Debug.LogErrorFormat(
+                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
+                );
                 looping = false;
                 return 0;
             }
@@ -485,14 +504,16 @@ namespace Appalachia.Audio.Components
             Patch patch,
             AudioParameters.EnvelopeParams ep,
             Transform t = null,
-            Vector3 pos = new Vector3(),
+            Vector3 pos = new(),
             float delay = 0f,
             float volume = 1f,
             float modVolume = 1f)
         {
             if (patch == null)
             {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                Debug.LogErrorFormat(
+                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
+                );
                 looping = false;
                 return 0;
             }
@@ -513,7 +534,10 @@ namespace Appalachia.Audio.Components
             return handle;
         }
 
-        public static void KeyOff(uint handle, float release = 0f, EnvelopeMode mode = EnvelopeMode.None)
+        public static void KeyOff(
+            uint handle,
+            float release = 0f,
+            EnvelopeMode mode = EnvelopeMode.None)
         {
             if (handle == 0)
             {
@@ -741,7 +765,8 @@ namespace Appalachia.Audio.Components
             {
                 if (info.audioSource)
                 {
-                    playing = info.audioSource.isPlaying || (info.audioSource.isVirtual && (keyOn > 0f));
+                    playing = info.audioSource.isPlaying ||
+                              (info.audioSource.isVirtual && (keyOn > 0f));
                     return true;
                 }
 

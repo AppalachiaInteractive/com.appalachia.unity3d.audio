@@ -9,7 +9,9 @@ using Appalachia.Core.Collections.NonSerialized;
 namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
-    public abstract class AudioContextCollection1<TEnumPrimary, T> : AudioContextCollection<AudioContext1, AudioContextParameters1, T>
+    public abstract class
+        AudioContextCollection1<TEnumPrimary, T> : AudioContextCollection<AudioContext1,
+            AudioContextParameters1, T>
         where TEnumPrimary : Enum
         where T : AudioContextCollection1<TEnumPrimary, T>
     {
@@ -18,7 +20,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         protected override void AddOrUpdate(AudioContext1 context)
         {
             context.parameters.primary.type = typeof(TEnumPrimary);
-            
+
             index.AddOrUpdate((TEnumPrimary) (object) context.parameters.primary.value, context);
         }
 
@@ -46,7 +48,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
                 return defaultPatch;
             }
-            
+
             return context.patch;
         }
     }

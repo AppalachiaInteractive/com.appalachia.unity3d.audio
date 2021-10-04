@@ -9,15 +9,19 @@ using Appalachia.Core.Collections.NonSerialized;
 namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
-    public abstract class
-        AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary, T> : AudioContextCollection<AudioContext4, AudioContextParameters4, T>
+    public abstract class AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
+                                                  TEnumQuaternary, T> : AudioContextCollection<
+        AudioContext4, AudioContextParameters4, T>
         where TEnumPrimary : Enum
         where TEnumSecondary : Enum
         where TEnumTertiary : Enum
         where TEnumQuaternary : Enum
-        where T : AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary, T>
+        where T : AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
+            TEnumQuaternary, T>
     {
-        [NonSerialized] private NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary, AudioContext4> index;
+        [NonSerialized]
+        private NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
+            TEnumQuaternary, AudioContext4> index;
 
         protected override void AddOrUpdate(AudioContext4 context)
         {
@@ -25,7 +29,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             context.parameters.secondary.type = typeof(TEnumSecondary);
             context.parameters.tertiary.type = typeof(TEnumTertiary);
             context.parameters.quaternary.type = typeof(TEnumQuaternary);
-            
+
             index.AddOrUpdate(
                 (TEnumPrimary) (object) context.parameters.primary.value,
                 (TEnumSecondary) (object) context.parameters.secondary.value,
@@ -44,7 +48,9 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         {
             if (index == null)
             {
-                index = new NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary, AudioContext4>();
+                index =
+                    new NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
+                        TEnumQuaternary, AudioContext4>();
             }
 
             successful = index.TryGetValueWithFallback(
@@ -70,7 +76,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
                 return defaultPatch;
             }
-            
+
             return context.patch;
         }
     }

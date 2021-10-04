@@ -23,7 +23,13 @@ namespace Appalachia.Audio.Contextual.Execution
                 manager.Initialize(owner);
             }
 
-            if (manager.Update(owner, out var patch, out var envelope, out var position, out var volume))
+            if (manager.Update(
+                owner,
+                out var patch,
+                out var envelope,
+                out var position,
+                out var volume
+            ))
             {
                 Synthesizer.KeyOn(out _, patch, envelope, null, position, 0f, volume);
             }

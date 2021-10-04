@@ -5,8 +5,8 @@ namespace Appalachia.Audio
     // System.Numerics is not available
     public class ComplexD
     {
-        public double real;
         public double imag;
+        public double real;
 
         public ComplexD(double real, double imag)
         {
@@ -16,47 +16,48 @@ namespace Appalachia.Audio
 
         public static ComplexD Add(ComplexD a, ComplexD b)
         {
-            return new ComplexD(a.real + b.real, a.imag + b.imag);
+            return new(a.real + b.real, a.imag + b.imag);
         }
 
         public static ComplexD Add(ComplexD a, double b)
         {
-            return new ComplexD(a.real + b, a.imag);
+            return new(a.real + b, a.imag);
         }
 
         public static ComplexD Add(double a, ComplexD b)
         {
-            return new ComplexD(a + b.real, b.imag);
+            return new(a + b.real, b.imag);
         }
 
         public static ComplexD Sub(ComplexD a, ComplexD b)
         {
-            return new ComplexD(a.real - b.real, a.imag - b.imag);
+            return new(a.real - b.real, a.imag - b.imag);
         }
 
         public static ComplexD Sub(ComplexD a, double b)
         {
-            return new ComplexD(a.real - b, a.imag);
+            return new(a.real - b, a.imag);
         }
 
         public static ComplexD Sub(double a, ComplexD b)
         {
-            return new ComplexD(a - b.real, -b.imag);
+            return new(a - b.real, -b.imag);
         }
 
         public static ComplexD Mul(ComplexD a, ComplexD b)
         {
-            return new ComplexD((a.real * b.real) - (a.imag * b.imag), (a.real * b.imag) + (a.imag * b.real));
+            return new((a.real * b.real) - (a.imag * b.imag), (a.real * b.imag) +
+                                                              (a.imag * b.real));
         }
 
         public static ComplexD Mul(ComplexD a, double b)
         {
-            return new ComplexD(a.real * b, a.imag * b);
+            return new(a.real * b, a.imag * b);
         }
 
         public static ComplexD Mul(double a, ComplexD b)
         {
-            return new ComplexD(a * b.real, a * b.imag);
+            return new(a * b.real, a * b.imag);
         }
 
         public static ComplexD Div(ComplexD a, ComplexD b)
@@ -84,7 +85,7 @@ namespace Appalachia.Audio
 
         public static ComplexD Exp(double omega)
         {
-            return new ComplexD(Math.Cos(omega), Math.Sin(omega));
+            return new(Math.Cos(omega), Math.Sin(omega));
         }
 
         public static ComplexD Pow(ComplexD a, double b)

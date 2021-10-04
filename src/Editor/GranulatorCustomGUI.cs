@@ -7,18 +7,22 @@ namespace Appalachia.Audio
 {
     public class GranulatorCustomGUI : IAudioEffectPluginGUI
     {
-        protected string[] DragParams = {"None", "Rnd offset", "Offset", "Window len", "Rnd window len"};
-
         protected DragOperation dragOperation = DragOperation.None;
 
+        protected string[] DragParams =
+        {
+            "None", "Rnd offset", "Offset", "Window len", "Rnd window len"
+        };
+
         private Color m_Wave1Color = AudioCurveRendering.kAudioOrange;
-        private Color m_Wave2Color = new Color(1.0f, 0.3f, 0.3f, 1.0f);
-        private Color m_Wave3Color = new Color(0.7f, 0.3f, 0.3f, 1.0f);
+        private Color m_Wave2Color = new(1.0f, 0.3f, 0.3f, 1.0f);
+        private Color m_Wave3Color = new(0.7f, 0.3f, 0.3f, 1.0f);
         private Color m_Wave4Color = AudioCurveRendering.kAudioOrange;
 
         public override string Name => "Demo Granulator";
 
-        public override string Description => "Granular synthesizer demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Granular synthesizer demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -33,6 +37,7 @@ namespace Appalachia.Audio
             Color c1,
             Color c2,
             Color c3,
+
             // ReSharper disable once UnusedParameter.Local
             float labeloffset,
             float rofs,
@@ -107,7 +112,9 @@ namespace Appalachia.Audio
 
             r = AudioCurveRendering.BeginCurveFrame(r);
 
-            if ((evtType == EventType.MouseDown) && r.Contains(evt.mousePosition) && (evt.button == 0))
+            if ((evtType == EventType.MouseDown) &&
+                r.Contains(evt.mousePosition) &&
+                (evt.button == 0))
             {
                 float ofs, rofs;
                 plugin.GetFloatParameter(DragParams[(int) DragOperation.Offset],       out ofs);
@@ -141,7 +148,11 @@ namespace Appalachia.Audio
                     float value;
                     plugin.GetFloatParameter(DragParams[(int) dragOperation], out value);
                     value = Mathf.Clamp(
-                        value + ((dragOperation == DragOperation.RandomOffset ? -evt.delta.x : evt.delta.x) * 0.001f),
+                        value +
+                        ((dragOperation == DragOperation.RandomOffset
+                             ? -evt.delta.x
+                             : evt.delta.x) *
+                         0.001f),
                         0.0f,
                         1.0f
                     );
@@ -173,7 +184,10 @@ namespace Appalachia.Audio
                 float wlen;
                 plugin.GetFloatParameter(DragParams[(int) DragOperation.WindowLen], out wlen);
                 float rwlen;
-                plugin.GetFloatParameter(DragParams[(int) DragOperation.RandomWindowLen], out rwlen);
+                plugin.GetFloatParameter(
+                    DragParams[(int) DragOperation.RandomWindowLen],
+                    out rwlen
+                );
                 float shape;
                 plugin.GetFloatParameter("Shape", out shape);
                 float useSample;
@@ -226,7 +240,8 @@ namespace Appalachia.Audio
                 GUIHelpers.DrawLine(x3, r.y, x3, r.y + r.height, m_Wave3Color);
                 GUIHelpers.DrawLine(x4, r.y, x4, r.y + r.height, m_Wave4Color);
 
-                var name = "Sample: " + Marshal.PtrToStringAnsi(Granulator_GetSampleName((int) useSample));
+                var name = "Sample: " +
+                           Marshal.PtrToStringAnsi(Granulator_GetSampleName((int) useSample));
                 GUIHelpers.DrawText(r2.x + 5, r2.y - 5, r2.width, name, Color.white);
             }
 

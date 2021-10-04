@@ -8,7 +8,8 @@ namespace Appalachia.Audio
     {
         public override string Name => "Demo ModalFilter";
 
-        public override string Description => "Modal filter demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Modal filter demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -28,12 +29,15 @@ namespace Appalachia.Audio
             var one = new ComplexD(1.0f,  0.0f);
             AudioCurveRendering.AudioCurveEvaluator d = delegate(float x)
             {
-                var w = ComplexD.Exp(wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true));
+                var w = ComplexD.Exp(
+                    wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true)
+                );
                 var h = zero;
                 var num = numModes * 3;
                 for (var n = 0; n < num; n += 3)
                 {
-                    h += (coeffs[n] * (one - (w * w))) / ((w * ((w * coeffs[n + 2]) + coeffs[n + 1])) + 1.0);
+                    h += (coeffs[n] * (one - (w * w))) /
+                         ((w * ((w * coeffs[n + 2]) + coeffs[n + 1])) + 1.0);
                 }
 
                 var mag = 10.0 * Math.Log10(h.Mag2());
@@ -75,10 +79,13 @@ namespace Appalachia.Audio
                 var useLogScale = false;
 
                 float numModes = 0;
-                if (plugin.GetFloatParameter("Num modes", out numModes) && (numModes > 0) && (numModes < 1000))
+                if (plugin.GetFloatParameter("Num modes", out numModes) &&
+                    (numModes > 0) &&
+                    (numModes < 1000))
                 {
                     float[] coeffs;
-                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int) numModes * 3) && (coeffs != null))
+                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int) numModes * 3) &&
+                        (coeffs != null))
                     {
                         // Draw filled curve
                         DrawFilterCurve(
@@ -110,10 +117,32 @@ namespace Appalachia.Audio
                     float[] spec;
 
                     plugin.GetFloatBuffer("InputSpec", out spec, specLen);
-                    DrawSpectrum(r, useLogScale, spec, dbRange, samplerate, 0.3f, 1.0f, 0.3f, 0.5f * blend, spectrumOffset);
+                    DrawSpectrum(
+                        r,
+                        useLogScale,
+                        spec,
+                        dbRange,
+                        samplerate,
+                        0.3f,
+                        1.0f,
+                        0.3f,
+                        0.5f * blend,
+                        spectrumOffset
+                    );
 
                     plugin.GetFloatBuffer("OutputSpec", out spec, specLen);
-                    DrawSpectrum(r, useLogScale, spec, dbRange, samplerate, 1.0f, 0.3f, 0.3f, 0.5f * blend, spectrumOffset);
+                    DrawSpectrum(
+                        r,
+                        useLogScale,
+                        spec,
+                        dbRange,
+                        samplerate,
+                        1.0f,
+                        0.3f,
+                        0.3f,
+                        0.5f * blend,
+                        spectrumOffset
+                    );
                 }
             }
 

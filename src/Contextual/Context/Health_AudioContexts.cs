@@ -8,6 +8,6 @@ namespace Appalachia.Audio.Contextual.Context
         Overheated = 30,
         Wounded = 40,
         Dying = 50,
-        Scared = 60,
+        Scared = 60
     }
 }

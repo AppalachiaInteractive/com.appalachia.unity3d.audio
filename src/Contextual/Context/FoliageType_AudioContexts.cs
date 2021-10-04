@@ -4,8 +4,7 @@ namespace Appalachia.Audio.Contextual.Context
     {
         None = 0,
         Green = 10,
-        Dry = 20, 
-        Snapping = 30,
-        
+        Dry = 20,
+        Snapping = 30
     }
 }

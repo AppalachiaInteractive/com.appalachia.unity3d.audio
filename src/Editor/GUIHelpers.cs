@@ -23,7 +23,11 @@ namespace Appalachia.Audio
         );
 
         // Maps from normalized frequency to real frequency
-        public static double MapNormalizedFrequency(double f, double sr, bool useLogScale, bool forward)
+        public static double MapNormalizedFrequency(
+            double f,
+            double sr,
+            bool useLogScale,
+            bool forward)
         {
             var maxFreq = 0.5 * sr;
             if (useLogScale)
@@ -67,11 +71,15 @@ namespace Appalachia.Audio
 
         public static void DrawLine(float x1, float y1, float x2, float y2, Color col)
         {
-            UnityEditor.Handles.color = col;
-            UnityEditor.Handles.DrawLine(new Vector3(x1, y1, 0), new Vector3(x2, y2, 0));
+            Handles.color = col;
+            Handles.DrawLine(new Vector3(x1, y1, 0), new Vector3(x2, y2, 0));
         }
 
-        public static void DrawFrequencyTickMarks(Rect r, float samplerate, bool logScale, Color col)
+        public static void DrawFrequencyTickMarks(
+            Rect r,
+            float samplerate,
+            bool logScale,
+            Color col)
         {
             textStyle10.normal.textColor = col;
             float px = r.x, w = 60.0f;
@@ -84,7 +92,9 @@ namespace Appalachia.Audio
                     EditorGUI.DrawRect(new Rect(x, r.yMax - 5f, 1f, 5f), col);
                     GUI.Label(
                         new Rect(x, r.yMax - 22f, 1, 15f),
-                        f < 1000.0f ? string.Format("{0:F0} Hz", f) : string.Format("{0:F1} kHz", f * 0.001f),
+                        f < 1000.0f
+                            ? string.Format("{0:F0} Hz",  f)
+                            : string.Format("{0:F1} kHz", f * 0.001f),
                         textStyle10
                     );
                     px = x;
@@ -105,7 +115,9 @@ namespace Appalachia.Audio
 
                     EditorGUI.DrawRect(new Rect(x, r.y, 1f, r.height), lineColor);
 
-                    var text = t0 > -1.0f ? string.Format("{0:F0} ms", t0 * 1000.0f) : string.Format("{0:F1} s", t0);
+                    var text = t0 > -1.0f
+                        ? string.Format("{0:F0} ms", t0 * 1000.0f)
+                        : string.Format("{0:F1} s",  t0);
                     GUI.Label(new Rect(x, r.y, 1f, 15f), text, textStyle10);
 
                     px = x;
@@ -113,7 +125,12 @@ namespace Appalachia.Audio
             }
         }
 
-        public static void DrawDbTickMarks(Rect r, float yoffset, float yscale, Color textColor, Color lineColor)
+        public static void DrawDbTickMarks(
+            Rect r,
+            float yoffset,
+            float yscale,
+            Color textColor,
+            Color lineColor)
         {
             textStyle10RightAligned.normal.textColor = textColor;
             float py = 10000.0f, h = 30, sy = 0.5f * r.height * yscale, cy = r.y + sy;

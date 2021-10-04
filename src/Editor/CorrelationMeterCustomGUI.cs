@@ -11,7 +11,8 @@ namespace Appalachia.Audio
 
         public override string Name => "Demo CorrelationMeter";
 
-        public override string Description => "Correlation meter demo plugin for Unity's audio plugin system";
+        public override string Description =>
+            "Correlation meter demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -56,10 +57,10 @@ namespace Appalachia.Audio
                 scale *= cr;
 
                 var lineTint = 0.5f;
-                UnityEditor.Handles.color = new Color(lineTint, lineTint, lineTint, 0.75f);
-                UnityEditor.Handles.DrawAAPolyLine(2.0f, coord1.Length, coord1);
-                UnityEditor.Handles.DrawAAPolyLine(2.0f, coord2.Length, coord2);
-                UnityEditor.Handles.DrawAAPolyLine(2.0f, circle.Length, circle);
+                Handles.color = new Color(lineTint, lineTint, lineTint, 0.75f);
+                Handles.DrawAAPolyLine(2.0f, coord1.Length, coord1);
+                Handles.DrawAAPolyLine(2.0f, coord2.Length, coord2);
+                Handles.DrawAAPolyLine(2.0f, circle.Length, circle);
 
                 HandleUtilityWrapper.handleWireMaterial.SetPass(0);
                 GL.Begin(GL.LINES);
@@ -72,7 +73,10 @@ namespace Appalachia.Audio
                 {
                     var px = cx + (scale * corr[n * 2]);
                     var py = cy - (scale * corr[(n * 2) + 1]);
-                    if ((px >= r.x) && (py >= r.y) && (px < (r.x + r.width)) && (py < (r.y + r.height)))
+                    if ((px >= r.x) &&
+                        (py >= r.y) &&
+                        (px < (r.x + r.width)) &&
+                        (py < (r.y + r.height)))
                     {
                         GL.Color(Color.Lerp(col1, col2, n * cs));
                         GL.Vertex3(px, py - 1.0f, 0.0f);

@@ -123,7 +123,12 @@ namespace Appalachia.Audio.Components
                 {
                     if (!emitter.patches[index].hasTimings)
                     {
-                        Synthesizer.KeyOn(emitter.patches[index], emitter.auxiliary.source, 0f, emitter.volume);
+                        Synthesizer.KeyOn(
+                            emitter.patches[index],
+                            emitter.auxiliary.source,
+                            0f,
+                            emitter.volume
+                        );
                     }
                 }
                 else
@@ -145,7 +150,15 @@ namespace Appalachia.Audio.Components
 
                     float v;
                     UpdateModVolume(out v, 1000f);
-                    keyHandle = Synthesizer.KeyOn(out looping, emitter.patches[index], t, p, 0f, emitter.volume, v);
+                    keyHandle = Synthesizer.KeyOn(
+                        out looping,
+                        emitter.patches[index],
+                        t,
+                        p,
+                        0f,
+                        emitter.volume,
+                        v
+                    );
                 }
             }
 

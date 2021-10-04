@@ -5,6 +5,6 @@ namespace Appalachia.Audio.Contextual.Context
         Normal = 0,
         Wet = 10,
         Snow = 20,
-        Frozen = 30,
+        Frozen = 30
     }
 }

@@ -10,8 +10,8 @@ namespace Appalachia.Audio.Components
 {
     public static class Sequencer
     {
-        public static List<Cue> activeCues0 = new List<Cue>(64);
-        public static List<Cue> activeCues1 = new List<Cue>(64);
+        public static List<Cue> activeCues0 = new(64);
+        public static List<Cue> activeCues1 = new(64);
 
         public static void Reset()
         {
@@ -31,7 +31,10 @@ namespace Appalachia.Audio.Components
             return c.cueHandle;
         }
 
-        public static void CueOut(uint handle, float release = 0f, EnvelopeMode mode = EnvelopeMode.None)
+        public static void CueOut(
+            uint handle,
+            float release = 0f,
+            EnvelopeMode mode = EnvelopeMode.None)
         {
             for (var x = activeCues0.GetEnumerator(); x.MoveNext();)
             {

@@ -4,6 +4,6 @@ namespace Appalachia.Audio.Contextual.Context
     {
         Normal = 0,
         Slow = 10,
-        Fast = 20,
+        Fast = 20
     }
 }

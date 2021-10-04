@@ -9,22 +9,32 @@ using Appalachia.Core.Collections.NonSerialized;
 namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
-    public abstract class AudioContextCollection2<TEnumPrimary, TEnumSecondary, T> : AudioContextCollection<AudioContext2, AudioContextParameters2, T>
+    public abstract class
+        AudioContextCollection2<TEnumPrimary, TEnumSecondary, T> : AudioContextCollection<
+            AudioContext2, AudioContextParameters2, T>
         where TEnumPrimary : Enum
         where TEnumSecondary : Enum
         where T : AudioContextCollection2<TEnumPrimary, TEnumSecondary, T>
     {
-        [NonSerialized] private NonSerializedAppaLookup2<TEnumPrimary, TEnumSecondary, AudioContext2> index;
+        [NonSerialized]
+        private NonSerializedAppaLookup2<TEnumPrimary, TEnumSecondary, AudioContext2> index;
 
         protected override void AddOrUpdate(AudioContext2 context)
         {
             context.parameters.primary.type = typeof(TEnumPrimary);
             context.parameters.secondary.type = typeof(TEnumSecondary);
-            
-            index.AddOrUpdate((TEnumPrimary) (object) context.parameters.primary, (TEnumSecondary) (object) context.parameters.secondary, context);
+
+            index.AddOrUpdate(
+                (TEnumPrimary) (object) context.parameters.primary,
+                (TEnumSecondary) (object) context.parameters.secondary,
+                context
+            );
         }
 
-        public ContextualAudioPatch GetBest(TEnumPrimary primary, TEnumSecondary secondary, out bool successful)
+        public ContextualAudioPatch GetBest(
+            TEnumPrimary primary,
+            TEnumSecondary secondary,
+            out bool successful)
         {
             if (index == null)
             {
@@ -35,7 +45,8 @@ namespace Appalachia.Audio.Contextual.Context.Collections
                 primary,
                 secondary,
                 out var context,
-                si => Equals((TEnumPrimary) (object) si.parameters.primary.value, primary) && si.defaultFallback,
+                si => Equals((TEnumPrimary) (object) si.parameters.primary.value, primary) &&
+                      si.defaultFallback,
                 $"No context patch found for [{primary}, {secondary}].",
                 $"No fallback context patch found for [{primary}, {secondary}]."
             );
@@ -49,7 +60,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
                 return defaultPatch;
             }
-            
+
             return context.patch;
         }
     }
