@@ -1,13 +1,13 @@
 using Appalachia.Audio.Components;
 using Appalachia.Audio.Contextual.Context.Collections;
 using Appalachia.Audio.Contextual.Context.Contexts;
-using Appalachia.Base.Behaviours;
+using Appalachia.Core.Behaviours;
 using UnityEngine;
 
 namespace Appalachia.Audio.Contextual.Execution
 {
     [DisallowMultipleComponent]
-    public abstract class AudioExecutionManagerBehaviour<T> : InternalMonoBehaviour
+    public abstract class AudioExecutionManagerBehaviour<T> : AppalachiaMonoBehaviour
         where T : AudioExecutionManagerBehaviour<T>
     {
         protected void HandleExecution<TProcessor, TCollection, TContext, TParams>(

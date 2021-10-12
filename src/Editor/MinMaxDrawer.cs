@@ -64,5 +64,5 @@ namespace Appalachia.Audio
                 }
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

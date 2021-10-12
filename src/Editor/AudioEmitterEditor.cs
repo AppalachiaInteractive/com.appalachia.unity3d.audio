@@ -1,4 +1,5 @@
 using Appalachia.Audio.Components;
+using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -50,12 +51,12 @@ namespace Appalachia.Audio
                 }
             }
 
-            [MenuItem("Appalachia.Core.Audio/GameObject/Audio Emitter")]
+            [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioEmitter))]
             private static void CreateAudioEmitter()
             {
                 var o = new GameObject("Audio Emitter");
                 o.AddComponent<AudioEmitter>();
-
+                
                 var p = Selection.activeGameObject;
                 if ((p != null) && !AssetDatabase.IsMainAsset(p) && !AssetDatabase.IsSubAsset(p))
                 {
@@ -74,5 +75,5 @@ namespace Appalachia.Audio
                 GUI.color = oldColor;
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

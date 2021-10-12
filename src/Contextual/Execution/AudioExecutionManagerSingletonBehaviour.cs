@@ -1,7 +1,7 @@
 using Appalachia.Audio.Components;
 using Appalachia.Audio.Contextual.Context.Collections;
 using Appalachia.Audio.Contextual.Context.Contexts;
-using Appalachia.Base.Behaviours;
+using Appalachia.Core.Behaviours;
 using UnityEngine;
 
 namespace Appalachia.Audio.Contextual.Execution

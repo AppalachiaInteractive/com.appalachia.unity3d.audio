@@ -14,4 +14,4 @@ namespace Appalachia.Audio.Utilities
         public static float plusMinusOne => next * denominator;
         public static float zeroToOne => (plusMinusOne + 1f) * 0.5f;
     }
-} // Appalachia.Core.Audio
+} 

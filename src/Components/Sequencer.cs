@@ -82,4 +82,4 @@ namespace Appalachia.Audio.Components
             activeCues1.Clear();
         }
     }
-} // Appalachia.Core.Audio
+} 

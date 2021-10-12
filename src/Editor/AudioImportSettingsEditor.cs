@@ -9,8 +9,8 @@ namespace Appalachia.Audio
 {
     namespace Editor
     {
-        [CustomEditor(typeof(ImportSettings))]
-        public class ImportSettingsEditor : UnityEditor.Editor
+        [CustomEditor(typeof(AudioImportSettings))]
+        public class AudioImportSettingsEditor : UnityEditor.Editor
         {
             public static readonly Dictionary<string, int> overridesTable = new();
 
@@ -176,10 +176,7 @@ namespace Appalachia.Audio
 
             public override void OnInspectorGUI()
             {
-                var rootProperty = serializedObject.FindProperty("root");
-
                 GUI.color = ColorizeDrawer.GetColor(0);
-                GUI.enabled = Directory.Exists(rootProperty.stringValue);
 
                 if (GUILayout.Button("Apply"))
                 {
@@ -192,7 +189,7 @@ namespace Appalachia.Audio
                         overrideProperty => { }
                     );
                     AssetDatabase.ImportAsset(
-                        rootProperty.stringValue,
+                        AudioImportSettings.instance.AssetPath,
                         ImportAssetOptions.ForceUpdate | ImportAssetOptions.ImportRecursive
                     );
                     overridesTable.Clear();
@@ -204,7 +201,6 @@ namespace Appalachia.Audio
                 DrawLine();
 
                 GUI.color = ColorizeDrawer.GetColor(1);
-                EditorGUILayout.PropertyField(rootProperty);
 
                 const int w = 40;
 
@@ -413,5 +409,5 @@ namespace Appalachia.Audio
 
             private delegate void EndFunction(SerializedProperty overrideProperty);
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

@@ -21,7 +21,7 @@ namespace Appalachia.Audio
                 }
             }
 
-            [PreferenceItem("Appalachia.Core.Audio")]
+            [PreferenceItem("Appalachia/Audio")]
             private static void OnPrefsGUI()
             {
                 InitPrefs();
@@ -164,5 +164,5 @@ namespace Appalachia.Audio
                 }
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

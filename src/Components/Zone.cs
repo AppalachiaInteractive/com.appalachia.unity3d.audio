@@ -274,4 +274,4 @@ namespace Appalachia.Audio.Components
         }
 #endif
     }
-} // Appalachia.Core.Audio
+} 

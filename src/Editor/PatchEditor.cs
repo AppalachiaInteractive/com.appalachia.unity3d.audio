@@ -54,7 +54,7 @@ namespace Appalachia.Audio
 
             private void DrawAudioProgramInspectorGUI(AudioProgram a)
             {
-                AudioClip c = null;
+                AudioClip c;
 
                 GUILayout.BeginHorizontal();
                 GUI.color = new Color(0.75f, 1.00f, 0.75f);
@@ -158,5 +158,5 @@ namespace Appalachia.Audio
                 GUILayout.Space(16);
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

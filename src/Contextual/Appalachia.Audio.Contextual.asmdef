@@ -1,22 +1,22 @@
 {
-    "name": "Appalachia.Audio.Contextual",
-    "rootNamespace": "",
-    "references": [
-        "GUID:27374ac3d2df75c448adb0e319b58fee",
-        "GUID:195705ddaa6fe6c42a576177c5d36a5c",
-        "GUID:a15d55b77c0da1b42af8372f5619c965",
-        "GUID:873f913f34eb2c34385d17b9a87f21b9",
-        "GUID:06d89ef463696534486384c7cc9fab96",
-        "GUID:55480544bf2803d4b8897bbc17b67656",
-        "GUID:cf75d8bea22d8fb469a2aa239cfc6930"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "Appalachia.Audio.Contextual",
+  "rootNamespace": "",
+  "references": [
+    "GUID:27374ac3d2df75c448adb0e319b58fee",
+    "GUID:4a600fa6fa2ca854b8f233a23710b315",
+    "GUID:195705ddaa6fe6c42a576177c5d36a5c",
+    "GUID:873f913f34eb2c34385d17b9a87f21b9",
+    "GUID:06d89ef463696534486384c7cc9fab96",
+    "GUID:a15d55b77c0da1b42af8372f5619c965",
+    "GUID:55480544bf2803d4b8897bbc17b67656"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

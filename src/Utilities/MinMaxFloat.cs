@@ -24,4 +24,4 @@ namespace Appalachia.Audio.Utilities
             return Mathf.Clamp(v, min, max);
         }
     }
-} // Appalachia.Core.Audio
+} 

@@ -41,4 +41,4 @@ namespace Appalachia.Audio.Components
             }
         }
     }
-} // Appalachia.Core.Audio
+} 

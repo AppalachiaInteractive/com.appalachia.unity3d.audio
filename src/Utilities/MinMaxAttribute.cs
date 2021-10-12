@@ -14,4 +14,4 @@ namespace Appalachia.Audio.Utilities
             max = nv;
         }
     }
-} // Appalachia.Core.Audio
+} 

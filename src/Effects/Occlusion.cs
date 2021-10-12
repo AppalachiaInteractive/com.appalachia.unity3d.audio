@@ -125,4 +125,4 @@ namespace Appalachia.Audio.Effects
                                                (1f - _current));
         }
     }
-} // Appalachia.Core.Audio
+} 

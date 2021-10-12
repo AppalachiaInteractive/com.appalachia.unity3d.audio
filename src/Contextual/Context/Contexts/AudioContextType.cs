@@ -1,6 +1,6 @@
 using System;
+using Appalachia.Core.Attributes.Editing;
 using Appalachia.Core.Types;
-using Appalachia.Editing.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

@@ -68,4 +68,4 @@ namespace Appalachia.Audio.Components
             return z;
         }
     }
-} // Appalachia.Core.Audio
+} 

@@ -72,5 +72,5 @@ namespace Appalachia.Audio
                 GUI.color = oldColor;
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

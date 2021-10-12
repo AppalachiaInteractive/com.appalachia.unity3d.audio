@@ -2,13 +2,14 @@
 
 using System;
 using Appalachia.Audio.Utilities;
+using Appalachia.Core.Scriptables;
 using UnityEngine;
 
 #endregion
 
 namespace Appalachia.Audio.Components
 {
-    public sealed class Patch : ScriptableObject
+    public sealed class Patch : SelfSavingScriptableObject<Patch>
     {
         [Space(10)] [Colorize] public AudioProgram program;
 
@@ -86,4 +87,4 @@ namespace Appalachia.Audio.Components
             );
         }
     }
-} // Appalachia.Core.Audio
+} 

@@ -5,25 +5,24 @@ namespace Appalachia.Audio
 {
     namespace Editor
     {
-        public class Importer : AssetPostprocessor
+        public class AudioImporter : AssetPostprocessor
         {
             protected void OnPreprocessAudio()
             {
                 int overrideIndex;
 
-                if (!ImportSettingsEditor.overridesTable.TryGetValue(assetPath, out overrideIndex))
+                if (!AudioImportSettingsEditor.overridesTable.TryGetValue(assetPath, out overrideIndex))
                 {
                     return;
                 }
 
-                var importSettings =
-                    AssetDatabase.LoadAssetAtPath<ImportSettings>(ImportSettings.path);
+                var importSettings = AudioImportSettings.instance;
                 var @override = importSettings.overrides[overrideIndex];
 
-                var importer = (AudioImporter) assetImporter;
+                var importer = (UnityEditor.AudioImporter) assetImporter;
 
-                var targets = Enum.GetNames(typeof(ImportTarget));
-                var values = (int[]) Enum.GetValues(typeof(ImportTarget));
+                var targets = Enum.GetNames(typeof(AudioImportTarget));
+                var values = (int[]) Enum.GetValues(typeof(AudioImportTarget));
 
                 for (int i = 0, n = targets.Length; i < n; ++i)
                 {
@@ -41,7 +40,7 @@ namespace Appalachia.Audio
                                 sampleRateOverride = 44100
                             };
 
-                            if (settings.target == ImportTarget.Standalone)
+                            if (settings.target == AudioImportTarget.Standalone)
                             {
                                 importer.defaultSampleSettings = sampleSettings;
                             }
@@ -54,5 +53,5 @@ namespace Appalachia.Audio
                 }
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

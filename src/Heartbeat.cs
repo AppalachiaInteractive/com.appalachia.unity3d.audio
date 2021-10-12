@@ -93,4 +93,4 @@ namespace Appalachia.Audio
             return r ? r.StopRecording() : -1;
         }
     }
-} // Appalachia.Core.Audio
+} 

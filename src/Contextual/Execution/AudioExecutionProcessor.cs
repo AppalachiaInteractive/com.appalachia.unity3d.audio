@@ -2,7 +2,7 @@ using System;
 using Appalachia.Audio.Components;
 using Appalachia.Audio.Contextual.Context.Collections;
 using Appalachia.Audio.Contextual.Context.Contexts;
-using Appalachia.Base.Behaviours;
+using Appalachia.Core.Behaviours;
 using UnityEngine;
 
 namespace Appalachia.Audio.Contextual.Execution
@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Contextual.Execution
         where TCollection : AudioContextCollection<TContext, TParams, TCollection>
         where TContext : AudioContext<TParams>
         where TParams : AudioContextParameters, new()
-        where TOwner : InternalMonoBehaviour
+        where TOwner : AppalachiaMonoBehaviour
     {
         [SerializeField] public TCollection audio;
 

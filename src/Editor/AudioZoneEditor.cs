@@ -1,5 +1,6 @@
 using System.Text;
 using Appalachia.Audio.Components;
+using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ namespace Appalachia.Audio
                 }
             }
 
-            [MenuItem("Appalachia.Core.Audio/GameObject/Audio Zone")]
+            [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioZone))]
             private static void CreateAudioZone()
             {
                 var o = new GameObject("Audio Zone");
@@ -70,7 +71,7 @@ namespace Appalachia.Audio
                 serializedObject.Update();
                 var prop = serializedObject.GetIterator();
                 var targ = (AudioZone) serializedObject.targetObject;
-                var disabled = false;
+                bool disabled;
                 if (prop.NextVisible(true))
                 {
                     do
@@ -101,9 +102,9 @@ namespace Appalachia.Audio
 
             public static void DrawZoneLabelStatic(Zone z, Vector3 p)
             {
-                if (z is AudioZone)
+                if (z is AudioZone zone)
                 {
-                    var e = AudioZone.FindEmitters((AudioZone) z);
+                    var e = AudioZone.FindEmitters(zone);
                     if (e.Length > 0)
                     {
                         var first = true;
@@ -164,5 +165,5 @@ namespace Appalachia.Audio
                 }
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

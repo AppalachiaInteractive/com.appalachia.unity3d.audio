@@ -124,4 +124,4 @@ namespace Appalachia.Audio.Effects
             return len;
         }
     }
-} // Appalachia.Core.Audio
+} 

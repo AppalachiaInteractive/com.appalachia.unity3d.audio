@@ -37,4 +37,4 @@ namespace Appalachia.Audio.Utilities
             return !a.ToBool(b);
         }
     }
-} // Appalachia.Core.Audio
+} 

@@ -1,16 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Appalachia.Audio.Components;
-using UnityEditor;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
 namespace Appalachia.Audio
 {
     namespace Editor
     {
-        public static class Factory
+        /*public static class Factory
         {
             public delegate void Initializer<X, Y>(X x, Y y);
 
@@ -107,9 +99,11 @@ namespace Appalachia.Audio
                 }
             }
 
-            [MenuItem("Assets/Create/Appalachia.Core.Audio Patch")]
+            [MenuItem(APPA_MENU.BASE_AppalachiaData + APPA_MENU.ASM_AppalachiaAudio + "Patch")]
             private static void CreateAudioProgram()
             {
+                var newInstance = Patch.CreateNew();
+                
                 Create<Patch, AudioClip>(
                     (a, c) =>
                     {
@@ -127,6 +121,6 @@ namespace Appalachia.Audio
                     }
                 );
             }
-        }
-    } // Editor
-}     // Appalachia.Core.Audio
+        }*/
+    }
+}     

@@ -1,4 +1,5 @@
 using Appalachia.Audio.Components;
+using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Appalachia.Audio
         [CustomEditor(typeof(AudioSlapback))]
         public class AudioSlapbackEditor : AudioZoneEditor
         {
-            [MenuItem("Appalachia.Core.Audio/GameObject/Audio Slapback")]
+            [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioSlapback))]
             private static void CreateAudioSlapback()
             {
                 var o = new GameObject("Audio Slapback");
@@ -72,5 +73,5 @@ namespace Appalachia.Audio
                 }
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

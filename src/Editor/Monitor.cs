@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Appalachia.Audio.Components;
+using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -85,13 +86,11 @@ namespace Appalachia.Audio
 
                 if (any)
                 {
-                    any = false;
                     DrawLine();
                 }
 
                 if (_showOcclusion)
                 {
-                    any = true;
                     DrawOcclusionGUI();
                 }
 
@@ -171,7 +170,7 @@ namespace Appalachia.Audio
                 return icon;
             }
 
-            [MenuItem("Appalachia.Core.Audio/Window/Monitor")]
+            [MenuItem(APPA_MENU.BASE_AppalachiaWindows + APPA_MENU.ASM_AppalachiaAudio + nameof(Monitor))]
             private static void Open()
             {
                 ((Monitor) GetWindow(typeof(Monitor))).Show();
@@ -806,5 +805,5 @@ namespace Appalachia.Audio
                 EditorGUILayout.EndScrollView();
             }
         }
-    } // Editor
-}     // Appalachia.Core.Audio
+    }
+}     

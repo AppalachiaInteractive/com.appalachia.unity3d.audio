@@ -2,6 +2,7 @@
 
 using System;
 using Appalachia.Audio.Utilities;
+using Appalachia.Core.Constants;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,7 +10,7 @@ using UnityEngine.Serialization;
 
 namespace Appalachia.Audio.Components
 {
-    [AddComponentMenu("Appalachia.Core.Audio/AudioEmitter")]
+    [AddComponentMenu(APPA_MENU.ASM_AppalachiaAudio + nameof(AudioEmitter))]
     public class AudioEmitter : MonoBehaviour
     {
         public enum Controller
@@ -170,4 +171,4 @@ namespace Appalachia.Audio.Components
             public Color color;
         }
     }
-} // Appalachia.Core.Audio
+} 

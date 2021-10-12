@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Appalachia.Audio.Effects;
 using Appalachia.Audio.Utilities;
 using UnityEditor;
@@ -804,21 +805,36 @@ namespace Appalachia.Audio.Components
         }
 
 #if UNITY_EDITOR
+
+        private static MethodInfo _PlayClip;
+        private static MethodInfo _StopAllClips;
+
         private static void PlayClip(AudioClip c, bool loop)
         {
-            var a = typeof(EditorApplication).Assembly;
-            var t = a.GetType("UnityEditor.AudioUtil");
-            var m = t.GetMethod("PlayClip", new[] {typeof(AudioClip), typeof(int), typeof(bool)});
-            m.Invoke(null, new object[] {c, 0, loop});
+            if (_PlayClip == null)
+            {
+                var a = typeof(EditorApplication).Assembly;
+                var t = a.GetType("UnityEditor.AudioUtil");
+                _PlayClip = t.GetMethod(
+                    "PlayClip",
+                    new[] {typeof(AudioClip), typeof(int), typeof(bool)}
+                );
+            }
+
+            _PlayClip.Invoke(null, new object[] {c, 0, loop});
         }
 
         private static void StopAllClips()
         {
-            var a = typeof(EditorApplication).Assembly;
-            var t = a.GetType("UnityEditor.AudioUtil");
-            var m = t.GetMethod("StopAllClips", new Type[0]);
-            m.Invoke(null, new object[0]);
+            if (_StopAllClips == null)
+            {
+                var a = typeof(EditorApplication).Assembly;
+                var t = a.GetType("UnityEditor.AudioUtil");
+                _StopAllClips = t.GetMethod("StopAllClips", new Type[0]);
+            }
+
+            _StopAllClips.Invoke(null, new object[0]);
         }
 #endif
     }
-} // Appalachia.Core.Audio
+} 
