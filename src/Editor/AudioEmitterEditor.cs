@@ -1,12 +1,12 @@
 using Appalachia.Audio.Components;
+using Appalachia.CI.Integration.Assets;
 using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
 namespace Appalachia.Audio
 {
-    namespace Editor
-    {
+    
         [CanEditMultipleObjects]
         [CustomEditor(typeof(AudioEmitter))]
         public class AudioEmitterEditor : UnityEditor.Editor
@@ -58,7 +58,7 @@ namespace Appalachia.Audio
                 o.AddComponent<AudioEmitter>();
                 
                 var p = Selection.activeGameObject;
-                if ((p != null) && !AssetDatabase.IsMainAsset(p) && !AssetDatabase.IsSubAsset(p))
+                if ((p != null) && !AssetDatabaseManager.IsMainAsset(p) && !AssetDatabaseManager.IsSubAsset(p))
                 {
                     o.transform.parent = p.transform;
                 }
@@ -75,5 +75,5 @@ namespace Appalachia.Audio
                 GUI.color = oldColor;
             }
         }
-    }
+    
 }     

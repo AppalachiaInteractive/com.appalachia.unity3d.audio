@@ -1,8 +1,7 @@
+/*
 namespace Appalachia.Audio
 {
-    namespace Editor
-    {
-        /*public static class Factory
+    /*public static class Factory
         {
             public delegate void Initializer<X, Y>(X x, Y y);
 
@@ -10,16 +9,16 @@ namespace Appalachia.Audio
                 where X : ScriptableObject
                 where Y : Object
             {
-                var p = AssetDatabase.GetAssetPath(Selection.activeObject);
+                var p = AssetDatabaseManager.GetAssetPath(Selection.activeObject);
                 if (string.IsNullOrEmpty(p))
                 {
                     p = ImportSettings.instance.root;
                 }
 
-                if (!Directory.Exists(p))
+                if (!AppaDirectory.Exists(p))
                 {
-                    p = Path.GetDirectoryName(p);
-                    if (!Directory.Exists(p))
+                    p = AppaPath.GetDirectoryName(p);
+                    if (!AppaDirectory.Exists(p))
                     {
                         p = "Assets";
                     }
@@ -28,7 +27,7 @@ namespace Appalachia.Audio
                 var l = new List<Y>();
                 foreach (var i in Selection.objects)
                 {
-                    if (i is Y && (AssetDatabase.IsMainAsset(i) || AssetDatabase.IsSubAsset(i)))
+                    if (i is Y && (AssetDatabaseManager.IsMainAsset(i) || AssetDatabaseManager.IsSubAsset(i)))
                     {
                         l.Add((Y) i);
                     }
@@ -71,13 +70,13 @@ namespace Appalachia.Audio
                     }
                 }
 
-                p = AssetDatabase.GenerateUniqueAssetPath(
-                    Path.Combine(p, r != "" ? r : string.Format("New {0}.asset", typeof(X).Name))
+                p = AssetDatabaseManager.GenerateUniqueAssetPath(
+                    AppaPath.Combine(p, r != "" ? r : string.Format("New {0}.asset", typeof(X).Name))
                 );
                 p = EditorUtility.SaveFilePanel(
                     string.Format("Save {0} Asset", typeof(X).Name),
-                    Path.GetDirectoryName(p),
-                    Path.GetFileName(p),
+                    AppaPath.GetDirectoryName(p),
+                    AppaPath.GetFileName(p),
                     "asset"
                 );
                 if (!string.IsNullOrEmpty(p))
@@ -94,7 +93,7 @@ namespace Appalachia.Audio
                         init(x, i);
                     }
 
-                    AssetDatabase.CreateAsset(x, p);
+                    AssetDatabaseManager.CreateAsset(x, p);
                     EditorGUIUtility.PingObject(x);
                 }
             }
@@ -121,6 +120,7 @@ namespace Appalachia.Audio
                     }
                 );
             }
-        }*/
-    }
-}     
+        }#1#
+}
+
+*/

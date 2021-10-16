@@ -1,17 +1,17 @@
 {
-  "name": "Appalachia.Audio",
-  "rootNamespace": "",
-  "references": [
-    "GUID:01789cac4a2597b458bedef85a39c3f2",
-    "GUID:a15d55b77c0da1b42af8372f5619c965"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Appalachia.Audio",
+    "rootNamespace": "",
+    "references": [
+        "GUID:01789cac4a2597b458bedef85a39c3f2",
+        "GUID:a15d55b77c0da1b42af8372f5619c965"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

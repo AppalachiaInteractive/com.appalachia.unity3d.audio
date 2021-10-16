@@ -2,8 +2,8 @@
 #region
 
 using System;
-using Appalachia.Core.Base.ScriptableObjects;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Core.Scriptables;
+using Appalachia.Core.Attributes;
 using Sirenix.OdinInspector;
 
 #endregion

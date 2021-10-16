@@ -152,4 +152,4 @@ namespace Appalachia.Audio.Components
             [Range(-1, 1)] public float gain;
         }
     }
-} 
+}

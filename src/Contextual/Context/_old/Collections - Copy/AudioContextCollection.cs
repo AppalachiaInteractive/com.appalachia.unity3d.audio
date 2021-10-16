@@ -3,8 +3,8 @@
 
 using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Contexts;
 using Appalachia.Core.Audio;
-using Appalachia.Core.Base.ScriptableObjects;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Core.Scriptables;
+using Appalachia.Core.Attributes;
 using Sirenix.OdinInspector;
 
 #endregion

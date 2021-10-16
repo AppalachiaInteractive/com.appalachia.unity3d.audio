@@ -58,4 +58,4 @@ namespace Appalachia.Audio.Components
             public bool forever;
         }
     }
-} 
+}

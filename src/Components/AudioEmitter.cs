@@ -171,4 +171,4 @@ namespace Appalachia.Audio.Components
             public Color color;
         }
     }
-} 
+}

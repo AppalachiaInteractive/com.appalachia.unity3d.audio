@@ -1,21 +1,25 @@
 {
-  "name": "Appalachia.Audio.Editor",
-  "rootNamespace": "",
-  "references": [
-    "GUID:27374ac3d2df75c448adb0e319b58fee",
-    "GUID:01789cac4a2597b458bedef85a39c3f2",
-    "GUID:a15d55b77c0da1b42af8372f5619c965",
-    "GUID:15a8a4345cdb8584c9a4bab175bd5ded"
-  ],
-  "includePlatforms": [
-    "Editor"
-  ],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Appalachia.Audio.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:27374ac3d2df75c448adb0e319b58fee",
+        "GUID:56ca8901b63fd204692a4a27f67b605e",
+        "GUID:01789cac4a2597b458bedef85a39c3f2",
+        "GUID:a15d55b77c0da1b42af8372f5619c965",
+        "GUID:15a8a4345cdb8584c9a4bab175bd5ded",
+        "GUID:53c314c6d5379534e87ce0066f9abb79"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Sirenix.OdinInspector.Editor.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

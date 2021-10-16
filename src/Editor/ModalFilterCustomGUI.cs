@@ -78,7 +78,7 @@ namespace Appalachia.Audio
 
                 var useLogScale = false;
 
-                float numModes = 0;
+                float numModes;
                 if (plugin.GetFloatParameter("Num modes", out numModes) &&
                     (numModes > 0) &&
                     (numModes < 1000))

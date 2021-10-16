@@ -2,7 +2,7 @@
 #region
 
 using System;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Core.Attributes;
 
 #endregion
 

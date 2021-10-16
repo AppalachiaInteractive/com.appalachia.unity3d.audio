@@ -106,7 +106,7 @@ namespace Appalachia.Audio.Components
                 bufferTarget = bufferSizeUp;
                 maxStepTarget = maxStepUp * Time.deltaTime;
             }
-            else if (value == last)
+            else if (Math.Abs(value - last) < float.Epsilon)
             {
             }
             else

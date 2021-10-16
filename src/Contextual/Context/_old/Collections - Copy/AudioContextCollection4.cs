@@ -6,7 +6,7 @@ using Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Contexts;
 using Appalachia.Core.Audio;
 using Appalachia.Core.Collections.Indexed;
 using Appalachia.Core.Collections;
-using Appalachia.Core.Editing.Attributes;
+using Appalachia.Core.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

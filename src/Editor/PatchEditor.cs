@@ -6,157 +6,154 @@ using UnityEngine;
 
 namespace Appalachia.Audio
 {
-    namespace Editor
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(Patch))]
+    public class PatchEditor : UnityEditor.Editor
     {
-        [CanEditMultipleObjects]
-        [CustomEditor(typeof(Patch))]
-        public class PatchEditor : UnityEditor.Editor
+        private bool _foldout;
+        private string _played;
+        private float _random;
+        private float[] _weights;
+
+        public override void OnInspectorGUI()
         {
-            private bool _foldout;
-            private string _played;
-            private float _random;
-            private float[] _weights;
+            var a = (Patch) target;
 
-            public override void OnInspectorGUI()
+            ColorizeDrawer.Reset();
+            DrawDefaultInspector();
+            GUILayout.Space(16);
+
+            if (GUILayout.Button("Set Clips To Selected"))
             {
-                var a = (Patch) target;
+                var assets = Selection.GetFiltered(typeof(AudioClip), SelectionMode.Assets);
+                Array.Sort(assets, (x, y) => string.Compare(x.name, y.name));
+                a.program.clips = new AudioProgram.AudioClipParams[assets.Length];
 
-                ColorizeDrawer.Reset();
-                DrawDefaultInspector();
-                GUILayout.Space(16);
-
-                if (GUILayout.Button("Set Clips To Selected"))
+                for (int i = 0, n = assets.Length; i < n; ++i)
                 {
-                    var assets = Selection.GetFiltered(typeof(AudioClip), SelectionMode.Assets);
-                    Array.Sort(assets, (x, y) => string.Compare(x.name, y.name));
-                    a.program.clips = new AudioProgram.AudioClipParams[assets.Length];
-
-                    for (int i = 0, n = assets.Length; i < n; ++i)
-                    {
-                        a.program.clips[i] =
-                            new AudioProgram.AudioClipParams {clip = (AudioClip) assets[i]};
-                    }
-                }
-
-                GUILayout.Space(16);
-
-                if ((a.sequence != null) &&
-                    (a.sequence.timing != null) &&
-                    (a.sequence.timing.Length > 0))
-                {
-                    DrawAudioSequenceInspectorGUI(a);
-                }
-                else if (a.program != null)
-                {
-                    DrawAudioProgramInspectorGUI(a.program);
+                    a.program.clips[i] =
+                        new AudioProgram.AudioClipParams {clip = (AudioClip) assets[i]};
                 }
             }
 
-            private void DrawAudioProgramInspectorGUI(AudioProgram a)
-            {
-                AudioClip c;
+            GUILayout.Space(16);
 
-                GUILayout.BeginHorizontal();
-                GUI.color = new Color(0.75f, 1.00f, 0.75f);
-                if (GUILayout.Button("\u25b6"))
+            if ((a.sequence != null) &&
+                (a.sequence.timing != null) &&
+                (a.sequence.timing.Length > 0))
+            {
+                DrawAudioSequenceInspectorGUI(a);
+            }
+            else if (a.program != null)
+            {
+                DrawAudioProgramInspectorGUI(a.program);
+            }
+        }
+
+        private void DrawAudioProgramInspectorGUI(AudioProgram a)
+        {
+            AudioClip c;
+
+            GUILayout.BeginHorizontal();
+            GUI.color = new Color(0.75f, 1.00f, 0.75f);
+            if (GUILayout.Button("\u25b6"))
+            {
+                float gain;
+                if (a.randomize)
                 {
-                    float gain;
-                    if (a.randomize)
+                    _random = Randomizer.zeroToOne;
+                    a.weighted.count = a.clips.Length;
+                    _weights = (float[]) a.weighted.weights.Clone();
+                    c = a.GetClip(_random, out gain);
+                }
+                else
+                {
+                    c = a.GetClip(out gain);
+                }
+
+                if (c != null)
+                {
+                    _played = c.name;
+                    Synthesizer.KeyOn(
+                        null,
+                        c,
+                        a.audioParameters,
+                        null,
+                        new Vector3(),
+                        1f + gain
+                    );
+                }
+            }
+
+            GUI.color = new Color(1.00f, 0.75f, 0.75f);
+            if (GUILayout.Button("\u2585"))
+            {
+                Synthesizer.StopAll();
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.Space(16);
+
+            GUI.color = Color.white;
+            _foldout = EditorGUILayout.Foldout(_foldout, "Randomization");
+            if (_foldout && (_weights != null))
+            {
+                float s = 0;
+                for (int i = 0, n = _weights.Length; i < n; ++i)
+                {
+                    s += _weights[i];
+                }
+
+                var t = _random * s;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(s.ToString("N2"));
+                GUILayout.Label(t.ToString("N2"));
+                GUILayout.Label("\t");
+                GUILayout.EndHorizontal();
+                for (int i = 0, n = _weights.Length; i < n; ++i)
+                {
+                    if (t >= _weights[i])
                     {
-                        _random = Randomizer.zeroToOne;
-                        a.weighted.count = a.clips.Length;
-                        _weights = (float[]) a.weighted.weights.Clone();
-                        c = a.GetClip(_random, out gain);
+                        GUI.color = Color.white;
+                    }
+                    else if (a.clips[i].clip.name == _played)
+                    {
+                        GUI.color = Color.green;
                     }
                     else
                     {
-                        c = a.GetClip(out gain);
+                        GUI.color = Color.gray;
                     }
 
-                    if (c != null)
-                    {
-                        _played = c.name;
-                        Synthesizer.KeyOn(
-                            null,
-                            c,
-                            a.audioParameters,
-                            null,
-                            new Vector3(),
-                            1f + gain
-                        );
-                    }
-                }
-
-                GUI.color = new Color(1.00f, 0.75f, 0.75f);
-                if (GUILayout.Button("\u2585"))
-                {
-                    Synthesizer.StopAll();
-                }
-
-                GUILayout.EndHorizontal();
-                GUILayout.Space(16);
-
-                GUI.color = Color.white;
-                _foldout = EditorGUILayout.Foldout(_foldout, "Randomization");
-                if (_foldout && (_weights != null))
-                {
-                    float s = 0;
-                    for (int i = 0, n = _weights.Length; i < n; ++i)
-                    {
-                        s += _weights[i];
-                    }
-
-                    var t = _random * s;
+                    t -= _weights[i];
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label(s.ToString("N2"));
+                    GUILayout.Label(_weights[i].ToString("N2"));
                     GUILayout.Label(t.ToString("N2"));
-                    GUILayout.Label("\t");
+                    GUILayout.Label(a.clips[i].clip.name);
                     GUILayout.EndHorizontal();
-                    for (int i = 0, n = _weights.Length; i < n; ++i)
-                    {
-                        if (t >= _weights[i])
-                        {
-                            GUI.color = Color.white;
-                        }
-                        else if (a.clips[i].clip.name == _played)
-                        {
-                            GUI.color = Color.green;
-                        }
-                        else
-                        {
-                            GUI.color = Color.gray;
-                        }
-
-                        t -= _weights[i];
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label(_weights[i].ToString("N2"));
-                        GUILayout.Label(t.ToString("N2"));
-                        GUILayout.Label(a.clips[i].clip.name);
-                        GUILayout.EndHorizontal();
-                    }
                 }
-            }
-
-            private void DrawAudioSequenceInspectorGUI(Patch patch)
-            {
-                bool looping;
-
-                GUILayout.BeginHorizontal();
-                GUI.color = new Color(0.75f, 1.00f, 0.75f);
-                if (GUILayout.Button("\u25b6"))
-                {
-                    Synthesizer.KeyOn(out looping, patch);
-                }
-
-                GUI.color = new Color(1.00f, 0.75f, 0.75f);
-                if (GUILayout.Button("\u2585"))
-                {
-                    Synthesizer.StopAll();
-                }
-
-                GUILayout.EndHorizontal();
-                GUILayout.Space(16);
             }
         }
+
+        private void DrawAudioSequenceInspectorGUI(Patch patch)
+        {
+            bool looping;
+
+            GUILayout.BeginHorizontal();
+            GUI.color = new Color(0.75f, 1.00f, 0.75f);
+            if (GUILayout.Button("\u25b6"))
+            {
+                Synthesizer.KeyOn(out looping, patch);
+            }
+
+            GUI.color = new Color(1.00f, 0.75f, 0.75f);
+            if (GUILayout.Button("\u2585"))
+            {
+                Synthesizer.StopAll();
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.Space(16);
+        }
     }
-}     
+}
