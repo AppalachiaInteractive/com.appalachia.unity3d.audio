@@ -1,7 +1,7 @@
 {
   "name": "com.appalachia.unity3d.audio",
   "displayName": "Appalachia.Audio for Unity3D",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "unity": "2020.3",
   "description": "Native audio plugins for Unityles analysis of audio system output to create reactive audio components.",
   "keywords": [

@@ -12,6 +12,12 @@
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 918f2a9ba909b434cdbc0ab0affa995751444891 | 2021-10-17 | Chris Schubert | Fixing package jsons |
+
+
+ ## Tag: `v0.1.6`
+| Hash | Date | Author | Changes |
+|------|------|--------|---------|
 | fb866fd3cb0523abfd704c89d4805246678f31d6 | 2021-10-16 | Chris Schubert | More project cleanup and refactoring |
 | 5bc7395e03c6805743c969cfce8b9f9ec51f2686 | 2021-10-12 | Chris Schubert | Finishing the organization of library into the new project structure |
 
