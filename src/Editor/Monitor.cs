@@ -10,13 +10,12 @@ namespace Appalachia.Audio
 {
     public class Monitor : AppalachiaEditorWindow
     {
-        private static readonly Dictionary<string, int> _srcColors = new();
-
         private static readonly StringBuilder _builder = new(256);
         private static readonly Dictionary<int, string> _intLookup = new();
-        private static bool _showSynthesizer = true;
-        private static bool _showSequencer = true;
+        private static readonly Dictionary<string, int> _srcColors = new();
         private static bool _showOcclusion;
+        private static bool _showSequencer = true;
+        private static bool _showSynthesizer = true;
         private GUIStyle _lineStyle;
         private int _paintCount;
         private Vector3 _scrollOcclusion;
@@ -24,6 +23,12 @@ namespace Appalachia.Audio
         private Vector3 _scrollSynthesizer;
 
         private List<Synthesizer.ActiveSource> _srcInfo;
+
+        protected void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            SceneView.duringSceneGui -= OnSceneGUI;
+        }
 
         protected void OnEnable()
         {
@@ -42,22 +47,12 @@ namespace Appalachia.Audio
             SceneView.duringSceneGui += OnSceneGUI;
         }
 
-        protected void OnDisable()
-        {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            SceneView.duringSceneGui -= OnSceneGUI;
-        }
-
         protected void OnGUI()
         {
             ColorizeDrawer.Reset();
             GUILayout.BeginHorizontal();
 
-            GUILayout.BeginVertical(
-                EditorStyles.helpBox,
-                GUILayout.Width(110),
-                GUILayout.ExpandHeight(true)
-            );
+            GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(110), GUILayout.ExpandHeight(true));
             DrawToolbarGUI();
             GUILayout.EndVertical();
 
@@ -98,92 +93,6 @@ namespace Appalachia.Audio
             GUILayout.EndHorizontal();
         }
 
-        public static int GetSourceColor(string name)
-        {
-            int i;
-            _srcColors.TryGetValue(name, out i);
-            return i;
-        }
-
-        private static Texture2D GetIcon()
-        {
-            const int w = 16;
-            var p = new Color[w * w];
-            for (var i = 0; i < (w * w); ++i)
-            {
-                if (((i % w) == 0) || ((i % w) == 1))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i % w) == ((w / 2) - 1)) || ((i % w) == (w / 2)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i % w) == (w - 2)) || ((i % w) == (w - 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == 0) || ((i / w) == 1))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 1) - 1)) || ((i / w) == ((w / 4) * 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 2) - 1)) || ((i / w) == ((w / 4) * 2)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 3) - 1)) || ((i / w) == ((w / 4) * 3)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (w - 2)) || ((i / w) == (w - 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if ((i / w) < ((w / 4) * 1))
-                {
-                    p[i] = Color.green;
-                }
-                else if ((i / w) < ((w / 4) * 2))
-                {
-                    p[i] = Color.green;
-                }
-                else if ((i / w) < ((w / 4) * 3))
-                {
-                    p[i] = Color.yellow;
-                }
-                else if ((i / w) < ((w / 4) * 4))
-                {
-                    p[i] = Color.red;
-                }
-            }
-
-            var icon = new Texture2D(w, w, TextureFormat.RGBA32, false);
-            icon.hideFlags = HideFlags.HideAndDontSave;
-            icon.filterMode = FilterMode.Point;
-            icon.SetPixels(p);
-            icon.Apply();
-            return icon;
-        }
-
-        [MenuItem(APPA_MENU.BASE_AppalachiaWindows + APPA_MENU.ASM_AppalachiaAudio + nameof(Monitor))]
-        private static void Open()
-        {
-            ((Monitor) GetWindow(typeof(Monitor))).Show();
-        }
-
-        private void OnPlayModeStateChanged(PlayModeStateChange change)
-        {
-            EditorApplication.update -= Repaint;
-            if (Application.isPlaying)
-            {
-                EditorApplication.update += Repaint;
-            }
-        }
-
         protected void OnSceneGUI(SceneView sv)
         {
             if (!Heartbeat.listenerTransform)
@@ -194,222 +103,65 @@ namespace Appalachia.Audio
             var p = Heartbeat.listenerTransform.position;
             var c = Handles.color;
 
-            for (var i = Synthesizer.activeSources0.GetEnumerator(); i.MoveNext();)
+            using (var enumerator = Synthesizer.activeSources0.GetEnumerator())
             {
-                if (i.Current.keyOn <= 0f)
+                for (var i = enumerator; i.MoveNext();)
                 {
-                    var j = GetSourceColor(i.Current.info.audioSource.name);
-                    Handles.color = ColorizeDrawer.GetColor(j);
-                    var q = i.Current.info.audioSource.transform.position;
-                    var d = p - q;
-                    if (d.magnitude < 1f)
+                    if (i.Current.keyOn <= 0f)
                     {
-                        continue;
+                        var j = GetSourceColor(i.Current.info.audioSource.name);
+                        Handles.color = ColorizeDrawer.GetColor(j);
+                        var q = i.Current.info.audioSource.transform.position;
+                        var d = p - q;
+                        if (d.magnitude < 1f)
+                        {
+                            continue;
+                        }
+
+                        var e = d.normalized;
+                        Handles.DrawLine(p - (e * 0.5f), q + (e * 0.5f));
+                        Handles.ConeHandleCap(
+                            0,
+                            p - (e * 0.5f),
+                            Quaternion.LookRotation(e),
+                            0.05f,
+                            Event.current.type
+                        );
+
+                        _builder.Append("\n\n");
+                        var ac = i.Current.info.audioSource.clip;
+                        _builder.Append(ac != null ? ac.name : "??");
+                        _builder.Append(" (");
+                        _builder.Append(i.Current.patch != null ? i.Current.patch.name : "-");
+                        _builder.Append(")");
+
+                        var s = _builder.ToString();
+                        _builder.Length = 0;
+
+                        Handles.BeginGUI();
+                        var k = GUI.color;
+                        GUI.color = Handles.color;
+                        var a = p - (d * 0.5f);
+                        var x = new GUIContent(i.Current.info.audioSource.name);
+                        var y = new GUIContent(s);
+                        var l = HandleUtility.WorldPointToSizedRect(a, x, EditorStyles.boldLabel);
+                        var m = HandleUtility.WorldPointToSizedRect(a, y, EditorStyles.helpBox);
+                        var n = Mathf.Max(l.width, m.width);
+                        l.width = n;
+                        m.width = n;
+                        l.x -= m.width * 1.2f;
+                        l.y -= m.height * 0.5f;
+                        m.x = l.x - Mathf.Max(0f, m.width - l.width);
+                        m.y = l.y + 1f;
+                        EditorGUI.HelpBox(m, y.text, MessageType.None);
+                        EditorGUI.DropShadowLabel(l, x);
+                        GUI.color = k;
+                        Handles.EndGUI();
                     }
-
-                    var e = d.normalized;
-                    Handles.DrawLine(p - (e * 0.5f), q + (e * 0.5f));
-                    Handles.ConeHandleCap(
-                        0,
-                        p - (e * 0.5f),
-                        Quaternion.LookRotation(e),
-                        0.05f,
-                        Event.current.type
-                    );
-
-                    _builder.Append("\n\n");
-                    var ac = i.Current.info.audioSource.clip;
-                    _builder.Append(ac != null ? ac.name : "??");
-                    _builder.Append(" (");
-                    _builder.Append(i.Current.patch != null ? i.Current.patch.name : "-");
-                    _builder.Append(")");
-
-                    var s = _builder.ToString();
-                    _builder.Length = 0;
-
-                    Handles.BeginGUI();
-                    var k = GUI.color;
-                    GUI.color = Handles.color;
-                    var a = p - (d * 0.5f);
-                    var x = new GUIContent(i.Current.info.audioSource.name);
-                    var y = new GUIContent(s);
-                    var l = HandleUtility.WorldPointToSizedRect(a, x, EditorStyles.boldLabel);
-                    var m = HandleUtility.WorldPointToSizedRect(a, y, EditorStyles.helpBox);
-                    var n = Mathf.Max(l.width, m.width);
-                    l.width = n;
-                    m.width = n;
-                    l.x -= m.width * 1.2f;
-                    l.y -= m.height * 0.5f;
-                    m.x = l.x - Mathf.Max(0f, m.width - l.width);
-                    m.y = l.y + 1f;
-                    EditorGUI.HelpBox(m, y.text, MessageType.None);
-                    EditorGUI.DropShadowLabel(l, x);
-                    GUI.color = k;
-                    Handles.EndGUI();
                 }
             }
 
             Handles.color = c;
-        }
-
-        private void DrawToolbarGUI()
-        {
-            GUILayout.Label("Views", EditorStyles.boldLabel);
-            DrawLine();
-            _showSynthesizer = GUILayout.Toggle(_showSynthesizer, "Synthesizer");
-            _showSequencer = GUILayout.Toggle(_showSequencer,     "Sequencer");
-            _showOcclusion = GUILayout.Toggle(_showOcclusion,     "Occlusion");
-        }
-
-        private void DrawOcclusionGUI()
-        {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Mute",      EditorStyles.boldLabel, GUILayout.Width(55));
-            GUILayout.Label("Mix Group", EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label("Output",    EditorStyles.boldLabel, GUILayout.Width(55));
-            GUILayout.Label("Source",    EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label("Patch",     EditorStyles.boldLabel, GUILayout.Width(220));
-            GUILayout.Label("Function",  EditorStyles.boldLabel, GUILayout.Width(75));
-            GUILayout.Label("Distance",  EditorStyles.boldLabel, GUILayout.Width(75));
-            GUILayout.Label("Occlusion", EditorStyles.boldLabel, GUILayout.Width(75));
-            EditorGUILayout.EndHorizontal();
-
-            var i = 0;
-            var c = GUI.color;
-            Rect p;
-            _scrollOcclusion = EditorGUILayout.BeginScrollView(_scrollOcclusion);
-
-            if (Application.isPlaying)
-            {
-                _srcColors.Clear();
-                _srcInfo.Clear();
-                for (var x = Synthesizer.activeSources0.GetEnumerator(); x.MoveNext();)
-                {
-                    _srcInfo.Add(x.Current);
-                }
-
-                for (var x = Synthesizer.freeSources.GetEnumerator(); x.MoveNext();)
-                {
-                    _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
-                }
-
-                _srcInfo.Sort(
-                    (x, y) => string.CompareOrdinal(
-                        x.info.audioSource.name,
-                        y.info.audioSource.name
-                    )
-                );
-
-                var lp = Heartbeat.listenerTransform.position;
-                for (var x = _srcInfo.GetEnumerator(); x.MoveNext();)
-                {
-                    var z = x.Current;
-                    if (z.info.occlusion.occlusion.function == OcclusionFunction.None)
-                    {
-                        continue;
-                    }
-
-                    EditorGUILayout.BeginHorizontal();
-                    float v;
-                    var dis = (z.handle == 0) || (z.keyOn > 0f);
-                    {
-                        _srcColors[z.info.audioSource.name] = i;
-                        if (dis)
-                        {
-                            GUI.color = ColorizeDrawer.disabledColor;
-                        }
-                        else
-                        {
-                            GUI.color = ColorizeDrawer.GetColor(i);
-                        }
-
-                        // Mute
-                        if (z.info.audioSource != null)
-                        {
-                            z.info.audioSource.mute = EditorGUILayout.Toggle(
-                                z.info.audioSource.mute,
-                                GUILayout.Width(50)
-                            );
-                        }
-                        else
-                        {
-                            EditorGUILayout.Toggle(false, GUILayout.Width(50));
-                        }
-
-                        GUILayout.Space(5);
-
-                        // Mix Group
-                        GUILayout.Label(
-                            !dis &&
-                            z.info.audioSource &&
-                            (z.info.audioSource.outputAudioMixerGroup != null)
-                                ? z.info.audioSource.outputAudioMixerGroup.name
-                                : "(None)",
-                            GUILayout.Width(100)
-                        );
-                        GUILayout.Space(10);
-
-                        // Output
-                        GUILayout.Label(
-                            !dis && !z.info.audioSource.isVirtual ? "\u2713" : "",
-                            GUILayout.Width(50)
-                        );
-                        GUILayout.Space(5);
-
-                        // Source
-                        GUILayout.Label(
-                            !dis ? z.info.audioSource.name : "",
-                            GUILayout.Width(110)
-                        );
-
-                        // Patch
-                        GUILayout.Label(!dis ? z.patch.name : "", GUILayout.Width(220));
-
-                        // Function
-                        GUILayout.Label(
-                            !dis ? z.info.occlusion.occlusion.function.ToString() : "",
-                            GUILayout.Width(70)
-                        );
-                        GUILayout.Space(5);
-
-                        // Distance
-                        v = !dis ? (z.info.audioSource.transform.position - lp).magnitude : 0f;
-                        GUILayout.Label(v.ToString("N3"), GUILayout.Width(70));
-                        GUILayout.Space(5);
-
-                        // Occlusion
-                        p = GUILayoutUtility.GetRect(
-                            GUIContent.none,
-                            EditorStyles.label,
-                            GUILayout.Width(70)
-                        );
-                        v = !dis ? 1f - z.info.occlusion.GetCurrent() : 0f;
-                        EditorGUI.ProgressBar(p, v, v.ToString("N3"));
-                        GUILayout.Space(5);
-                    }
-
-                    EditorGUILayout.EndHorizontal();
-                    ++i;
-                }
-            }
-
-            GUI.color = c;
-            EditorGUILayout.EndScrollView();
-        }
-
-        private void DrawLine()
-        {
-            var c = GUI.color;
-            var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
-            if (Event.current.type == EventType.Repaint)
-            {
-                GUI.color = EditorGUIUtility.isProSkin
-                    ? new Color(0.157f, 0.157f, 0.157f)
-                    : new Color(0.5f,   0.5f,   0.5f);
-                _lineStyle.Draw(p, false, false, false, false);
-            }
-
-            GUI.color = c;
         }
 
         private void DrawHeader()
@@ -492,194 +244,154 @@ namespace Appalachia.Audio
             DrawLine();
         }
 
-        private void DrawSynthesizerGUI()
+        private void DrawLine()
         {
-            var shift = Event.current.shift;
+            var c = GUI.color;
+            var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUI.color = EditorGUIUtility.isProSkin
+                    ? new Color(0.157f, 0.157f, 0.157f)
+                    : new Color(0.5f,   0.5f,   0.5f);
+                _lineStyle.Draw(p, false, false, false, false);
+            }
 
+            GUI.color = c;
+        }
+
+        private void DrawOcclusionGUI()
+        {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Mute",      EditorStyles.boldLabel, GUILayout.Width(55));
             GUILayout.Label("Mix Group", EditorStyles.boldLabel, GUILayout.Width(110));
             GUILayout.Label("Output",    EditorStyles.boldLabel, GUILayout.Width(55));
             GUILayout.Label("Source",    EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label(
-                shift ? "Audio Clip" : "Patch",
-                EditorStyles.boldLabel,
-                GUILayout.Width(220)
-            );
-            GUILayout.Label("Keyed",    EditorStyles.boldLabel, GUILayout.Width(55));
-            GUILayout.Label("Time",     EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label("Envelope", EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label("Volume",   EditorStyles.boldLabel, GUILayout.Width(110));
-            GUILayout.Label("Distance", EditorStyles.boldLabel, GUILayout.Width(75));
+            GUILayout.Label("Patch",     EditorStyles.boldLabel, GUILayout.Width(220));
+            GUILayout.Label("Function",  EditorStyles.boldLabel, GUILayout.Width(75));
+            GUILayout.Label("Distance",  EditorStyles.boldLabel, GUILayout.Width(75));
+            GUILayout.Label("Occlusion", EditorStyles.boldLabel, GUILayout.Width(75));
             EditorGUILayout.EndHorizontal();
 
             var i = 0;
             var c = GUI.color;
             Rect p;
-            _scrollSynthesizer = EditorGUILayout.BeginScrollView(_scrollSynthesizer);
+            _scrollOcclusion = EditorGUILayout.BeginScrollView(_scrollOcclusion);
 
-            if (Application.isPlaying && Heartbeat.listenerTransform)
+            if (Application.isPlaying)
             {
                 _srcColors.Clear();
                 _srcInfo.Clear();
-                for (var x = Synthesizer.activeSources0.GetEnumerator(); x.MoveNext();)
+
+                using (var enumerator = Synthesizer.activeSources0.GetEnumerator())
                 {
-                    _srcInfo.Add(x.Current);
+                    for (var x = enumerator; x.MoveNext();)
+                    {
+                        _srcInfo.Add(x.Current);
+                    }
                 }
 
-                for (var x = Synthesizer.freeSources.GetEnumerator(); x.MoveNext();)
+                using (var enumerator = Synthesizer.freeSources.GetEnumerator())
                 {
-                    _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
+                    for (var x = enumerator; x.MoveNext();)
+                    {
+                        _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
+                    }
                 }
 
                 _srcInfo.Sort(
-                    (x, y) => string.Compare(x.info.audioSource.name, y.info.audioSource.name)
+                    (x, y) => string.CompareOrdinal(x.info.audioSource.name, y.info.audioSource.name)
                 );
 
                 var lp = Heartbeat.listenerTransform.position;
-                for (var x = _srcInfo.GetEnumerator(); x.MoveNext();)
+                using (var enumerator = _srcInfo.GetEnumerator())
                 {
-                    var z = x.Current;
-
-                    EditorGUILayout.BeginHorizontal();
-                    float v;
-                    var dis = (z.handle == 0) || (z.keyOn > 0f);
+                    for (var x = enumerator; x.MoveNext();)
                     {
-                        _srcColors[z.info.audioSource.name] = i;
-                        if (dis)
+                        var z = x.Current;
+                        if (z.info.occlusion.occlusion.function == OcclusionFunction.None)
                         {
-                            GUI.color = ColorizeDrawer.disabledColor;
-                        }
-                        else
-                        {
-                            GUI.color = ColorizeDrawer.GetColor(i);
+                            continue;
                         }
 
-                        // Mute
-                        if (z.info.audioSource != null)
+                        EditorGUILayout.BeginHorizontal();
+                        float v;
+                        var dis = (z.handle == 0) || (z.keyOn > 0f);
                         {
-                            z.info.audioSource.mute = EditorGUILayout.Toggle(
-                                z.info.audioSource.mute,
+                            _srcColors[z.info.audioSource.name] = i;
+                            if (dis)
+                            {
+                                GUI.color = ColorizeDrawer.disabledColor;
+                            }
+                            else
+                            {
+                                GUI.color = ColorizeDrawer.GetColor(i);
+                            }
+
+                            // Mute
+                            if (z.info.audioSource != null)
+                            {
+                                z.info.audioSource.mute = EditorGUILayout.Toggle(
+                                    z.info.audioSource.mute,
+                                    GUILayout.Width(50)
+                                );
+                            }
+                            else
+                            {
+                                EditorGUILayout.Toggle(false, GUILayout.Width(50));
+                            }
+
+                            GUILayout.Space(5);
+
+                            // Mix Group
+                            GUILayout.Label(
+                                !dis &&
+                                z.info.audioSource &&
+                                (z.info.audioSource.outputAudioMixerGroup != null)
+                                    ? z.info.audioSource.outputAudioMixerGroup.name
+                                    : "(None)",
+                                GUILayout.Width(100)
+                            );
+                            GUILayout.Space(10);
+
+                            // Output
+                            GUILayout.Label(
+                                !dis && !z.info.audioSource.isVirtual ? "\u2713" : "",
                                 GUILayout.Width(50)
                             );
-                        }
-                        else
-                        {
-                            EditorGUILayout.Toggle(false, GUILayout.Width(50));
-                        }
+                            GUILayout.Space(5);
 
-                        GUILayout.Space(5);
+                            // Source
+                            GUILayout.Label(!dis ? z.info.audioSource.name : "", GUILayout.Width(110));
 
-                        // Mix Group
-                        GUILayout.Label(
-                            !dis &&
-                            z.info.audioSource &&
-                            (z.info.audioSource.outputAudioMixerGroup != null)
-                                ? z.info.audioSource.outputAudioMixerGroup.name
-                                : "(None)",
-                            GUILayout.Width(100)
-                        );
-                        GUILayout.Space(10);
+                            // Patch
+                            GUILayout.Label(!dis ? z.patch.name : "", GUILayout.Width(220));
 
-                        // Output
-                        GUILayout.Label(
-                            !dis && !z.info.audioSource.isVirtual ? "\u2713" : "",
-                            GUILayout.Width(50)
-                        );
-                        GUILayout.Space(5);
-
-                        // Source
-                        GUILayout.Label(
-                            !dis ? z.info.audioSource.name : "",
-                            GUILayout.Width(110)
-                        );
-
-                        // Patch
-                        if (shift)
-                        {
+                            // Function
                             GUILayout.Label(
-                                !dis
-                                    ? z.info.audioSource.clip != null
-                                        ? z.info.audioSource.clip.name
-                                        : "-"
-                                    : "",
-                                GUILayout.Width(220)
+                                !dis ? z.info.occlusion.occlusion.function.ToString() : "",
+                                GUILayout.Width(70)
                             );
-                        }
-                        else
-                        {
-                            GUILayout.Label(
-                                !dis
-                                    ? z.patch != null
-                                        ? z.patch.name
-                                        : "-"
-                                    : "",
-                                GUILayout.Width(220)
+                            GUILayout.Space(5);
+
+                            // Distance
+                            v = !dis ? (z.info.audioSource.transform.position - lp).magnitude : 0f;
+                            GUILayout.Label(v.ToString("N3"), GUILayout.Width(70));
+                            GUILayout.Space(5);
+
+                            // Occlusion
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(70)
                             );
+                            v = !dis ? 1f - z.info.occlusion.GetCurrent() : 0f;
+                            EditorGUI.ProgressBar(p, v, v.ToString("N3"));
+                            GUILayout.Space(5);
                         }
 
-                        // Keyed
-                        if (dis || z.keyOff)
-                        {
-                            GUILayout.Label("Off", GUILayout.Width(50));
-                        }
-                        else
-                        {
-                            GUILayout.Label("On", GUILayout.Width(50));
-                        }
-
-                        GUILayout.Space(5);
-
-                        // Time
-                        p = GUILayoutUtility.GetRect(
-                            GUIContent.none,
-                            EditorStyles.label,
-                            GUILayout.Width(100)
-                        );
-                        v = !dis ? z.info.audioSource.time : 0f;
-                        EditorGUI.ProgressBar(
-                            p,
-                            v / (!dis ? z.info.audioSource.clip.length : 1f),
-                            v.ToString("N3")
-                        );
-                        GUILayout.Space(10);
-
-                        // Envelope
-                        p = GUILayoutUtility.GetRect(
-                            GUIContent.none,
-                            EditorStyles.label,
-                            GUILayout.Width(50)
-                        );
-                        v = !dis ? z.envelope.GetAttackValue() : 0f;
-                        EditorGUI.ProgressBar(p, v, v.ToString("N3"));
-                        GUILayout.Space(5);
-                        p = GUILayoutUtility.GetRect(
-                            GUIContent.none,
-                            EditorStyles.label,
-                            GUILayout.Width(50)
-                        );
-                        v = !dis ? z.envelope.GetReleaseValue() : 0f;
-                        EditorGUI.ProgressBar(p, v, v.ToString("N3"));
-                        GUILayout.Space(5);
-
-                        // Volume
-                        p = GUILayoutUtility.GetRect(
-                            GUIContent.none,
-                            EditorStyles.label,
-                            GUILayout.Width(100)
-                        );
-                        v = !dis ? z.GetVolume() : 0f;
-                        EditorGUI.ProgressBar(p, v, v.ToString("N3"));
-                        GUILayout.Space(10);
-
-                        // Distance
-                        v = !dis ? (z.info.audioSource.transform.position - lp).magnitude : 0f;
-                        GUILayout.Label(v.ToString("N3"), GUILayout.Width(70));
-                        GUILayout.Space(5);
+                        EditorGUILayout.EndHorizontal();
+                        ++i;
                     }
-
-                    EditorGUILayout.EndHorizontal();
-                    ++i;
                 }
             }
 
@@ -705,96 +417,95 @@ namespace Appalachia.Audio
 
             if (Application.isPlaying)
             {
-                for (var x = Sequencer.activeCues0.GetEnumerator(); x.MoveNext();)
+                using (var enumerator = Sequencer.activeCues0.GetEnumerator())
                 {
-                    GUI.color = ColorizeDrawer.GetColor(i);
-                    var z = x.Current;
-                    EditorGUILayout.BeginHorizontal();
-
-                    // Pause
-                    if (z.emitter)
+                    for (var x = enumerator; x.MoveNext();)
                     {
-                        z.emitter.SetPaused(
-                            EditorGUILayout.Toggle(z.emitter.IsPaused(), GUILayout.Width(50))
-                        );
-                    }
-                    else
-                    {
-                        EditorGUILayout.Toggle(false, GUILayout.Width(50));
-                    }
+                        GUI.color = ColorizeDrawer.GetColor(i);
+                        var z = x.Current;
+                        EditorGUILayout.BeginHorizontal();
 
-                    GUILayout.Space(5);
-
-                    // Emitter
-                    GUILayout.Label(z.emitter.name, GUILayout.Width(110));
-
-                    // Patch
-                    GUILayout.Label(z.emitter.patches[z.index].name, GUILayout.Width(220));
-
-                    // Period
-                    p = GUILayoutUtility.GetRect(
-                        GUIContent.none,
-                        EditorStyles.label,
-                        GUILayout.Width(100)
-                    );
-                    if (z.totalTime > 0f)
-                    {
-                        EditorGUI.ProgressBar(
-                            p,
-                            z.currentTime / z.totalTime,
-                            z.currentTime.ToString("N3")
-                        );
-                    }
-                    else if (z.emitter.modulation.period > 0f)
-                    {
-                        var t = z.currentTime % z.emitter.modulation.period;
-                        EditorGUI.ProgressBar(
-                            p,
-                            t / z.emitter.modulation.period,
-                            t.ToString("N3")
-                        );
-                    }
-                    else
-                    {
-                        EditorGUI.ProgressBar(p, 0f, z.currentTime.ToString("N3"));
-                    }
-
-                    GUILayout.Space(10);
-
-                    // Repeat
-                    if (z.repeatCount == 0)
-                    {
-                        GUILayout.Label("Never", GUILayout.Width(70));
-                    }
-                    else if (z.repeatCount > 0)
-                    {
-                        string ris;
-                        if (!_intLookup.TryGetValue(z.repeatIndex, out ris))
+                        // Pause
+                        if (z.emitter)
                         {
-                            ris = z.repeatIndex.ToString();
-                            _intLookup[z.repeatIndex] = ris;
+                            z.emitter.SetPaused(
+                                EditorGUILayout.Toggle(z.emitter.IsPaused(), GUILayout.Width(50))
+                            );
+                        }
+                        else
+                        {
+                            EditorGUILayout.Toggle(false, GUILayout.Width(50));
                         }
 
+                        GUILayout.Space(5);
+
+                        // Emitter
+                        GUILayout.Label(z.emitter.name, GUILayout.Width(110));
+
+                        // Patch
+                        GUILayout.Label(z.emitter.patches[z.index].name, GUILayout.Width(220));
+
+                        // Period
                         p = GUILayoutUtility.GetRect(
                             GUIContent.none,
                             EditorStyles.label,
-                            GUILayout.Width(70)
+                            GUILayout.Width(100)
                         );
-                        EditorGUI.ProgressBar(p, z.repeatIndex / (float) z.repeatCount, ris);
+                        if (z.totalTime > 0f)
+                        {
+                            EditorGUI.ProgressBar(
+                                p,
+                                z.currentTime / z.totalTime,
+                                z.currentTime.ToString("N3")
+                            );
+                        }
+                        else if (z.emitter.modulation.period > 0f)
+                        {
+                            var t = z.currentTime % z.emitter.modulation.period;
+                            EditorGUI.ProgressBar(p, t / z.emitter.modulation.period, t.ToString("N3"));
+                        }
+                        else
+                        {
+                            EditorGUI.ProgressBar(p, 0f, z.currentTime.ToString("N3"));
+                        }
+
+                        GUILayout.Space(10);
+
+                        // Repeat
+                        if (z.repeatCount == 0)
+                        {
+                            GUILayout.Label("Never", GUILayout.Width(70));
+                        }
+                        else if (z.repeatCount > 0)
+                        {
+                            string ris;
+                            if (!_intLookup.TryGetValue(z.repeatIndex, out ris))
+                            {
+                                ris = z.repeatIndex.ToString();
+                                _intLookup[z.repeatIndex] = ris;
+                            }
+
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(70)
+                            );
+                            EditorGUI.ProgressBar(p, z.repeatIndex / (float) z.repeatCount, ris);
+                        }
+                        else
+                        {
+                            GUILayout.Label("Forever", GUILayout.Width(70));
+                        }
+
+                        GUILayout.Space(5);
+
+                        // Looping
+                        GUILayout.Label(z.looping ? "\u2713" : "", GUILayout.Width(50));
+                        GUILayout.Space(5);
+
+                        EditorGUILayout.EndHorizontal();
+                        ++i;
                     }
-                    else
-                    {
-                        GUILayout.Label("Forever", GUILayout.Width(70));
-                    }
-
-                    GUILayout.Space(5);
-
-                    // Looping
-                    GUILayout.Label(z.looping ? "\u2713" : "", GUILayout.Width(50));
-                    GUILayout.Space(5);
-
-                    EditorGUILayout.EndHorizontal();
-                    ++i;
                 }
 
                 GUI.color = c;
@@ -802,6 +513,296 @@ namespace Appalachia.Audio
 
             GUI.color = c;
             EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawSynthesizerGUI()
+        {
+            var shift = Event.current.shift;
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Mute",                         EditorStyles.boldLabel, GUILayout.Width(55));
+            GUILayout.Label("Mix Group",                    EditorStyles.boldLabel, GUILayout.Width(110));
+            GUILayout.Label("Output",                       EditorStyles.boldLabel, GUILayout.Width(55));
+            GUILayout.Label("Source",                       EditorStyles.boldLabel, GUILayout.Width(110));
+            GUILayout.Label(shift ? "Audio Clip" : "Patch", EditorStyles.boldLabel, GUILayout.Width(220));
+            GUILayout.Label("Keyed",                        EditorStyles.boldLabel, GUILayout.Width(55));
+            GUILayout.Label("Time",                         EditorStyles.boldLabel, GUILayout.Width(110));
+            GUILayout.Label("Envelope",                     EditorStyles.boldLabel, GUILayout.Width(110));
+            GUILayout.Label("Volume",                       EditorStyles.boldLabel, GUILayout.Width(110));
+            GUILayout.Label("Distance",                     EditorStyles.boldLabel, GUILayout.Width(75));
+            EditorGUILayout.EndHorizontal();
+
+            var i = 0;
+            var c = GUI.color;
+            Rect p;
+            _scrollSynthesizer = EditorGUILayout.BeginScrollView(_scrollSynthesizer);
+
+            if (Application.isPlaying && Heartbeat.listenerTransform)
+            {
+                _srcColors.Clear();
+                _srcInfo.Clear();
+                using (var enumerator = Synthesizer.activeSources0.GetEnumerator())
+                {
+                    for (var x = enumerator; x.MoveNext();)
+                    {
+                        _srcInfo.Add(x.Current);
+                    }
+                }
+
+                using (var enumerator = Synthesizer.freeSources.GetEnumerator())
+                {
+                    for (var x = enumerator; x.MoveNext();)
+                    {
+                        _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
+                    }
+                }
+
+                _srcInfo.Sort((x, y) => string.Compare(x.info.audioSource.name, y.info.audioSource.name));
+
+                var lp = Heartbeat.listenerTransform.position;
+                using (var enumerator = _srcInfo.GetEnumerator())
+                {
+                    for (var x = enumerator; x.MoveNext();)
+                    {
+                        var z = x.Current;
+
+                        EditorGUILayout.BeginHorizontal();
+                        float v;
+                        var dis = (z.handle == 0) || (z.keyOn > 0f);
+                        {
+                            _srcColors[z.info.audioSource.name] = i;
+                            if (dis)
+                            {
+                                GUI.color = ColorizeDrawer.disabledColor;
+                            }
+                            else
+                            {
+                                GUI.color = ColorizeDrawer.GetColor(i);
+                            }
+
+                            // Mute
+                            if (z.info.audioSource != null)
+                            {
+                                z.info.audioSource.mute = EditorGUILayout.Toggle(
+                                    z.info.audioSource.mute,
+                                    GUILayout.Width(50)
+                                );
+                            }
+                            else
+                            {
+                                EditorGUILayout.Toggle(false, GUILayout.Width(50));
+                            }
+
+                            GUILayout.Space(5);
+
+                            // Mix Group
+                            GUILayout.Label(
+                                !dis &&
+                                z.info.audioSource &&
+                                (z.info.audioSource.outputAudioMixerGroup != null)
+                                    ? z.info.audioSource.outputAudioMixerGroup.name
+                                    : "(None)",
+                                GUILayout.Width(100)
+                            );
+                            GUILayout.Space(10);
+
+                            // Output
+                            GUILayout.Label(
+                                !dis && !z.info.audioSource.isVirtual ? "\u2713" : "",
+                                GUILayout.Width(50)
+                            );
+                            GUILayout.Space(5);
+
+                            // Source
+                            GUILayout.Label(!dis ? z.info.audioSource.name : "", GUILayout.Width(110));
+
+                            // Patch
+                            if (shift)
+                            {
+                                GUILayout.Label(
+                                    !dis
+                                        ? z.info.audioSource.clip != null
+                                            ? z.info.audioSource.clip.name
+                                            : "-"
+                                        : "",
+                                    GUILayout.Width(220)
+                                );
+                            }
+                            else
+                            {
+                                GUILayout.Label(
+                                    !dis
+                                        ? z.patch != null
+                                            ? z.patch.name
+                                            : "-"
+                                        : "",
+                                    GUILayout.Width(220)
+                                );
+                            }
+
+                            // Keyed
+                            if (dis || z.keyOff)
+                            {
+                                GUILayout.Label("Off", GUILayout.Width(50));
+                            }
+                            else
+                            {
+                                GUILayout.Label("On", GUILayout.Width(50));
+                            }
+
+                            GUILayout.Space(5);
+
+                            // Time
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(100)
+                            );
+                            v = !dis ? z.info.audioSource.time : 0f;
+                            EditorGUI.ProgressBar(
+                                p,
+                                v / (!dis ? z.info.audioSource.clip.length : 1f),
+                                v.ToString("N3")
+                            );
+                            GUILayout.Space(10);
+
+                            // Envelope
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(50)
+                            );
+                            v = !dis ? z.envelope.GetAttackValue() : 0f;
+                            EditorGUI.ProgressBar(p, v, v.ToString("N3"));
+                            GUILayout.Space(5);
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(50)
+                            );
+                            v = !dis ? z.envelope.GetReleaseValue() : 0f;
+                            EditorGUI.ProgressBar(p, v, v.ToString("N3"));
+                            GUILayout.Space(5);
+
+                            // Volume
+                            p = GUILayoutUtility.GetRect(
+                                GUIContent.none,
+                                EditorStyles.label,
+                                GUILayout.Width(100)
+                            );
+                            v = !dis ? z.GetVolume() : 0f;
+                            EditorGUI.ProgressBar(p, v, v.ToString("N3"));
+                            GUILayout.Space(10);
+
+                            // Distance
+                            v = !dis ? (z.info.audioSource.transform.position - lp).magnitude : 0f;
+                            GUILayout.Label(v.ToString("N3"), GUILayout.Width(70));
+                            GUILayout.Space(5);
+                        }
+
+                        EditorGUILayout.EndHorizontal();
+                        ++i;
+                    }
+                }
+            }
+
+            GUI.color = c;
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawToolbarGUI()
+        {
+            GUILayout.Label("Views", EditorStyles.boldLabel);
+            DrawLine();
+            _showSynthesizer = GUILayout.Toggle(_showSynthesizer, "Synthesizer");
+            _showSequencer = GUILayout.Toggle(_showSequencer,     "Sequencer");
+            _showOcclusion = GUILayout.Toggle(_showOcclusion,     "Occlusion");
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange change)
+        {
+            EditorApplication.update -= Repaint;
+            if (Application.isPlaying)
+            {
+                EditorApplication.update += Repaint;
+            }
+        }
+
+        public static int GetSourceColor(string name)
+        {
+            int i;
+            _srcColors.TryGetValue(name, out i);
+            return i;
+        }
+
+        private static Texture2D GetIcon()
+        {
+            const int w = 16;
+            var p = new Color[w * w];
+            for (var i = 0; i < (w * w); ++i)
+            {
+                if (((i % w) == 0) || ((i % w) == 1))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i % w) == ((w / 2) - 1)) || ((i % w) == (w / 2)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i % w) == (w - 2)) || ((i % w) == (w - 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == 0) || ((i / w) == 1))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 1) - 1)) || ((i / w) == ((w / 4) * 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 2) - 1)) || ((i / w) == ((w / 4) * 2)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 3) - 1)) || ((i / w) == ((w / 4) * 3)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (w - 2)) || ((i / w) == (w - 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if ((i / w) < ((w / 4) * 1))
+                {
+                    p[i] = Color.green;
+                }
+                else if ((i / w) < ((w / 4) * 2))
+                {
+                    p[i] = Color.green;
+                }
+                else if ((i / w) < ((w / 4) * 3))
+                {
+                    p[i] = Color.yellow;
+                }
+                else if ((i / w) < ((w / 4) * 4))
+                {
+                    p[i] = Color.red;
+                }
+            }
+
+            var icon = new Texture2D(w, w, TextureFormat.RGBA32, false);
+            icon.hideFlags = HideFlags.HideAndDontSave;
+            icon.filterMode = FilterMode.Point;
+            icon.SetPixels(p);
+            icon.Apply();
+            return icon;
+        }
+
+        [MenuItem(APPA_MENU.BASE_AppalachiaWindows + APPA_MENU.ASM_AppalachiaAudio + nameof(Monitor))]
+        private static void Open()
+        {
+            ((Monitor) GetWindow(typeof(Monitor))).Show();
         }
     }
 }

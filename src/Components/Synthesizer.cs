@@ -546,11 +546,13 @@ namespace Appalachia.Audio.Components
                 return;
             }
 
-            for (var x = activeSources0.GetEnumerator(); x.MoveNext();)
+            using (var enumerator = activeSources0.GetEnumerator())
             {
-                var z = x.Current;
-                if (z.handle == handle)
+                for (var x = enumerator; x.MoveNext();)
                 {
+                    var z = x.Current;
+                    if (z.handle == handle)
+                    {
 #if SYNTHESIZER_PARANOIA
                 Debug.LogFormat(
                     Time.frameCount.ToString("X4") +
@@ -558,23 +560,24 @@ namespace Appalachia.Audio.Components
                     z.info.audioSource.clip.name, z.info.audioSource.name,
                     release, mode);
 #endif
-                    switch (mode)
-                    {
-                        case EnvelopeMode.Exact:
-                            z.envelope.SetRelease(release);
-                            break;
-                        case EnvelopeMode.Min:
-                            z.envelope.SetRelease(Mathf.Min(z.envelope.releaseTime, release));
-                            break;
-                        case EnvelopeMode.Max:
-                            z.envelope.SetRelease(Mathf.Max(z.envelope.releaseTime, release));
-                            break;
+                        switch (mode)
+                        {
+                            case EnvelopeMode.Exact:
+                                z.envelope.SetRelease(release);
+                                break;
+                            case EnvelopeMode.Min:
+                                z.envelope.SetRelease(Mathf.Min(z.envelope.releaseTime, release));
+                                break;
+                            case EnvelopeMode.Max:
+                                z.envelope.SetRelease(Mathf.Max(z.envelope.releaseTime, release));
+                                break;
+                        }
+
+                        z.keyOff = true;
                     }
 
-                    z.keyOff = true;
+                    activeSources1.Add(z);
                 }
-
-                activeSources1.Add(z);
             }
 
             Swap(ref activeSources0, ref activeSources1);
@@ -589,15 +592,18 @@ namespace Appalachia.Audio.Components
                 return;
             }
 
-            for (var x = activeSources0.GetEnumerator(); x.MoveNext();)
+            using (var enumerator = activeSources0.GetEnumerator())
             {
-                var z = x.Current;
-                if (z.handle == handle)
+                for (var x = enumerator; x.MoveNext();)
                 {
-                    z.modVolume = volume;
-                }
+                    var z = x.Current;
+                    if (z.handle == handle)
+                    {
+                        z.modVolume = volume;
+                    }
 
-                activeSources1.Add(z);
+                    activeSources1.Add(z);
+                }
             }
 
             Swap(ref activeSources0, ref activeSources1);
@@ -612,18 +618,21 @@ namespace Appalachia.Audio.Components
                 return;
             }
 
-            for (var x = activeSources0.GetEnumerator(); x.MoveNext();)
+            using (var enumerator = activeSources0.GetEnumerator())
             {
-                var z = x.Current;
-                if ((z.handle == handle) && z.info.audioSource)
+                for (var x = enumerator; x.MoveNext();)
                 {
+                    var z = x.Current;
+                    if ((z.handle == handle) && z.info.audioSource)
+                    {
 #if SYNTHESIZER_PARANOIA
                 Debug.LogFormat(
                     Time.frameCount.ToString("X4") +
                     " Synthesizer.Update: {0} ({1}) : stopped by envelope",
                     z.info.audioSource.clip.name, z.info.audioSource.name);
 #endif
-                    z.info.audioSource.Stop();
+                        z.info.audioSource.Stop();
+                    }
                 }
             }
         }
@@ -640,12 +649,15 @@ namespace Appalachia.Audio.Components
                 return;
             }
 #endif
-            for (var x = activeSources0.GetEnumerator(); x.MoveNext();)
+            using (var enumerator = activeSources0.GetEnumerator())
             {
-                var z = x.Current;
-                if (z.info.audioSource)
+                for (var x = enumerator; x.MoveNext();)
                 {
-                    z.info.audioSource.Stop();
+                    var z = x.Current;
+                    if (z.info.audioSource)
+                    {
+                        z.info.audioSource.Stop();
+                    }
                 }
             }
         }
@@ -659,43 +671,46 @@ namespace Appalachia.Audio.Components
 
         internal static void Update(float dt)
         {
-            for (var x = activeSources0.GetEnumerator(); x.MoveNext();)
+            using (var enumerator = activeSources0.GetEnumerator())
             {
-                var z = x.Current;
-                bool playing;
-                if (z.Check(out playing))
+                for (var x = enumerator; x.MoveNext();)
                 {
-                    if (playing)
+                    var z = x.Current;
+                    bool playing;
+                    if (z.Check(out playing))
                     {
-                        z.UpdatePosition();
-                        z.UpdateEnvelope(dt, ref playing);
                         if (playing)
                         {
-                            z.UpdateVolume();
-                            activeSources1.Add(z);
-                        }
-                        else
-                        {
+                            z.UpdatePosition();
+                            z.UpdateEnvelope(dt, ref playing);
+                            if (playing)
+                            {
+                                z.UpdateVolume();
+                                activeSources1.Add(z);
+                            }
+                            else
+                            {
 #if SYNTHESIZER_PARANOIA
                         Debug.LogFormat(
                             Time.frameCount.ToString("X4") +
                             " Synthesizer.Update: {0} ({1}) : stopped by envelope",
                             z.info.audioSource.clip.name, z.info.audioSource.name);
 #endif
-                            z.info.audioSource.Stop();
+                                z.info.audioSource.Stop();
+                            }
                         }
-                    }
 
-                    if (!playing)
-                    {
+                        if (!playing)
+                        {
 #if SYNTHESIZER_PARANOIA
                     Debug.LogFormat(
                         Time.frameCount.ToString("X4") +
                         " Synthesizer.Update: {0} ({1}) : freed",
                         z.info.audioSource.clip.name, z.info.audioSource.name);
 #endif
-                        z.info.Disable();
-                        freeSources.Push(z.info);
+                            z.info.Disable();
+                            freeSources.Push(z.info);
+                        }
                     }
                 }
             }
