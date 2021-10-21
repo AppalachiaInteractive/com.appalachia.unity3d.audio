@@ -2,7 +2,7 @@
 
 using System;
 using Appalachia.Audio.Utilities;
-using Appalachia.Core.Constants;
+using Appalachia.CI.Constants;
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -1,7 +1,7 @@
 using System.Text;
 using Appalachia.Audio.Components;
+using Appalachia.CI.Constants;
 using Appalachia.CI.Integration.Assets;
-using Appalachia.Core.Constants;
 using UnityEditor;
 using UnityEngine;
 
