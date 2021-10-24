@@ -12,6 +12,11 @@
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+
+
+ ## Tag: `v0.1.9`
+| Hash | Date | Author | Changes |
+|------|------|--------|---------|
 | 774a34a22f902aed49084f91bd7cd16344687b11 | 2021-10-23 | Chris Schubert | Updating file layout and preparing for integration with UI project |
 
 
