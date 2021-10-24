@@ -27,7 +27,9 @@ namespace Appalachia.Audio.Components
 
         public static void CueOut(uint handle, float release = 0f, EnvelopeMode mode = EnvelopeMode.None)
         {
-            for (var x = activeCues0.GetEnumerator(); x.MoveNext();)
+            var enumerator = activeCues0.GetEnumerator();
+            
+            for (var x = enumerator; x.MoveNext();)
             {
                 var z = x.Current;
                 if (z.cueHandle == handle)
@@ -52,7 +54,8 @@ namespace Appalachia.Audio.Components
 
         public static void Update(float dt)
         {
-            for (var x = activeCues0.GetEnumerator(); x.MoveNext();)
+            var enumerator = activeCues0.GetEnumerator();
+            for (var x = enumerator; x.MoveNext();)
             {
                 var z = x.Current;
                 var s = z.Update(dt);
