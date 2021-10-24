@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Appalachia.CI.Integration;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.CI.Integration.FileSystem;
 using UnityEditor;
@@ -10,169 +9,28 @@ using UnityEngine;
 namespace Appalachia.Audio
 {
     [CustomEditor(typeof(AudioImportSettings))]
-    public class AudioImportSettingsEditor : UnityEditor.Editor
+    public class AudioImportSettingsEditor : Editor
     {
         public static readonly Dictionary<string, int> overridesTable = new();
 
         private static readonly char[] splitSeparators = {';'};
-
-        private SortedDictionary<string, string> _audioClipPaths;
-        private List<SortedDictionary<string, string>> _cacheTables;
-        private int _deleteCommand;
-        private HashSet<string> _filteredPaths;
-
-        private GUIStyle _lineStyle;
-
-        private int _moveCommand;
+        private bool _resetCaches;
+        private bool _unfilteredVisible;
         private Dictionary<string, int> _nameCount;
 
-        private string _refreshText;
-        private bool _resetCaches;
-        private Stopwatch _stopwatch;
+        private GUIStyle _lineStyle;
+        private HashSet<string> _filteredPaths;
+        private int _deleteCommand;
+
+        private int _moveCommand;
+        private List<SortedDictionary<string, string>> _cacheTables;
+
+        private SortedDictionary<string, string> _audioClipPaths;
         private SortedDictionary<string, string> _unfilteredPaths;
+        private Stopwatch _stopwatch;
+
+        private string _refreshText;
         private string _unfilteredText;
-        private bool _unfilteredVisible;
-
-        protected void OnEnable()
-        {
-            _audioClipPaths = new SortedDictionary<string, string>();
-            _cacheTables = new List<SortedDictionary<string, string>>();
-            _nameCount = new Dictionary<string, int>();
-            _unfilteredPaths = new SortedDictionary<string, string>();
-            _filteredPaths = new HashSet<string>();
-            _stopwatch = new Stopwatch();
-
-            InitLine();
-            RefreshAudioClips();
-        }
-
-        private void RefreshAudioClips()
-        {
-            _stopwatch.Reset();
-            _stopwatch.Start();
-
-            _audioClipPaths.Clear();
-            _nameCount.Clear();
-
-            var digits = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-            var delimeters = new[] {'_', '-', ' '};
-            var guids = AssetDatabaseManager.FindAssets("t:AudioClip");
-
-            foreach (var guid in guids)
-            {
-                var path = AssetDatabaseManager.GUIDToAssetPath(guid);
-                var fileName = AppaPath.GetFileNameWithoutExtension(path);
-                fileName = fileName.Trim(digits);
-                fileName = fileName.Trim(delimeters);
-
-                _audioClipPaths.Add(path, fileName);
-
-                int count;
-                _nameCount.TryGetValue(fileName, out count);
-                _nameCount[fileName] = count + 1;
-            }
-
-            ResetCaches();
-
-            _stopwatch.Stop();
-
-            _refreshText = string.Format(
-                "Found {0} AudioClips in {1:N2}s",
-                guids.Length,
-                _stopwatch.Elapsed.TotalSeconds
-            );
-        }
-
-        private void ResetCaches()
-        {
-            var overridesProperty = serializedObject.FindProperty("overrides");
-
-            _unfilteredPaths.Clear();
-
-            foreach (var x in _audioClipPaths)
-            {
-                _unfilteredPaths.Add(x.Key, x.Value);
-            }
-
-            for (int i = 0, n = overridesProperty.arraySize; i < n; ++i)
-            {
-                SortedDictionary<string, string> table;
-
-                if (_cacheTables.Count > i)
-                {
-                    table = _cacheTables[i];
-                    table.Clear();
-                }
-                else
-                {
-                    table = new SortedDictionary<string, string>();
-                    _cacheTables.Add(table);
-                }
-
-                var overrideProperty = overridesProperty.GetArrayElementAtIndex(i);
-                var filterProperty = overrideProperty.FindPropertyRelative("filter");
-                var filter = filterProperty.stringValue.Split(
-                    splitSeparators,
-                    StringSplitOptions.None
-                );
-
-                foreach (var x in _unfilteredPaths)
-                foreach (var y in filter)
-                {
-                    if (x.Key.IndexOf(y, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                    {
-                        if (!table.ContainsKey(x.Key))
-                        {
-                            _filteredPaths.Add(x.Key);
-                            table.Add(x.Key, x.Value);
-                        }
-                    }
-                }
-
-                foreach (var x in _filteredPaths)
-                {
-                    _unfilteredPaths.Remove(x);
-                }
-
-                _filteredPaths.Clear();
-            }
-
-            _unfilteredText = _unfilteredPaths.Count + " AudioClips left unmodified";
-        }
-
-        private SerializedProperty IterateOverrides(
-            OverrideFunction overrideFunction,
-            PathFunction pathFunction,
-            EndFunction endFunction)
-        {
-            var overridesProperty = serializedObject.FindProperty("overrides");
-
-            for (int i = 0, n = overridesProperty.arraySize; i < n; ++i)
-            {
-                var overrideProperty = overridesProperty.GetArrayElementAtIndex(i);
-
-                var filterProperty = overrideProperty.FindPropertyRelative("filter");
-
-                //var filter = filterProperty.stringValue;
-
-                if (i < _cacheTables.Count)
-                {
-                    var table = _cacheTables[i];
-
-                    if (overrideFunction(overrideProperty, i, n, table.Count))
-                    {
-                        foreach (var x in table)
-                        {
-                            pathFunction(x.Key, x.Value, i);
-                        }
-                    }
-                }
-
-                endFunction(overrideProperty);
-            }
-
-            return overridesProperty;
-        }
 
         public override void OnInspectorGUI()
         {
@@ -336,11 +194,7 @@ namespace Appalachia.Audio
                 overridesProperty.InsertArrayElementAtIndex(overridesProperty.arraySize);
             }
 
-            _unfilteredVisible = EditorGUI.Foldout(
-                addButtonRect,
-                _unfilteredVisible,
-                _unfilteredText
-            );
+            _unfilteredVisible = EditorGUI.Foldout(addButtonRect, _unfilteredVisible, _unfilteredText);
 
             EditorGUI.indentLevel++;
             GUI.enabled = false;
@@ -373,12 +227,51 @@ namespace Appalachia.Audio
             }
         }
 
-        private void InitLine()
+        protected void OnEnable()
         {
-            _lineStyle = new GUIStyle();
-            _lineStyle.normal.background = EditorGUIUtility.whiteTexture;
-            _lineStyle.stretchWidth = true;
-            _lineStyle.margin = new RectOffset(0, 0, 7, 7);
+            _audioClipPaths = new SortedDictionary<string, string>();
+            _cacheTables = new List<SortedDictionary<string, string>>();
+            _nameCount = new Dictionary<string, int>();
+            _unfilteredPaths = new SortedDictionary<string, string>();
+            _filteredPaths = new HashSet<string>();
+            _stopwatch = new Stopwatch();
+
+            InitLine();
+            RefreshAudioClips();
+        }
+
+        private SerializedProperty IterateOverrides(
+            OverrideFunction overrideFunction,
+            PathFunction pathFunction,
+            EndFunction endFunction)
+        {
+            var overridesProperty = serializedObject.FindProperty("overrides");
+
+            for (int i = 0, n = overridesProperty.arraySize; i < n; ++i)
+            {
+                var overrideProperty = overridesProperty.GetArrayElementAtIndex(i);
+
+                var filterProperty = overrideProperty.FindPropertyRelative("filter");
+
+                //var filter = filterProperty.stringValue;
+
+                if (i < _cacheTables.Count)
+                {
+                    var table = _cacheTables[i];
+
+                    if (overrideFunction(overrideProperty, i, n, table.Count))
+                    {
+                        foreach (var x in table)
+                        {
+                            pathFunction(x.Key, x.Value, i);
+                        }
+                    }
+                }
+
+                endFunction(overrideProperty);
+            }
+
+            return overridesProperty;
         }
 
         private void DrawLine()
@@ -396,6 +289,107 @@ namespace Appalachia.Audio
             GUI.color = c;
         }
 
+        private void InitLine()
+        {
+            _lineStyle = new GUIStyle();
+            _lineStyle.normal.background = EditorGUIUtility.whiteTexture;
+            _lineStyle.stretchWidth = true;
+            _lineStyle.margin = new RectOffset(0, 0, 7, 7);
+        }
+
+        private void RefreshAudioClips()
+        {
+            _stopwatch.Reset();
+            _stopwatch.Start();
+
+            _audioClipPaths.Clear();
+            _nameCount.Clear();
+
+            var digits = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+            var delimeters = new[] {'_', '-', ' '};
+            var guids = AssetDatabaseManager.FindAssets("t:AudioClip");
+
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabaseManager.GUIDToAssetPath(guid);
+                var fileName = AppaPath.GetFileNameWithoutExtension(path);
+                fileName = fileName.Trim(digits);
+                fileName = fileName.Trim(delimeters);
+
+                _audioClipPaths.Add(path, fileName);
+
+                int count;
+                _nameCount.TryGetValue(fileName, out count);
+                _nameCount[fileName] = count + 1;
+            }
+
+            ResetCaches();
+
+            _stopwatch.Stop();
+
+            _refreshText = string.Format(
+                "Found {0} AudioClips in {1:N2}s",
+                guids.Length,
+                _stopwatch.Elapsed.TotalSeconds
+            );
+        }
+
+        private void ResetCaches()
+        {
+            var overridesProperty = serializedObject.FindProperty("overrides");
+
+            _unfilteredPaths.Clear();
+
+            foreach (var x in _audioClipPaths)
+            {
+                _unfilteredPaths.Add(x.Key, x.Value);
+            }
+
+            for (int i = 0, n = overridesProperty.arraySize; i < n; ++i)
+            {
+                SortedDictionary<string, string> table;
+
+                if (_cacheTables.Count > i)
+                {
+                    table = _cacheTables[i];
+                    table.Clear();
+                }
+                else
+                {
+                    table = new SortedDictionary<string, string>();
+                    _cacheTables.Add(table);
+                }
+
+                var overrideProperty = overridesProperty.GetArrayElementAtIndex(i);
+                var filterProperty = overrideProperty.FindPropertyRelative("filter");
+                var filter = filterProperty.stringValue.Split(splitSeparators, StringSplitOptions.None);
+
+                foreach (var x in _unfilteredPaths)
+                foreach (var y in filter)
+                {
+                    if (x.Key.IndexOf(y, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        if (!table.ContainsKey(x.Key))
+                        {
+                            _filteredPaths.Add(x.Key);
+                            table.Add(x.Key, x.Value);
+                        }
+                    }
+                }
+
+                foreach (var x in _filteredPaths)
+                {
+                    _unfilteredPaths.Remove(x);
+                }
+
+                _filteredPaths.Clear();
+            }
+
+            _unfilteredText = _unfilteredPaths.Count + " AudioClips left unmodified";
+        }
+
+        private delegate void EndFunction(SerializedProperty overrideProperty);
+
         private delegate bool OverrideFunction(
             SerializedProperty overrideProperty,
             int overrideIndex,
@@ -403,7 +397,5 @@ namespace Appalachia.Audio
             int matchCount);
 
         private delegate void PathFunction(string path, string name, int overrideIndex);
-
-        private delegate void EndFunction(SerializedProperty overrideProperty);
     }
 }

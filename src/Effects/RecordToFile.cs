@@ -8,84 +8,12 @@ namespace Appalachia.Audio.Effects
 {
     public sealed class RecordToFile : MonoBehaviour
     {
+        private readonly List<byte[]> _proc = new(8);
+        private readonly object _locker = 0;
         private readonly Queue<byte[]> _freed = new(8);
         private readonly Queue<byte[]> _inuse = new(8);
-        private readonly object _locker = 0;
-        private readonly List<byte[]> _proc = new(8);
-        private bool _recording;
         private BinaryWriter _writer;
-
-        private void Update()
-        {
-            if (_recording)
-            {
-                lock (_locker)
-                {
-                    while (_inuse.Count > 0)
-                    {
-                        _proc.Add(_inuse.Dequeue());
-                    }
-                }
-
-                foreach (var i in _proc)
-                {
-                    _writer.Write(i);
-                }
-
-                lock (_locker)
-                {
-                    foreach (var i in _proc)
-                    {
-                        _freed.Enqueue(i);
-                    }
-                }
-
-                _proc.Clear();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            StopRecording();
-        }
-
-        private void OnAudioFilterRead(float[] data, int channels)
-        {
-            lock (_locker)
-            {
-                if (_recording)
-                {
-                    var buf = _freed.Count > 0 ? _freed.Dequeue() : null;
-                    if ((buf == null) || (buf.Length != (data.Length * sizeof(float))))
-                    {
-                        buf = new byte[data.Length * sizeof(float)];
-                    }
-
-                    Buffer.BlockCopy(data, 0, buf, 0, buf.Length);
-                    _inuse.Enqueue(buf);
-                }
-            }
-        }
-
-        public void StartRecording(string path)
-        {
-            StopRecording();
-            if (!path.EndsWith(".wav"))
-            {
-                path += ".wav";
-            }
-
-            lock (_locker)
-            {
-                _writer = new BinaryWriter(new FileStream(path, FileMode.Create));
-                for (var i = 0; i < 44; ++i)
-                {
-                    _writer.Write((byte) 0x00);
-                }
-
-                _recording = true;
-            }
-        }
+        private bool _recording;
 
         public int StopRecording()
         {
@@ -123,5 +51,77 @@ namespace Appalachia.Audio.Effects
 
             return len;
         }
+
+        public void StartRecording(string path)
+        {
+            StopRecording();
+            if (!path.EndsWith(".wav"))
+            {
+                path += ".wav";
+            }
+
+            lock (_locker)
+            {
+                _writer = new BinaryWriter(new FileStream(path, FileMode.Create));
+                for (var i = 0; i < 44; ++i)
+                {
+                    _writer.Write((byte) 0x00);
+                }
+
+                _recording = true;
+            }
+        }
+
+        private void OnAudioFilterRead(float[] data, int channels)
+        {
+            lock (_locker)
+            {
+                if (_recording)
+                {
+                    var buf = _freed.Count > 0 ? _freed.Dequeue() : null;
+                    if ((buf == null) || (buf.Length != (data.Length * sizeof(float))))
+                    {
+                        buf = new byte[data.Length * sizeof(float)];
+                    }
+
+                    Buffer.BlockCopy(data, 0, buf, 0, buf.Length);
+                    _inuse.Enqueue(buf);
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            StopRecording();
+        }
+
+        private void Update()
+        {
+            if (_recording)
+            {
+                lock (_locker)
+                {
+                    while (_inuse.Count > 0)
+                    {
+                        _proc.Add(_inuse.Dequeue());
+                    }
+                }
+
+                foreach (var i in _proc)
+                {
+                    _writer.Write(i);
+                }
+
+                lock (_locker)
+                {
+                    foreach (var i in _proc)
+                    {
+                        _freed.Enqueue(i);
+                    }
+                }
+
+                _proc.Clear();
+            }
+        }
     }
-} 
+}

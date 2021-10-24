@@ -8,6 +8,22 @@ namespace Appalachia.Audio
     {
         protected DragOperation dragOperation = DragOperation.Low;
 
+        public void DrawBandSplitMarker(
+            IAudioEffectPlugin plugin,
+            Rect r,
+            float x,
+            float w,
+            bool highlight,
+            Color color)
+        {
+            if (highlight)
+            {
+                w *= 2.0f;
+            }
+
+            EditorGUI.DrawRect(new Rect((r.x + x) - w, r.y, 2 * w, r.height), color);
+        }
+
         public void DrawSpectrum(
             Rect r,
             bool useLogScale,
@@ -26,8 +42,7 @@ namespace Appalachia.Audio
                 r,
                 delegate(float x)
                 {
-                    var f = GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true) *
-                            xscale;
+                    var f = GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true) * xscale;
                     var i = (int) Math.Floor(f);
                     var h = data[i] + ((data[i + 1] - data[i]) * (f - i));
                     var mag = h > 0.0 ? (20.0f * Math.Log10(h)) + gainOffsetDB : -120.0;
@@ -35,22 +50,6 @@ namespace Appalachia.Audio
                 },
                 new Color(colR, colG, colB, colA)
             );
-        }
-
-        public void DrawBandSplitMarker(
-            IAudioEffectPlugin plugin,
-            Rect r,
-            float x,
-            float w,
-            bool highlight,
-            Color color)
-        {
-            if (highlight)
-            {
-                w *= 2.0f;
-            }
-
-            EditorGUI.DrawRect(new Rect((r.x + x) - w, r.y, 2 * w, r.height), color);
         }
 
         protected static Color ScaleAlpha(Color col, float blend)

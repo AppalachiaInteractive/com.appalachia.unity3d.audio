@@ -6,6 +6,5 @@ namespace Appalachia.Audio
     public class AudioImportSettings : SelfSavingSingletonScriptableObject<AudioImportSettings>
     {
         [Colorize] public AudioImportSettingsOverride[] overrides;
-
     }
 }

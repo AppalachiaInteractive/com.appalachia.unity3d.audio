@@ -14,15 +14,15 @@ namespace Appalachia.Audio.Components
     {
         [Space(10)] [Colorize] public AudioClipParams[] clips;
 
-        [Colorize] public bool randomize = true;
-
-        [Colorize] public bool increment = true;
-
         [Space(10)] [Colorize] public AudioMixerGroup mixerGroup;
 
         [Space(10)]
         [Colorize]
         public AudioParameters audioParameters = AudioParameters.defaultAudioParameters;
+
+        [Colorize] public bool increment = true;
+
+        [Colorize] public bool randomize = true;
 
         [NonSerialized] public int clipIndex;
 
@@ -31,23 +31,6 @@ namespace Appalachia.Audio.Components
         [NonSerialized] public Patch patch;
 
         [HideInInspector] public WeightedDecay weighted;
-
-        public void Initialize()
-        {
-            lastFrame = -1;
-            clipIndex = 0;
-        }
-
-        internal float GetMaxDuration()
-        {
-            var n = 0f;
-            foreach (var c in clips)
-            {
-                n = Mathf.Max(n, c.clip.length);
-            }
-
-            return n;
-        }
 
         public AudioClip GetClip(out float gain)
         {
@@ -143,6 +126,23 @@ namespace Appalachia.Audio.Components
             }
 
             return false;
+        }
+
+        public void Initialize()
+        {
+            lastFrame = -1;
+            clipIndex = 0;
+        }
+
+        internal float GetMaxDuration()
+        {
+            var n = 0f;
+            foreach (var c in clips)
+            {
+                n = Mathf.Max(n, c.clip.length);
+            }
+
+            return n;
         }
 
         [Serializable]

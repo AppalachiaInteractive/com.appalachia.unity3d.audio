@@ -12,7 +12,12 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSignalSmoothAnalyzer
     {
-        [HideInInspector] public int referenceID;
+        [HorizontalGroup("Trend/B", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        public float avg;
 
         [HorizontalGroup("Trend/C", .5f)]
         [ReadOnly]
@@ -20,10 +25,12 @@ namespace Appalachia.Audio.Components
         [LabelWidth(70)]
         public float last;
 
-        [HorizontalGroup("Trend/C1", .5f)]
-        [PropertyRange(0.01f, .2f)]
+        [HorizontalGroup("Trend/A", .5f)]
+        [ReadOnly]
+        [NonSerialized]
+        [ShowInInspector]
         [LabelWidth(70)]
-        public float maxStepUp = 0.01f;
+        public float max = GAC.THRESHOLD_DB_LOW;
 
         [HorizontalGroup("Trend/C1", .5f)]
         [PropertyRange(0.01f, .2f)]
@@ -32,40 +39,10 @@ namespace Appalachia.Audio.Components
 
         [HideInInspector] public float maxStepTarget = 0.01f;
 
-        [HorizontalGroup("Trend/D", .5f)]
-        [PropertyRange(1, 128)]
+        [HorizontalGroup("Trend/C1", .5f)]
+        [PropertyRange(0.01f, .2f)]
         [LabelWidth(70)]
-        [LabelText("Buffer Up")]
-        public int bufferSizeUp = 24;
-
-        [HorizontalGroup("Trend/D", .5f)]
-        [PropertyRange(1, 128)]
-        [LabelWidth(70)]
-        [LabelText("Buffer Down")]
-        public int bufferSizeDown = 48;
-
-        [HorizontalGroup("Trend/E", .5f)]
-        [ReadOnly]
-        [ShowInInspector]
-        [LabelWidth(70)]
-        [LabelText("Target")]
-        public int bufferTarget = 24;
-
-        [HorizontalGroup("Trend/B", .5f)]
-        [ReadOnly]
-        [NonSerialized]
-        [ShowInInspector]
-        [LabelWidth(70)]
-        public float avg;
-
-        private Queue<float> buffer = new(128);
-
-        [HorizontalGroup("Trend/A", .5f)]
-        [ReadOnly]
-        [NonSerialized]
-        [ShowInInspector]
-        [LabelWidth(70)]
-        public float max = GAC.THRESHOLD_DB_LOW;
+        public float maxStepUp = 0.01f;
 
         [FoldoutGroup("Trend")]
         [HorizontalGroup("Trend/A", .5f)]
@@ -83,6 +60,29 @@ namespace Appalachia.Audio.Components
         public float realAvg;
 
         [NonSerialized] public float sum;
+
+        [HorizontalGroup("Trend/D", .5f)]
+        [PropertyRange(1, 128)]
+        [LabelWidth(70)]
+        [LabelText("Buffer Down")]
+        public int bufferSizeDown = 48;
+
+        [HorizontalGroup("Trend/D", .5f)]
+        [PropertyRange(1, 128)]
+        [LabelWidth(70)]
+        [LabelText("Buffer Up")]
+        public int bufferSizeUp = 24;
+
+        [HorizontalGroup("Trend/E", .5f)]
+        [ReadOnly]
+        [ShowInInspector]
+        [LabelWidth(70)]
+        [LabelText("Target")]
+        public int bufferTarget = 24;
+
+        [HideInInspector] public int referenceID;
+
+        private Queue<float> buffer = new(128);
 
         [HorizontalGroup("Trend/E", .5f)]
         [ReadOnly]

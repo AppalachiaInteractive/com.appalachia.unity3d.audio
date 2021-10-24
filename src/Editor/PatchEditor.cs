@@ -8,12 +8,12 @@ namespace Appalachia.Audio
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Patch))]
-    public class PatchEditor : UnityEditor.Editor
+    public class PatchEditor : Editor
     {
         private bool _foldout;
-        private string _played;
         private float _random;
         private float[] _weights;
+        private string _played;
 
         public override void OnInspectorGUI()
         {
@@ -31,16 +31,13 @@ namespace Appalachia.Audio
 
                 for (int i = 0, n = assets.Length; i < n; ++i)
                 {
-                    a.program.clips[i] =
-                        new AudioProgram.AudioClipParams {clip = (AudioClip) assets[i]};
+                    a.program.clips[i] = new AudioProgram.AudioClipParams {clip = (AudioClip) assets[i]};
                 }
             }
 
             GUILayout.Space(16);
 
-            if ((a.sequence != null) &&
-                (a.sequence.timing != null) &&
-                (a.sequence.timing.Length > 0))
+            if ((a.sequence != null) && (a.sequence.timing != null) && (a.sequence.timing.Length > 0))
             {
                 DrawAudioSequenceInspectorGUI(a);
             }
@@ -74,14 +71,7 @@ namespace Appalachia.Audio
                 if (c != null)
                 {
                     _played = c.name;
-                    Synthesizer.KeyOn(
-                        null,
-                        c,
-                        a.audioParameters,
-                        null,
-                        new Vector3(),
-                        1f + gain
-                    );
+                    Synthesizer.KeyOn(null, c, a.audioParameters, null, new Vector3(), 1f + gain);
                 }
             }
 

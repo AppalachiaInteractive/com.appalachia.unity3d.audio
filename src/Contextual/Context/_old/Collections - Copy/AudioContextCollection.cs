@@ -11,11 +11,11 @@ using Sirenix.OdinInspector;
 
 namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Collections
 {
-    [Serializable] 
+    [Serializable]
 public abstract class AudioContextCollection<TContext, T> : SelfSavingAndIdentifyingScriptableObject<T>
         where TContext : AudioContext
         where T : AudioContextCollection<TContext, T>
-    {        
+    {
         [SmartLabel, ToggleLeft, HorizontalGroup("A", .2f)]
         public bool locked;
 
@@ -25,7 +25,7 @@ public abstract class AudioContextCollection<TContext, T> : SelfSavingAndIdentif
         [SmartLabel, DisableIf(nameof(locked))]
         [ListDrawerSettings]
         public TContext[] index;
-        
+
         private void OnEnable()
         {
             Refresh();

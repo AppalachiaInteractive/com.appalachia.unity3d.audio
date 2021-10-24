@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Collections
 {
-    [Serializable] 
+    [Serializable]
 public abstract class AudioContextCollection1<TEnum, TContext, TIndex, TEnumList, TContextList, T> : AudioContextCollection<TContext, T>
         where TEnum : Enum
         where TContext : AudioContext1<TEnum, TContext>

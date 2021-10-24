@@ -5,16 +5,15 @@ namespace Appalachia.Audio
 {
     public class OscilloscopeCustomGUI : IAudioEffectPluginGUI
     {
-        private const int scopeheight = 120;
         private const int maxspeclen = 4096;
+        private const int scopeheight = 120;
         private readonly Color[] spec = new Color[maxspeclen];
         private readonly int[] specpos = new int[8];
         private readonly Texture2D[] spectex = new Texture2D[8];
 
-        public override string Name => "Demo Oscilloscope";
+        public override string Description => "Oscilloscope demo plugin for Unity's audio plugin system";
 
-        public override string Description =>
-            "Oscilloscope demo plugin for Unity's audio plugin system";
+        public override string Name => "Demo Oscilloscope";
 
         public override string Vendor => "Unity";
 
@@ -46,11 +45,7 @@ namespace Appalachia.Audio
                             r,
                             delegate(float x)
                             {
-                                var f = Mathf.Clamp(
-                                    x * (numsamples - 2) * window * 0.5f,
-                                    0,
-                                    numsamples - 2
-                                );
+                                var f = Mathf.Clamp(x * (numsamples - 2) * window * 0.5f, 0, numsamples - 2);
                                 var i = (int) Mathf.Floor(f);
                                 var s1 = 20.0f * Mathf.Log10(buffer[i] + 0.0001f);
                                 var s2 = 20.0f * Mathf.Log10(buffer[i + 1] + 0.0001f);
@@ -58,12 +53,7 @@ namespace Appalachia.Audio
                             },
                             lineColor
                         );
-                        GUIHelpers.DrawFrequencyTickMarks(
-                            r,
-                            samplerate * window * 0.5f,
-                            false,
-                            Color.red
-                        );
+                        GUIHelpers.DrawFrequencyTickMarks(r, samplerate * window * 0.5f, false, Color.red);
                         GUIHelpers.DrawDbTickMarks(
                             r,
                             1.0f / scale,
@@ -119,12 +109,7 @@ namespace Appalachia.Audio
                     var oldColor = GUI.color;
                     GUI.color = new Color(1.0f, 1.0f, 1.0f, blend);
 
-                    var r2 = new Rect(
-                        r.x,
-                        r.y + specpos[channel],
-                        r.width / (window * 0.5f),
-                        scopeheight
-                    );
+                    var r2 = new Rect(r.x, r.y + specpos[channel], r.width / (window * 0.5f), scopeheight);
                     GUI.DrawTexture(r2, spectex[channel], ScaleMode.StretchToFill, false, 1.0f);
 
                     r2.y -= scopeheight;
@@ -132,12 +117,7 @@ namespace Appalachia.Audio
 
                     GUI.color = oldColor;
 
-                    GUIHelpers.DrawFrequencyTickMarks(
-                        r,
-                        samplerate * window * 0.5f,
-                        false,
-                        Color.red
-                    );
+                    GUIHelpers.DrawFrequencyTickMarks(r, samplerate * window * 0.5f, false, Color.red);
                 }
             }
 

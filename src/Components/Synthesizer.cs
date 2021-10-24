@@ -20,20 +20,198 @@ namespace Appalachia.Audio.Components
 {
     public static class Synthesizer
     {
-        private static float _masterVolume = 1f;
-
-        public static Stack<SourceInfo> freeSources = new(64);
-        public static List<ActiveSource> activeSources0 = new(64);
-        public static List<ActiveSource> activeSources1 = new(64);
-        public static uint activeHandle;
 #if UNITY_EDITOR
         public static int sourceIndex;
 #endif
+        public static List<ActiveSource> activeSources0 = new(64);
+        public static List<ActiveSource> activeSources1 = new(64);
+
+        public static Stack<SourceInfo> freeSources = new(64);
+        public static uint activeHandle;
+        private static float _masterVolume = 1f;
 
         public static float masterVolume
         {
             get => _masterVolume;
             set => _masterVolume = Mathf.Clamp01(value);
+        }
+
+        public static bool IsKeyedOn(uint handle)
+        {
+            if (handle == 0)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer IsKeyedOn: bad handle");
+                return false;
+            }
+
+            foreach (var i in activeSources0)
+            {
+                if (i.handle == handle)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static uint KeyOn(
+            AudioMixerGroup g,
+            AudioClip c,
+            AudioParameters p,
+            Transform t = null,
+            Vector3 pos = new(),
+            float delay = 0f,
+            float volume = 1f,
+            float modVolume = 1f)
+        {
+            if (c == null)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing audio clip reference");
+                return 0;
+            }
+
+            var handle = GetNextHandle();
+            Activate(
+                g,
+                c,
+                p,
+                new ActivationParams
+                {
+                    transform = t,
+                    position = pos,
+                    delay = delay,
+                    volume = volume,
+                    modVolume = modVolume,
+                    handle = handle
+                }
+#if UNITY_EDITOR
+                ,
+                null
+#endif
+            );
+            return handle;
+        }
+
+        public static uint KeyOn(
+            out bool looping,
+            Patch patch,
+            Transform t = null,
+            Vector3 pos = new(),
+            float delay = 0f,
+            float volume = 1f,
+            float modVolume = 1f)
+        {
+            if (patch == null)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                looping = false;
+                return 0;
+            }
+
+            var handle = GetNextHandle();
+            looping = patch.Activate(
+                new ActivationParams
+                {
+                    transform = t,
+                    position = pos,
+                    delay = delay,
+                    volume = volume,
+                    modVolume = modVolume,
+                    handle = handle
+                }
+            );
+            return handle;
+        }
+
+        public static uint KeyOn(
+            out bool looping,
+            Patch patch,
+            AudioParameters.EnvelopeParams ep,
+            Transform t = null,
+            Vector3 pos = new(),
+            float delay = 0f,
+            float volume = 1f,
+            float modVolume = 1f)
+        {
+            if (patch == null)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                looping = false;
+                return 0;
+            }
+
+            var handle = GetNextHandle();
+            looping = patch.Activate(
+                new ActivationParams
+                {
+                    transform = t,
+                    position = pos,
+                    delay = delay,
+                    volume = volume,
+                    modVolume = modVolume,
+                    handle = handle
+                },
+                ep
+            );
+            return handle;
+        }
+
+        public static void KeyOff(uint handle, float release = 0f, EnvelopeMode mode = EnvelopeMode.None)
+        {
+            if (handle == 0)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOff: bad handle");
+                return;
+            }
+
+            using (var enumerator = activeSources0.GetEnumerator())
+            {
+                for (var x = enumerator; x.MoveNext();)
+                {
+                    var z = x.Current;
+                    if (z.handle == handle)
+                    {
+#if SYNTHESIZER_PARANOIA
+                Debug.LogFormat(
+                    Time.frameCount.ToString("X4") +
+                    " Synthesizer.KeyOff: {0} ({1}) : {2} {3}",
+                    z.info.audioSource.clip.name, z.info.audioSource.name,
+                    release, mode);
+#endif
+                        switch (mode)
+                        {
+                            case EnvelopeMode.Exact:
+                                z.envelope.SetRelease(release);
+                                break;
+                            case EnvelopeMode.Min:
+                                z.envelope.SetRelease(Mathf.Min(z.envelope.releaseTime, release));
+                                break;
+                            case EnvelopeMode.Max:
+                                z.envelope.SetRelease(Mathf.Max(z.envelope.releaseTime, release));
+                                break;
+                        }
+
+                        z.keyOff = true;
+                    }
+
+                    activeSources1.Add(z);
+                }
+            }
+
+            Swap(ref activeSources0, ref activeSources1);
+            activeSources1.Clear();
+        }
+
+        public static void KeyOn(Patch patch, AudioSource src, float delay = 0f, float volume = 1f)
+        {
+            if (patch == null)
+            {
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference");
+                return;
+            }
+
+            Activate(patch, src, delay, volume);
         }
 
         public static void Reset()
@@ -44,64 +222,56 @@ namespace Appalachia.Audio.Components
             activeSources1.Clear();
         }
 
-        private static SourceInfo CreateSource()
+        public static void Stop(uint handle)
         {
-            var o = new GameObject(
-#if UNITY_EDITOR
-                string.Format("Appalachia.Core.Audio.Source #{0:X2}", sourceIndex++)
-#endif
-            );
-            o.transform.parent = Heartbeat.hierarchyTransform;
-            var i = new SourceInfo
+            if (handle == 0)
             {
-                transform = o.transform,
-                audioSource = o.AddComponent<AudioSource>(),
-                lowPassFilter = o.AddComponent<AudioLowPassFilter>(),
-                highPassFilter = o.AddComponent<AudioHighPassFilter>(),
-                occlusion = o.AddComponent<Occlusion>()
-            };
-            i.audioSource.playOnAwake = false;
-            return i;
+                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer Stop: bad handle");
+                return;
+            }
+
+            using (var enumerator = activeSources0.GetEnumerator())
+            {
+                for (var x = enumerator; x.MoveNext();)
+                {
+                    var z = x.Current;
+                    if ((z.handle == handle) && z.info.audioSource)
+                    {
+#if SYNTHESIZER_PARANOIA
+                Debug.LogFormat(
+                    Time.frameCount.ToString("X4") +
+                    " Synthesizer.Update: {0} ({1}) : stopped by envelope",
+                    z.info.audioSource.clip.name, z.info.audioSource.name);
+#endif
+                        z.info.audioSource.Stop();
+                    }
+                }
+            }
         }
 
-        private static bool ActivateStatic(
-            AudioMixerGroup g,
-            AudioClip c,
-            AudioParameters p,
-            AudioSource s,
-            float delay,
-            float volume,
-            float pitch)
+        public static void StopAll()
         {
-            s.clip = c;
-            s.volume = volume;
-            s.pitch = p.GetPitch() * pitch * Time.timeScale;
-            s.panStereo = p.panning;
-            s.loop = p.loop;
-            s.spatialBlend = p.spatial.blend;
-            s.minDistance = p.spatial.distance.min;
-            s.maxDistance = p.spatial.distance.max;
-            s.dopplerLevel = p.spatial.doppler;
-            s.priority = (int) p.runtime.priority;
-            s.outputAudioMixerGroup = g;
-
-            if (delay <= Mathf.Epsilon)
-            {
-                s.Play();
-            }
-            else
-            {
-                s.PlayDelayed(delay);
-            }
-
 #if SYNTHESIZER_PARANOIA
-        Debug.LogFormat(
-            Time.frameCount.ToString("X4") +
-            " Synthesizer.ActivateStatic: {0} {1} ({2}) : {3:N2} {4:N2} {5:N2} -> {6}",
-            g, c.name, s.name, delay, volume, pitch, s.isPlaying);
+        Debug.LogFormat("Synthesizer.StopAll");
 #endif
-
-            return p.loop;
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                StopAllClips();
+                return;
+            }
+#endif
+            using (var enumerator = activeSources0.GetEnumerator())
+            {
+                for (var x = enumerator; x.MoveNext();)
+                {
+                    var z = x.Current;
+                    if (z.info.audioSource)
+                    {
+                        z.info.audioSource.Stop();
+                    }
+                }
+            }
         }
 
         internal static bool Activate(
@@ -143,9 +313,7 @@ namespace Appalachia.Audio.Components
                 patch
 #endif
             );
-            if (!looping &&
-                (p.occlusion.function != OcclusionFunction.None) &&
-                (p.slapback.patch != null))
+            if (!looping && (p.occlusion.function != OcclusionFunction.None) && (p.slapback.patch != null))
             {
                 AudioSlapback s;
                 Vector3 pos3, d3;
@@ -192,82 +360,6 @@ namespace Appalachia.Audio.Components
             }
 
             return looping;
-        }
-
-        internal static bool ActivateInternal(
-            AudioMixerGroup g,
-            AudioClip c,
-            AudioParameters p,
-            ActivationParams ap,
-            Vector3 pos2,
-            float pitch
-#if UNITY_EDITOR
-            ,
-            Patch patch
-#endif
-        )
-        {
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                EditorApplication.CallbackFunction f = null;
-                var n = Time.realtimeSinceStartup;
-                f = () =>
-                {
-                    if ((Time.realtimeSinceStartup - n) >= ap.delay)
-                    {
-                        EditorApplication.update -= f;
-                        PlayClip(c, p.loop);
-                    }
-                };
-                EditorApplication.update += f;
-                return false;
-            }
-#endif
-
-            var i = freeSources.Count > 0 ? freeSources.Pop() : CreateSource();
-            i.transform.position = pos2;
-            i.Enable(p);
-
-            var z = new ActiveSource
-            {
-                handle = ap.handle,
-                keyOn = ap.delay,
-                keyOff = false,
-#if UNITY_EDITOR
-                patch = patch,
-#endif
-                info = i,
-                target =
-                    (ap.transform == null) || ap.transform.gameObject.isStatic
-                        ? null
-                        : ap.transform,
-                localPosition = ap.position,
-                volume = p.GetVolume() * Mathf.Clamp01(ap.volume),
-                modVolume = ap.modVolume,
-                envelope = Envelope.instant
-            };
-
-#if SYNTHESIZER_PARANOIA
-        Debug.LogFormat(
-            Time.frameCount.ToString("X4") +
-            " Synthesizer.ActivateInternal: {0} {1} ({2})",
-            g, c.name, z.target);
-#endif
-
-            if (p.envelope.attack > Mathf.Epsilon)
-            {
-                z.envelope.SetAttack(p.envelope.attack);
-            }
-
-            if (p.envelope.release > Mathf.Epsilon)
-            {
-                z.envelope.SetRelease(p.envelope.release);
-            }
-
-            ActivateStatic(g, c, p, i.audioSource, ap.delay, z.GetVolume(), pitch);
-            activeSources0.Add(z);
-            return p.loop;
         }
 
         internal static bool Activate(Patch patch, AudioSource src, float delay, float volume)
@@ -389,199 +481,83 @@ namespace Appalachia.Audio.Components
             return looping;
         }
 
+        internal static bool ActivateInternal(
+            AudioMixerGroup g,
+            AudioClip c,
+            AudioParameters p,
+            ActivationParams ap,
+            Vector3 pos2,
+            float pitch
+#if UNITY_EDITOR
+            ,
+            Patch patch
+#endif
+        )
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                EditorApplication.CallbackFunction f = null;
+                var n = Time.realtimeSinceStartup;
+                f = () =>
+                {
+                    if ((Time.realtimeSinceStartup - n) >= ap.delay)
+                    {
+                        EditorApplication.update -= f;
+                        PlayClip(c, p.loop);
+                    }
+                };
+                EditorApplication.update += f;
+                return false;
+            }
+#endif
+
+            var i = freeSources.Count > 0 ? freeSources.Pop() : CreateSource();
+            i.transform.position = pos2;
+            i.Enable(p);
+
+            var z = new ActiveSource
+            {
+                handle = ap.handle,
+                keyOn = ap.delay,
+                keyOff = false,
+#if UNITY_EDITOR
+                patch = patch,
+#endif
+                info = i,
+                target = (ap.transform == null) || ap.transform.gameObject.isStatic ? null : ap.transform,
+                localPosition = ap.position,
+                volume = p.GetVolume() * Mathf.Clamp01(ap.volume),
+                modVolume = ap.modVolume,
+                envelope = Envelope.instant
+            };
+
+#if SYNTHESIZER_PARANOIA
+        Debug.LogFormat(
+            Time.frameCount.ToString("X4") +
+            " Synthesizer.ActivateInternal: {0} {1} ({2})",
+            g, c.name, z.target);
+#endif
+
+            if (p.envelope.attack > Mathf.Epsilon)
+            {
+                z.envelope.SetAttack(p.envelope.attack);
+            }
+
+            if (p.envelope.release > Mathf.Epsilon)
+            {
+                z.envelope.SetRelease(p.envelope.release);
+            }
+
+            ActivateStatic(g, c, p, i.audioSource, ap.delay, z.GetVolume(), pitch);
+            activeSources0.Add(z);
+            return p.loop;
+        }
+
         internal static uint GetNextHandle()
         {
             activeHandle = (activeHandle << 16) | ((activeHandle & 0xffff) + 1);
             return activeHandle;
-        }
-
-        public static bool IsKeyedOn(uint handle)
-        {
-            if (handle == 0)
-            {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer IsKeyedOn: bad handle");
-                return false;
-            }
-
-            foreach (var i in activeSources0)
-            {
-                if (i.handle == handle)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public static uint KeyOn(
-            AudioMixerGroup g,
-            AudioClip c,
-            AudioParameters p,
-            Transform t = null,
-            Vector3 pos = new(),
-            float delay = 0f,
-            float volume = 1f,
-            float modVolume = 1f)
-        {
-            if (c == null)
-            {
-                Debug.LogErrorFormat(
-                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing audio clip reference"
-                );
-                return 0;
-            }
-
-            var handle = GetNextHandle();
-            Activate(
-                g,
-                c,
-                p,
-                new ActivationParams
-                {
-                    transform = t,
-                    position = pos,
-                    delay = delay,
-                    volume = volume,
-                    modVolume = modVolume,
-                    handle = handle
-                }
-#if UNITY_EDITOR
-                ,
-                null
-#endif
-            );
-            return handle;
-        }
-
-        public static void KeyOn(Patch patch, AudioSource src, float delay = 0f, float volume = 1f)
-        {
-            if (patch == null)
-            {
-                Debug.LogErrorFormat(
-                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
-                );
-                return;
-            }
-
-            Activate(patch, src, delay, volume);
-        }
-
-        public static uint KeyOn(
-            out bool looping,
-            Patch patch,
-            Transform t = null,
-            Vector3 pos = new(),
-            float delay = 0f,
-            float volume = 1f,
-            float modVolume = 1f)
-        {
-            if (patch == null)
-            {
-                Debug.LogErrorFormat(
-                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
-                );
-                looping = false;
-                return 0;
-            }
-
-            var handle = GetNextHandle();
-            looping = patch.Activate(
-                new ActivationParams
-                {
-                    transform = t,
-                    position = pos,
-                    delay = delay,
-                    volume = volume,
-                    modVolume = modVolume,
-                    handle = handle
-                }
-            );
-            return handle;
-        }
-
-        public static uint KeyOn(
-            out bool looping,
-            Patch patch,
-            AudioParameters.EnvelopeParams ep,
-            Transform t = null,
-            Vector3 pos = new(),
-            float delay = 0f,
-            float volume = 1f,
-            float modVolume = 1f)
-        {
-            if (patch == null)
-            {
-                Debug.LogErrorFormat(
-                    "Appalachia.Core.Audio.Synthesizer KeyOn: missing patch reference"
-                );
-                looping = false;
-                return 0;
-            }
-
-            var handle = GetNextHandle();
-            looping = patch.Activate(
-                new ActivationParams
-                {
-                    transform = t,
-                    position = pos,
-                    delay = delay,
-                    volume = volume,
-                    modVolume = modVolume,
-                    handle = handle
-                },
-                ep
-            );
-            return handle;
-        }
-
-        public static void KeyOff(
-            uint handle,
-            float release = 0f,
-            EnvelopeMode mode = EnvelopeMode.None)
-        {
-            if (handle == 0)
-            {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer KeyOff: bad handle");
-                return;
-            }
-
-            using (var enumerator = activeSources0.GetEnumerator())
-            {
-                for (var x = enumerator; x.MoveNext();)
-                {
-                    var z = x.Current;
-                    if (z.handle == handle)
-                    {
-#if SYNTHESIZER_PARANOIA
-                Debug.LogFormat(
-                    Time.frameCount.ToString("X4") +
-                    " Synthesizer.KeyOff: {0} ({1}) : {2} {3}",
-                    z.info.audioSource.clip.name, z.info.audioSource.name,
-                    release, mode);
-#endif
-                        switch (mode)
-                        {
-                            case EnvelopeMode.Exact:
-                                z.envelope.SetRelease(release);
-                                break;
-                            case EnvelopeMode.Min:
-                                z.envelope.SetRelease(Mathf.Min(z.envelope.releaseTime, release));
-                                break;
-                            case EnvelopeMode.Max:
-                                z.envelope.SetRelease(Mathf.Max(z.envelope.releaseTime, release));
-                                break;
-                        }
-
-                        z.keyOff = true;
-                    }
-
-                    activeSources1.Add(z);
-                }
-            }
-
-            Swap(ref activeSources0, ref activeSources1);
-            activeSources1.Clear();
         }
 
         internal static void SetModVolume(uint handle, float volume)
@@ -608,65 +584,6 @@ namespace Appalachia.Audio.Components
 
             Swap(ref activeSources0, ref activeSources1);
             activeSources1.Clear();
-        }
-
-        public static void Stop(uint handle)
-        {
-            if (handle == 0)
-            {
-                Debug.LogErrorFormat("Appalachia.Core.Audio.Synthesizer Stop: bad handle");
-                return;
-            }
-
-            using (var enumerator = activeSources0.GetEnumerator())
-            {
-                for (var x = enumerator; x.MoveNext();)
-                {
-                    var z = x.Current;
-                    if ((z.handle == handle) && z.info.audioSource)
-                    {
-#if SYNTHESIZER_PARANOIA
-                Debug.LogFormat(
-                    Time.frameCount.ToString("X4") +
-                    " Synthesizer.Update: {0} ({1}) : stopped by envelope",
-                    z.info.audioSource.clip.name, z.info.audioSource.name);
-#endif
-                        z.info.audioSource.Stop();
-                    }
-                }
-            }
-        }
-
-        public static void StopAll()
-        {
-#if SYNTHESIZER_PARANOIA
-        Debug.LogFormat("Synthesizer.StopAll");
-#endif
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                StopAllClips();
-                return;
-            }
-#endif
-            using (var enumerator = activeSources0.GetEnumerator())
-            {
-                for (var x = enumerator; x.MoveNext();)
-                {
-                    var z = x.Current;
-                    if (z.info.audioSource)
-                    {
-                        z.info.audioSource.Stop();
-                    }
-                }
-            }
-        }
-
-        private static void Swap<T>(ref List<T> a, ref List<T> b)
-        {
-            var y = a;
-            a = b;
-            b = y;
         }
 
         internal static void Update(float dt)
@@ -719,37 +636,71 @@ namespace Appalachia.Audio.Components
             activeSources1.Clear();
         }
 
-        [Serializable]
-        public struct SourceInfo
+        private static bool ActivateStatic(
+            AudioMixerGroup g,
+            AudioClip c,
+            AudioParameters p,
+            AudioSource s,
+            float delay,
+            float volume,
+            float pitch)
         {
-            public Transform transform;
-            public AudioSource audioSource;
-            public AudioLowPassFilter lowPassFilter;
-            public AudioHighPassFilter highPassFilter;
-            public Occlusion occlusion;
+            s.clip = c;
+            s.volume = volume;
+            s.pitch = p.GetPitch() * pitch * Time.timeScale;
+            s.panStereo = p.panning;
+            s.loop = p.loop;
+            s.spatialBlend = p.spatial.blend;
+            s.minDistance = p.spatial.distance.min;
+            s.maxDistance = p.spatial.distance.max;
+            s.dopplerLevel = p.spatial.doppler;
+            s.priority = (int) p.runtime.priority;
+            s.outputAudioMixerGroup = g;
 
-            public void Enable(AudioParameters p)
+            if (delay <= Mathf.Epsilon)
             {
-                audioSource.enabled = true;
-
-                if ((p.occlusion.function != OcclusionFunction.None) && (p.spatial.blend > 0f))
-                {
-                    lowPassFilter.enabled = true;
-                    highPassFilter.enabled = true;
-                    occlusion.enabled = true;
-                }
-
-                occlusion.occlusion = p.occlusion;
-                occlusion.spatial = p.spatial;
+                s.Play();
+            }
+            else
+            {
+                s.PlayDelayed(delay);
             }
 
-            public void Disable()
+#if SYNTHESIZER_PARANOIA
+        Debug.LogFormat(
+            Time.frameCount.ToString("X4") +
+            " Synthesizer.ActivateStatic: {0} {1} ({2}) : {3:N2} {4:N2} {5:N2} -> {6}",
+            g, c.name, s.name, delay, volume, pitch, s.isPlaying);
+#endif
+
+            return p.loop;
+        }
+
+        private static SourceInfo CreateSource()
+        {
+            var o = new GameObject(
+#if UNITY_EDITOR
+                string.Format("Appalachia.Core.Audio.Source #{0:X2}", sourceIndex++)
+#endif
+            );
+            o.transform.parent = Heartbeat.hierarchyTransform;
+            var i = new SourceInfo
             {
-                audioSource.enabled = false;
-                lowPassFilter.enabled = false;
-                highPassFilter.enabled = false;
-                occlusion.enabled = false;
-            }
+                transform = o.transform,
+                audioSource = o.AddComponent<AudioSource>(),
+                lowPassFilter = o.AddComponent<AudioLowPassFilter>(),
+                highPassFilter = o.AddComponent<AudioHighPassFilter>(),
+                occlusion = o.AddComponent<Occlusion>()
+            };
+            i.audioSource.playOnAwake = false;
+            return i;
+        }
+
+        private static void Swap<T>(ref List<T> a, ref List<T> b)
+        {
+            var y = a;
+            a = b;
+            b = y;
         }
 
         [Serializable]
@@ -781,8 +732,7 @@ namespace Appalachia.Audio.Components
             {
                 if (info.audioSource)
                 {
-                    playing = info.audioSource.isPlaying ||
-                              (info.audioSource.isVirtual && (keyOn > 0f));
+                    playing = info.audioSource.isPlaying || (info.audioSource.isVirtual && (keyOn > 0f));
                     return true;
                 }
 
@@ -819,6 +769,39 @@ namespace Appalachia.Audio.Components
             }
         }
 
+        [Serializable]
+        public struct SourceInfo
+        {
+            public Transform transform;
+            public AudioSource audioSource;
+            public AudioLowPassFilter lowPassFilter;
+            public AudioHighPassFilter highPassFilter;
+            public Occlusion occlusion;
+
+            public void Enable(AudioParameters p)
+            {
+                audioSource.enabled = true;
+
+                if ((p.occlusion.function != OcclusionFunction.None) && (p.spatial.blend > 0f))
+                {
+                    lowPassFilter.enabled = true;
+                    highPassFilter.enabled = true;
+                    occlusion.enabled = true;
+                }
+
+                occlusion.occlusion = p.occlusion;
+                occlusion.spatial = p.spatial;
+            }
+
+            public void Disable()
+            {
+                audioSource.enabled = false;
+                lowPassFilter.enabled = false;
+                highPassFilter.enabled = false;
+                occlusion.enabled = false;
+            }
+        }
+
 #if UNITY_EDITOR
 
         private static MethodInfo _PlayClip;
@@ -830,10 +813,7 @@ namespace Appalachia.Audio.Components
             {
                 var a = typeof(EditorApplication).Assembly;
                 var t = a.GetType("UnityEditor.AudioUtil");
-                _PlayClip = t.GetMethod(
-                    "PlayClip",
-                    new[] {typeof(AudioClip), typeof(int), typeof(bool)}
-                );
+                _PlayClip = t.GetMethod("PlayClip", new[] {typeof(AudioClip), typeof(int), typeof(bool)});
             }
 
             _PlayClip.Invoke(null, new object[] {c, 0, loop});
@@ -852,4 +832,4 @@ namespace Appalachia.Audio.Components
         }
 #endif
     }
-} 
+}

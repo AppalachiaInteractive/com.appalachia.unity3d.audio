@@ -9,21 +9,6 @@ namespace Appalachia.Audio
     [CustomEditor(typeof(AudioSlapback))]
     public class AudioSlapbackEditor : AudioZoneEditor
     {
-        [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioSlapback))]
-        private static void CreateAudioSlapback()
-        {
-            var o = new GameObject("Audio Slapback");
-            o.AddComponent<AudioSlapback>();
-
-            var p = Selection.activeGameObject;
-            if ((p != null) && !AssetDatabaseManager.IsMainAsset(p) && !AssetDatabaseManager.IsSubAsset(p))
-            {
-                o.transform.parent = p.transform;
-            }
-
-            EditorGUIUtility.PingObject(o);
-        }
-
         public override void OnInspectorGUI()
         {
             ColorizeDrawer.Reset();
@@ -70,6 +55,23 @@ namespace Appalachia.Audio
                     z.radius = f;
                 }
             }
+        }
+
+        [MenuItem(
+            APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioSlapback)
+        )]
+        private static void CreateAudioSlapback()
+        {
+            var o = new GameObject("Audio Slapback");
+            o.AddComponent<AudioSlapback>();
+
+            var p = Selection.activeGameObject;
+            if ((p != null) && !AssetDatabaseManager.IsMainAsset(p) && !AssetDatabaseManager.IsSubAsset(p))
+            {
+                o.transform.parent = p.transform;
+            }
+
+            EditorGUIUtility.PingObject(o);
         }
     }
 }

@@ -11,16 +11,16 @@ namespace Appalachia.Audio.Components
     {
         public static readonly HashSet<AudioSlapback> allSlapbacks = new();
 
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            allSlapbacks.Add(this);
-        }
-
         protected new void OnDisable()
         {
             allSlapbacks.Remove(this);
             base.OnDisable();
+        }
+
+        protected new void OnEnable()
+        {
+            base.OnEnable();
+            allSlapbacks.Add(this);
         }
 
         public static AudioSlapback FindClosest(Vector3 p, out Vector3 rp, out Vector3 rd)

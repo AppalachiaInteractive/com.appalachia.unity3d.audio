@@ -10,19 +10,19 @@ namespace Appalachia.Audio
 {
     public class Monitor : AppalachiaEditorWindow
     {
-        private static readonly StringBuilder _builder = new(256);
         private static readonly Dictionary<int, string> _intLookup = new();
         private static readonly Dictionary<string, int> _srcColors = new();
+        private static readonly StringBuilder _builder = new(256);
         private static bool _showOcclusion;
         private static bool _showSequencer = true;
         private static bool _showSynthesizer = true;
         private GUIStyle _lineStyle;
         private int _paintCount;
+
+        private List<Synthesizer.ActiveSource> _srcInfo;
         private Vector3 _scrollOcclusion;
         private Vector3 _scrollSequencer;
         private Vector3 _scrollSynthesizer;
-
-        private List<Synthesizer.ActiveSource> _srcInfo;
 
         protected void OnDisable()
         {

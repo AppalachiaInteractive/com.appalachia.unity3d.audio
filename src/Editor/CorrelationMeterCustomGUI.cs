@@ -5,14 +5,13 @@ namespace Appalachia.Audio
 {
     public class CorrelationMeterCustomGUI : IAudioEffectPluginGUI
     {
+        private static readonly Vector3[] circle = new Vector3[40];
         private static readonly Vector3[] coord1 = new Vector3[2];
         private static readonly Vector3[] coord2 = new Vector3[2];
-        private static readonly Vector3[] circle = new Vector3[40];
+
+        public override string Description => "Correlation meter demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo CorrelationMeter";
-
-        public override string Description =>
-            "Correlation meter demo plugin for Unity's audio plugin system";
 
         public override string Vendor => "Unity";
 
@@ -73,10 +72,7 @@ namespace Appalachia.Audio
                 {
                     var px = cx + (scale * corr[n * 2]);
                     var py = cy - (scale * corr[(n * 2) + 1]);
-                    if ((px >= r.x) &&
-                        (py >= r.y) &&
-                        (px < (r.x + r.width)) &&
-                        (py < (r.y + r.height)))
+                    if ((px >= r.x) && (py >= r.y) && (px < (r.x + r.width)) && (py < (r.y + r.height)))
                     {
                         GL.Color(Color.Lerp(col1, col2, n * cs));
                         GL.Vertex3(px, py - 1.0f, 0.0f);

@@ -8,9 +8,42 @@ using UnityEngine;
 namespace Appalachia.Audio
 {
     [CustomEditor(typeof(AudioZone))]
-    public class AudioZoneEditor : UnityEditor.Editor
+    public class AudioZoneEditor : Editor
     {
         protected static StringBuilder builder = new();
+
+        public override void OnInspectorGUI()
+        {
+            ColorizeDrawer.Reset();
+            var oldColor = GUI.color;
+            GUI.color = ColorizeDrawer.GetColor("");
+
+            serializedObject.Update();
+            var prop = serializedObject.GetIterator();
+            var targ = (AudioZone) serializedObject.targetObject;
+            bool disabled;
+            if (prop.NextVisible(true))
+            {
+                do
+                {
+                    disabled = !((prop.name != "m_Script") &&
+                                 ((prop.name != "radius") || (targ.trigger == null)) &&
+                                 ((prop.name != "layerMask") || (targ.trigger != null)));
+                    EditorGUI.BeginDisabledGroup(disabled);
+                    EditorGUILayout.PropertyField(prop);
+                    EditorGUI.EndDisabledGroup();
+                } while (prop.NextVisible(false));
+            }
+
+            serializedObject.ApplyModifiedProperties();
+
+            GUI.color = oldColor;
+        }
+
+        protected virtual void DrawZoneLabel(Zone z, Vector3 p)
+        {
+            DrawZoneLabelStatic(z, p);
+        }
 
         protected void OnSceneGUI()
         {
@@ -44,59 +77,6 @@ namespace Appalachia.Audio
                     }
                 }
             }
-        }
-
-        [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioZone))]
-        private static void CreateAudioZone()
-        {
-            var o = new GameObject("Audio Zone");
-            o.AddComponent<AudioZone>();
-
-            var p = Selection.activeGameObject;
-            if ((p != null) && !AssetDatabaseManager.IsMainAsset(p) && !AssetDatabaseManager.IsSubAsset(p))
-            {
-                o.transform.parent = p.transform;
-            }
-
-            EditorGUIUtility.PingObject(o);
-        }
-
-        public override void OnInspectorGUI()
-        {
-            ColorizeDrawer.Reset();
-            var oldColor = GUI.color;
-            GUI.color = ColorizeDrawer.GetColor("");
-
-            serializedObject.Update();
-            var prop = serializedObject.GetIterator();
-            var targ = (AudioZone) serializedObject.targetObject;
-            bool disabled;
-            if (prop.NextVisible(true))
-            {
-                do
-                {
-                    disabled = !((prop.name != "m_Script") &&
-                                 ((prop.name != "radius") || (targ.trigger == null)) &&
-                                 ((prop.name != "layerMask") || (targ.trigger != null)));
-                    EditorGUI.BeginDisabledGroup(disabled);
-                    EditorGUILayout.PropertyField(prop);
-                    EditorGUI.EndDisabledGroup();
-                } while (prop.NextVisible(false));
-            }
-
-            serializedObject.ApplyModifiedProperties();
-
-            GUI.color = oldColor;
-        }
-
-        protected static string GetZoneCaption(Zone z)
-        {
-            return string.Format("{0} ({1:N2})", z.name, z.GetRadius());
-        }
-
-        protected virtual void DrawZoneLabel(Zone z, Vector3 p)
-        {
-            DrawZoneLabelStatic(z, p);
         }
 
         public static void DrawZoneLabelStatic(Zone z, Vector3 p)
@@ -162,6 +142,26 @@ namespace Appalachia.Audio
                     z.radius = f;
                 }
             }
+        }
+
+        protected static string GetZoneCaption(Zone z)
+        {
+            return string.Format("{0} ({1:N2})", z.name, z.GetRadius());
+        }
+
+        [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioZone))]
+        private static void CreateAudioZone()
+        {
+            var o = new GameObject("Audio Zone");
+            o.AddComponent<AudioZone>();
+
+            var p = Selection.activeGameObject;
+            if ((p != null) && !AssetDatabaseManager.IsMainAsset(p) && !AssetDatabaseManager.IsSubAsset(p))
+            {
+                o.transform.parent = p.transform;
+            }
+
+            EditorGUIUtility.PingObject(o);
         }
     }
 }

@@ -14,83 +14,27 @@ namespace Appalachia.Audio.Components
         public static readonly List<Zone> allZones = new();
         public static bool dontProbeZones;
 
-        public float radius = 5f;
-
         [Range(0, 1)] public float parentExclusion;
 
-        protected Collider _trigger;
-        protected int _triggerRefs;
-        internal TernaryBool active;
-        internal List<Zone> children;
-
-        internal int hash;
+        public float radius = 5f;
         internal bool inited;
-
-        internal Zone parent;
+        internal bool wantActive;
 
         internal float volumeExclusion;
         internal float volumeInfluence;
-        internal bool wantActive;
+
+        internal int hash;
+        internal List<Zone> children;
+        internal TernaryBool active;
+
+        internal Zone parent;
+
+        protected Collider _trigger;
+        protected int _triggerRefs;
 
         public bool isVolumeExcluded => volumeExclusion > 0f;
 
         public Collider trigger => inited ? _trigger : FindTrigger(this);
-
-        protected void OnEnable()
-        {
-            if (!inited)
-            {
-                OnInit();
-            }
-
-            allZones.Add(this);
-            OnUpdateActivation(wantActive);
-        }
-
-        protected void OnDisable()
-        {
-            allZones.Remove(this);
-            OnUpdateActivation(false);
-            _triggerRefs = 0;
-        }
-
-        public static Collider FindTrigger(Zone z)
-        {
-            var c = z.GetComponent<Collider>();
-            return (c != null) && c.isTrigger ? c : null;
-        }
-
-        private static float GetTriggerRadius(Collider c)
-        {
-            var e = c.bounds.extents;
-            return Mathf.Max(e.x, e.z);
-        }
-
-        protected virtual void OnInit()
-        {
-            if ((_trigger = FindTrigger(this)) == null)
-            {
-                RegisterWithParentZone();
-            }
-
-            hash = (int) Synthesizer.GetNextHandle();
-            inited = true;
-        }
-
-        private void RegisterWithParentZone()
-        {
-            var z = FindParentZone();
-            if (z != null)
-            {
-                if (z.children == null)
-                {
-                    z.children = new List<Zone>(4);
-                }
-
-                z.children.Add(this);
-                parent = z;
-            }
-        }
 
         public float GetRadius()
         {
@@ -101,22 +45,6 @@ namespace Appalachia.Audio.Components
         public Zone FindParentZone()
         {
             return FindParentZoneRecursive(transform.parent);
-        }
-
-        private Zone FindParentZoneRecursive(Transform t)
-        {
-            if (t != null)
-            {
-                var z = t.GetComponent<Zone>();
-                return z != null ? z : FindParentZoneRecursive(t.parent);
-            }
-
-            return null;
-        }
-
-        protected void SetActive(bool state)
-        {
-            wantActive = state;
         }
 
         protected bool OnUpdateActivation(bool state)
@@ -138,12 +66,78 @@ namespace Appalachia.Audio.Components
             return true;
         }
 
+        protected void OnDisable()
+        {
+            allZones.Remove(this);
+            OnUpdateActivation(false);
+            _triggerRefs = 0;
+        }
+
+        protected void OnEnable()
+        {
+            if (!inited)
+            {
+                OnInit();
+            }
+
+            allZones.Add(this);
+            OnUpdateActivation(wantActive);
+        }
+
+        protected virtual void OnInit()
+        {
+            if ((_trigger = FindTrigger(this)) == null)
+            {
+                RegisterWithParentZone();
+            }
+
+            hash = (int) Synthesizer.GetNextHandle();
+            inited = true;
+        }
+
         protected virtual void OnProbe(Vector3 lpos, int thisFrame)
         {
         }
 
         protected virtual void OnUpdateEmitters()
         {
+        }
+
+        protected void SetActive(bool state)
+        {
+            wantActive = state;
+        }
+
+        private void RegisterWithParentZone()
+        {
+            var z = FindParentZone();
+            if (z != null)
+            {
+                if (z.children == null)
+                {
+                    z.children = new List<Zone>(4);
+                }
+
+                z.children.Add(this);
+                parent = z;
+            }
+        }
+
+        private Zone FindParentZoneRecursive(Transform t)
+        {
+            if (t != null)
+            {
+                var z = t.GetComponent<Zone>();
+                return z != null ? z : FindParentZoneRecursive(t.parent);
+            }
+
+            return null;
+        }
+
+        public static Collider FindTrigger(Zone z)
+        {
+            var c = z.GetComponent<Collider>();
+            return (c != null) && c.isTrigger ? c : null;
         }
 
         internal static void UpdateZone(int thisFrame)
@@ -155,20 +149,10 @@ namespace Appalachia.Audio.Components
             UpdateEmitters();
         }
 
-        private static void UpdateProbes(int thisFrame)
+        private static float GetTriggerRadius(Collider c)
         {
-            if (!dontProbeZones)
-            {
-                var l = Heartbeat.listenerTransform;
-                if (l)
-                {
-                    var lpos = l.position;
-                    foreach (var z in allZones)
-                    {
-                        z.OnProbe(lpos, thisFrame);
-                    }
-                }
-            }
+            var e = c.bounds.extents;
+            return Mathf.Max(e.x, e.z);
         }
 
         private static void UpdateActivation()
@@ -183,27 +167,11 @@ namespace Appalachia.Audio.Components
             }
         }
 
-        private static void UpdateInfluence()
+        private static void UpdateEmitters()
         {
             foreach (var z in allZones)
             {
-                // default is full influence and no exclusion
-                z.volumeExclusion = 0f;
-                z.volumeInfluence = z.active == true ? 1f : 0f;
-
-                // for active audio zones with peripheral fade, adjust the influence
-                AudioZone az;
-                if ((z.active == true) && ((az = z as AudioZone) != null))
-                {
-                    var pfMin = az.peripheralFade.min;
-                    var pfMax = az.peripheralFade.max;
-                    if (pfMin < 1f)
-                    {
-                        var x = az.sqrDistance / az.sqrRadius;
-                        var y = 1f - Mathf.Clamp01((x - pfMin) / (pfMax - pfMin));
-                        az.volumeInfluence = y * y;
-                    }
-                }
+                z.OnUpdateEmitters();
             }
         }
 
@@ -242,11 +210,43 @@ namespace Appalachia.Audio.Components
             exclusion = Mathf.Clamp01(k - 1f);
         }
 
-        private static void UpdateEmitters()
+        private static void UpdateInfluence()
         {
             foreach (var z in allZones)
             {
-                z.OnUpdateEmitters();
+                // default is full influence and no exclusion
+                z.volumeExclusion = 0f;
+                z.volumeInfluence = z.active == true ? 1f : 0f;
+
+                // for active audio zones with peripheral fade, adjust the influence
+                AudioZone az;
+                if ((z.active == true) && ((az = z as AudioZone) != null))
+                {
+                    var pfMin = az.peripheralFade.min;
+                    var pfMax = az.peripheralFade.max;
+                    if (pfMin < 1f)
+                    {
+                        var x = az.sqrDistance / az.sqrRadius;
+                        var y = 1f - Mathf.Clamp01((x - pfMin) / (pfMax - pfMin));
+                        az.volumeInfluence = y * y;
+                    }
+                }
+            }
+        }
+
+        private static void UpdateProbes(int thisFrame)
+        {
+            if (!dontProbeZones)
+            {
+                var l = Heartbeat.listenerTransform;
+                if (l)
+                {
+                    var lpos = l.position;
+                    foreach (var z in allZones)
+                    {
+                        z.OnProbe(lpos, thisFrame);
+                    }
+                }
             }
         }
 
@@ -258,8 +258,7 @@ namespace Appalachia.Audio.Components
             public Color inactiveColor;
         }
 
-        [Colorize]
-        public GizmoParams gizmo = new() {activeColor = Color.magenta, inactiveColor = Color.blue};
+        [Colorize] public GizmoParams gizmo = new() {activeColor = Color.magenta, inactiveColor = Color.blue};
 #endif
 
 #if UNITY_EDITOR
@@ -274,4 +273,4 @@ namespace Appalachia.Audio.Components
         }
 #endif
     }
-} 
+}

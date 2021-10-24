@@ -21,11 +21,11 @@
     "registry": "http://35.211.123.13:4873/"
   },
   "dependencies": {
-    "com.appalachia.unity3d.core": "0.1.3",
-    "com.appalachia.unity3d.editing": "0.1.6",
-    "com.appalachia.unity3d.rendering": "0.1.5",
-    "com.appalachia.unity3d.utility": "0.1.0",
-    "com.appalachia.unity3d.ci": "0.1.0"
+    "com.appalachia.unity3d.core": "0.1.4",
+    "com.appalachia.unity3d.editing": "0.1.7",
+    "com.appalachia.unity3d.rendering": "0.1.6",
+    "com.appalachia.unity3d.utility": "0.1.1",
+    "com.appalachia.unity3d.ci": "0.1.1"
   },
   "scripts": {
     "preversion": "bash ~/com.appalachia/appa/appa package unity3d preversion",

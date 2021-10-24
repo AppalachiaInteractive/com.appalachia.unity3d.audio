@@ -12,11 +12,6 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     public abstract class AudioContext<T>
         where T : AudioContextParameters
     {
-        [SmartLabel]
-        [InlineProperty]
-        [PropertyOrder(0)]
-        public T parameters;
-
         [ToggleLeft]
         [SmartLabel]
         [HorizontalGroup("B")]
@@ -27,5 +22,10 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
         [InlineProperty]
         [PropertyOrder(20)]
         public ContextualAudioPatch patch;
+
+        [SmartLabel]
+        [InlineProperty]
+        [PropertyOrder(0)]
+        public T parameters;
     }
 }

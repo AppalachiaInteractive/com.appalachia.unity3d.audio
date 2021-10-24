@@ -7,14 +7,24 @@ namespace Appalachia.Audio.Effects
     {
         public AudioParameters.OcclusionParams occlusion;
         public AudioParameters.SpatialParams spatial;
-        private float _current;
         private AudioHighPassFilter _highPassFilter;
-        private int _lastFrame;
         private AudioLowPassFilter _lowPassFilter;
-        private OcclusionSettings _settings;
 
         private AudioSource _source;
+        private float _current;
         private float _target;
+        private int _lastFrame;
+        private OcclusionSettings _settings;
+
+        public float GetCurrent()
+        {
+            return _current;
+        }
+
+        public float GetTarget()
+        {
+            return _target;
+        }
 
         private void LateUpdate()
         {
@@ -45,16 +55,6 @@ namespace Appalachia.Audio.Effects
 
             _lastFrame = -1;
             Test(Mathf.Infinity);
-        }
-
-        public float GetTarget()
-        {
-            return _target;
-        }
-
-        public float GetCurrent()
-        {
-            return _current;
         }
 
         private void Test(float dt)
@@ -116,13 +116,11 @@ namespace Appalachia.Audio.Effects
 
             _current = Mathf.Lerp(_current, _target, dt * 8f);
             _lowPassFilter.cutoffFrequency = _settings.lowPassRange.min +
-                                             ((_settings.lowPassRange.max -
-                                               _settings.lowPassRange.min) *
+                                             ((_settings.lowPassRange.max - _settings.lowPassRange.min) *
                                               _current);
             _highPassFilter.cutoffFrequency = _settings.highPassRange.min +
-                                              ((_settings.highPassRange.max -
-                                                _settings.highPassRange.min) *
+                                              ((_settings.highPassRange.max - _settings.highPassRange.min) *
                                                (1f - _current));
         }
     }
-} 
+}

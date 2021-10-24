@@ -16,16 +16,16 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
         [SerializeField]
         [SmartLabel]
         [InlineProperty]
+        public AudioContextType quaternary;
+
+        [SerializeField]
+        [SmartLabel]
+        [InlineProperty]
         public AudioContextType secondary;
 
         [SerializeField]
         [SmartLabel]
         [InlineProperty]
         public AudioContextType tertiary;
-
-        [SerializeField]
-        [SmartLabel]
-        [InlineProperty]
-        public AudioContextType quaternary;
     }
 }

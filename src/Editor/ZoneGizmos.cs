@@ -6,41 +6,10 @@ namespace Appalachia.Audio
 {
     internal static class ZoneGizmos
     {
-        private static bool prefsInited;
         private static bool alwaysShowZoneGizmosPrefs;
+        private static bool prefsInited;
 
-        private static void InitPrefs()
-        {
-            if (!prefsInited)
-            {
-                prefsInited = true;
-                alwaysShowZoneGizmosPrefs =
-                    EditorPrefs.GetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos");
-            }
-        }
-
-        [PreferenceItem("Appalachia/Audio")]
-        private static void OnPrefsGUI()
-        {
-            InitPrefs();
-            alwaysShowZoneGizmosPrefs = EditorGUILayout.Toggle(
-                "Always Show Zone Gizmos",
-                alwaysShowZoneGizmosPrefs
-            );
-            if (GUI.changed)
-            {
-                EditorPrefs.SetBool(
-                    "Appalachia.Core.Audio:alwaysShowZoneGizmos",
-                    alwaysShowZoneGizmosPrefs
-                );
-            }
-        }
-
-        [DrawGizmo(
-            GizmoType.Pickable |
-            GizmoType.InSelectionHierarchy |
-            GizmoType.NotInSelectionHierarchy
-        )]
+        [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
         private static void DrawGizmo(AudioEmitter e, GizmoType t)
         {
             InitPrefs();
@@ -70,11 +39,7 @@ namespace Appalachia.Audio
             Gizmos.DrawIcon(e.transform.position, "Appalachia.Core.Audio_AudioEmitter.png");
         }
 
-        [DrawGizmo(
-            GizmoType.Pickable |
-            GizmoType.InSelectionHierarchy |
-            GizmoType.NotInSelectionHierarchy
-        )]
+        [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
         private static void DrawGizmo(AudioSlapback s, GizmoType t)
         {
             InitPrefs();
@@ -97,11 +62,7 @@ namespace Appalachia.Audio
             Gizmos.DrawIcon(s.transform.position, "Appalachia.Core.Audio_AudioSlapback.png");
         }
 
-        [DrawGizmo(
-            GizmoType.Pickable |
-            GizmoType.InSelectionHierarchy |
-            GizmoType.NotInSelectionHierarchy
-        )]
+        [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
         private static void DrawGizmo(AudioZone z, GizmoType t)
         {
             InitPrefs();
@@ -159,6 +120,29 @@ namespace Appalachia.Audio
                         Gizmos.DrawWireSphere(z.transform.position, r);
                     }
                 }
+            }
+        }
+
+        private static void InitPrefs()
+        {
+            if (!prefsInited)
+            {
+                prefsInited = true;
+                alwaysShowZoneGizmosPrefs = EditorPrefs.GetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos");
+            }
+        }
+
+        [PreferenceItem("Appalachia/Audio")]
+        private static void OnPrefsGUI()
+        {
+            InitPrefs();
+            alwaysShowZoneGizmosPrefs = EditorGUILayout.Toggle(
+                "Always Show Zone Gizmos",
+                alwaysShowZoneGizmosPrefs
+            );
+            if (GUI.changed)
+            {
+                EditorPrefs.SetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos", alwaysShowZoneGizmosPrefs);
             }
         }
     }

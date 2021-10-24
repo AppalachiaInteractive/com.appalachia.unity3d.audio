@@ -32,13 +32,6 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         [ListDrawerSettings]
         public TContext[] contexts;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-            Refresh();
-        }
-
         protected abstract void AddOrUpdate(TContext context);
 
 #if UNITY_EDITOR
@@ -59,5 +52,12 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
         }
 #endif
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            Refresh();
+        }
     }
 }

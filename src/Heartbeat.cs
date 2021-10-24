@@ -10,57 +10,21 @@ namespace Appalachia.Audio
     {
         public static Transform listenerTransform;
         public static Transform playerTransform;
+        public static Transform hierarchyTransform { get; private set; }
 
         public AudioMixer audioMixer;
         public string rotationAngleParameter = "Appalachia.Core.Audio Rotation Angle";
-        public static Transform hierarchyTransform { get; private set; }
 
-        protected void Awake()
+        public int StopRecording()
         {
-            hierarchyTransform = transform;
-        }
-
-        protected void Update()
-        {
-            var dt = Time.deltaTime;
-            var tf = Time.frameCount;
-
-            Profiler.BeginSample("Update Zones");
-            Zone.UpdateZone(tf);
-            Profiler.EndSample();
-
-            Profiler.BeginSample("Update Sequencer");
-            Sequencer.Update(dt);
-            Profiler.EndSample();
-
-            Profiler.BeginSample("Update Synthesizer");
-            Synthesizer.Update(dt);
-            Profiler.EndSample();
-        }
-
-        protected void LateUpdate()
-        {
-            if (playerTransform && audioMixer)
+            if (listenerTransform == null)
             {
-                var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
-                if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
-                {
-                    Debug.LogWarning(
-                        "Failed to set audio mixer parameter: " + rotationAngleParameter
-                    );
-                }
+                Debug.LogWarning("StopRecording: no listener");
+                return -1;
             }
-        }
 
-        protected void OnDestroy()
-        {
-            Sequencer.Reset();
-            Synthesizer.Reset();
-
-            if (hierarchyTransform == transform)
-            {
-                hierarchyTransform = null;
-            }
+            var r = listenerTransform.GetComponent<RecordToFile>();
+            return r ? r.StopRecording() : -1;
         }
 
         public void StartRecording(string name)
@@ -81,16 +45,50 @@ namespace Appalachia.Audio
             }
         }
 
-        public int StopRecording()
+        protected void Awake()
         {
-            if (listenerTransform == null)
-            {
-                Debug.LogWarning("StopRecording: no listener");
-                return -1;
-            }
+            hierarchyTransform = transform;
+        }
 
-            var r = listenerTransform.GetComponent<RecordToFile>();
-            return r ? r.StopRecording() : -1;
+        protected void LateUpdate()
+        {
+            if (playerTransform && audioMixer)
+            {
+                var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
+                if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
+                {
+                    Debug.LogWarning("Failed to set audio mixer parameter: " + rotationAngleParameter);
+                }
+            }
+        }
+
+        protected void OnDestroy()
+        {
+            Sequencer.Reset();
+            Synthesizer.Reset();
+
+            if (hierarchyTransform == transform)
+            {
+                hierarchyTransform = null;
+            }
+        }
+
+        protected void Update()
+        {
+            var dt = Time.deltaTime;
+            var tf = Time.frameCount;
+
+            Profiler.BeginSample("Update Zones");
+            Zone.UpdateZone(tf);
+            Profiler.EndSample();
+
+            Profiler.BeginSample("Update Sequencer");
+            Sequencer.Update(dt);
+            Profiler.EndSample();
+
+            Profiler.BeginSample("Update Synthesizer");
+            Synthesizer.Update(dt);
+            Profiler.EndSample();
         }
     }
-} 
+}

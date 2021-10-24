@@ -11,34 +11,16 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSequence
     {
-        [Space(10)] [Colorize] public Timing[] timing;
-
         [Space(10)]
         [MinMax(0, 600, colorize = true)]
         public MinMaxFloat duration;
 
-        [Colorize] public RepeatParams repeat = new() {forever = true};
-
-        [NonSerialized] public uint lastHandle;
-
         [NonSerialized] public Patch patch;
 
-        internal float GetMaxDuration()
-        {
-            return duration.max * (1 + repeat.count);
-        }
+        [Colorize] public RepeatParams repeat = new() {forever = true};
+        [Space(10)] [Colorize] public Timing[] timing;
 
-        public float GetDuration()
-        {
-            return duration.GetRandomValue();
-        }
-
-        public bool GetCueInfo(out float duration, out int repeats)
-        {
-            duration = GetDuration();
-            repeats = repeat.forever ? -1 : repeat.count;
-            return duration > Mathf.Epsilon;
-        }
+        [NonSerialized] public uint lastHandle;
 
         public bool Activate(ActivationParams ap)
         {
@@ -49,6 +31,23 @@ namespace Appalachia.Audio.Components
             }
 
             return false;
+        }
+
+        public bool GetCueInfo(out float duration, out int repeats)
+        {
+            duration = GetDuration();
+            repeats = repeat.forever ? -1 : repeat.count;
+            return duration > Mathf.Epsilon;
+        }
+
+        public float GetDuration()
+        {
+            return duration.GetRandomValue();
+        }
+
+        internal float GetMaxDuration()
+        {
+            return duration.max * (1 + repeat.count);
         }
 
         [Serializable]

@@ -10,17 +10,17 @@ using Sirenix.OdinInspector;
 
 namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Contexts
 {
-    [Serializable] 
+    [Serializable]
     public abstract class AudioContext
     {
         [ToggleLeft, SmartLabel, HorizontalGroup("B"), PropertyOrder(10)]
         public bool defaultFallback;
-        
+
         [SmartLabel, InlineProperty]
         public ContextualAudioPatch patch;
     }
-    
-    
+
+
 }
 */
 

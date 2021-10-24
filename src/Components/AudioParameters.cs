@@ -30,24 +30,18 @@ namespace Appalachia.Audio.Components
             volume =
                 new MinMaxFloat
                 {
-                    min = defaultVolume - defaultVariation,
-                    max = defaultVolume + defaultVariation
+                    min = defaultVolume - defaultVariation, max = defaultVolume + defaultVariation
                 },
             pitch =
                 new MinMaxFloat
                 {
-                    min = defaultPitch - defaultVariation,
-                    max = defaultPitch + defaultVariation
+                    min = defaultPitch - defaultVariation, max = defaultPitch + defaultVariation
                 },
             spatial =
                 new SpatialParams
                 {
                     blend = defaultBlend,
-                    distance =
-                        new MinMaxFloat
-                        {
-                            min = defaultMinDistance, max = defaultMaxDistance
-                        },
+                    distance = new MinMaxFloat {min = defaultMinDistance, max = defaultMaxDistance},
                     doppler = defaultDoppler
                 },
             randomization = new RandomizationParams(),

@@ -102,7 +102,7 @@ namespace Appalachia.Audio
             private static void CreateAudioProgram()
             {
                 var newInstance = Patch.CreateNew();
-                
+
                 Create<Patch, AudioClip>(
                     (a, c) =>
                     {
@@ -124,3 +124,5 @@ namespace Appalachia.Audio
 }
 
 */
+
+

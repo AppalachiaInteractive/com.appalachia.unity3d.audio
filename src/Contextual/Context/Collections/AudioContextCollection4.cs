@@ -10,34 +10,17 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
     public abstract class AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
-                                                  TEnumQuaternary, T> : AudioContextCollection<
-        AudioContext4, AudioContextParameters4, T>
+                                                  TEnumQuaternary, T> : AudioContextCollection<AudioContext4,
+        AudioContextParameters4, T>
         where TEnumPrimary : Enum
         where TEnumSecondary : Enum
         where TEnumTertiary : Enum
         where TEnumQuaternary : Enum
-        where T : AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
-            TEnumQuaternary, T>
+        where T : AudioContextCollection4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary, T>
     {
         [NonSerialized]
-        private NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
-            TEnumQuaternary, AudioContext4> index;
-
-        protected override void AddOrUpdate(AudioContext4 context)
-        {
-            context.parameters.primary.type = typeof(TEnumPrimary);
-            context.parameters.secondary.type = typeof(TEnumSecondary);
-            context.parameters.tertiary.type = typeof(TEnumTertiary);
-            context.parameters.quaternary.type = typeof(TEnumQuaternary);
-
-            index.AddOrUpdate(
-                (TEnumPrimary) (object) context.parameters.primary.value,
-                (TEnumSecondary) (object) context.parameters.secondary.value,
-                (TEnumTertiary) (object) context.parameters.tertiary.value,
-                (TEnumQuaternary) (object) context.parameters.quaternary.value,
-                context
-            );
-        }
+        private NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary,
+            AudioContext4> index;
 
         public ContextualAudioPatch GetBest(
             TEnumPrimary primary,
@@ -49,8 +32,8 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             if (index == null)
             {
                 index =
-                    new NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary,
-                        TEnumQuaternary, AudioContext4>();
+                    new NonSerializedAppaLookup4<TEnumPrimary, TEnumSecondary, TEnumTertiary, TEnumQuaternary,
+                        AudioContext4>();
             }
 
             successful = index.TryGetValueWithFallback(
@@ -78,6 +61,22 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
 
             return context.patch;
+        }
+
+        protected override void AddOrUpdate(AudioContext4 context)
+        {
+            context.parameters.primary.type = typeof(TEnumPrimary);
+            context.parameters.secondary.type = typeof(TEnumSecondary);
+            context.parameters.tertiary.type = typeof(TEnumTertiary);
+            context.parameters.quaternary.type = typeof(TEnumQuaternary);
+
+            index.AddOrUpdate(
+                (TEnumPrimary) (object) context.parameters.primary.value,
+                (TEnumSecondary) (object) context.parameters.secondary.value,
+                (TEnumTertiary) (object) context.parameters.tertiary.value,
+                (TEnumQuaternary) (object) context.parameters.quaternary.value,
+                context
+            );
         }
     }
 }

@@ -12,10 +12,10 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class Timing
     {
+        [MinMax(0, 600)] public MinMaxFloat delay;
+
         [FormerlySerializedAs("asset")]
         public Patch patch;
-
-        [MinMax(0, 600)] public MinMaxFloat delay;
 
         [Colorize(order = 0)] public RandomizationParams randomization = new() {chance = 1f};
 

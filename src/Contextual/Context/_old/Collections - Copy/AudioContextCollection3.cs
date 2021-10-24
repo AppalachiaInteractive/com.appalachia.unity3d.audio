@@ -14,12 +14,12 @@ using UnityEngine;
 
 namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Collections
 {
-    [Serializable] 
+    [Serializable]
 public abstract class AudioContextCollection3<TEnumPrimary, TEnumSecondary, TEnumTertiary, TContext,
-                                                  TIndex, TDoubleIndex, TTripleIndex, 
-                                                  TListPrimary, TListSecondary, TListTertiary, 
-                                                  TListContext, 
-                                                  TListIndex, TListDoubleIndex, 
+                                                  TIndex, TDoubleIndex, TTripleIndex,
+                                                  TListPrimary, TListSecondary, TListTertiary,
+                                                  TListContext,
+                                                  TListIndex, TListDoubleIndex,
                                                   T> : AudioContextCollection<TContext, T>
         where TEnumPrimary : Enum
         where TEnumSecondary : Enum

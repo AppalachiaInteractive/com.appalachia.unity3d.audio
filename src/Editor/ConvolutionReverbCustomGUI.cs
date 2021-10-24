@@ -10,46 +10,12 @@ namespace Appalachia.Audio
         private Color m_Impulse1Color = AudioCurveRendering.kAudioOrange;
         private Color m_Impulse2Color = AudioCurveRendering.kAudioOrange;
 
-        public override string Name => "Demo ConvolutionReverb";
-
         public override string Description =>
             "Convolution reverb demo plugin for Unity's audio plugin system";
 
+        public override string Name => "Demo ConvolutionReverb";
+
         public override string Vendor => "Unity";
-
-        [DllImport("AudioPluginDemo")]
-        private static extern IntPtr ConvolutionReverb_GetSampleName(int index);
-
-        private void DrawCurve(
-            Rect r,
-            float[] curve,
-            float yscale,
-            Color col,
-
-            // ReSharper disable once UnusedParameter.Local
-            float labeloffset,
-            float wetLevel,
-            float gain)
-        {
-            float xscale = curve.Length - 2;
-            var maxval = 0.0f;
-            for (var n = 0; n < curve.Length; n++)
-            {
-                maxval = Mathf.Max(maxval, Mathf.Abs(curve[n]));
-            }
-
-            yscale *= maxval > 0.0f ? gain / maxval : 0.0f;
-            AudioCurveRendering.DrawSymmetricFilledCurve(
-                r,
-                delegate(float x, out Color color)
-                {
-                    var f = Mathf.Clamp(x * xscale, 0.0f, xscale);
-                    var i = (int) Mathf.Floor(f);
-                    color = new Color(col.r, col.g, col.b, col.a * wetLevel);
-                    return (curve[i] + ((curve[i + 1] - curve[i]) * (f - i))) * yscale;
-                }
-            );
-        }
 
         public void DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -82,9 +48,7 @@ namespace Appalachia.Audio
                 DrawCurve(r2, imp2, 1.0f, m_Impulse2Color, 150, wet, gain);
 
                 var name = "Impulse: " +
-                           Marshal.PtrToStringAnsi(
-                               ConvolutionReverb_GetSampleName((int) useSample)
-                           );
+                           Marshal.PtrToStringAnsi(ConvolutionReverb_GetSampleName((int) useSample));
                 GUIHelpers.DrawText(r2.x + 5, r2.y - 5, r2.width, name, Color.white);
             }
 
@@ -99,5 +63,39 @@ namespace Appalachia.Audio
             GUILayout.Space(5f);
             return true;
         }
+
+        private void DrawCurve(
+            Rect r,
+            float[] curve,
+            float yscale,
+            Color col,
+
+            // ReSharper disable once UnusedParameter.Local
+            float labeloffset,
+            float wetLevel,
+            float gain)
+        {
+            float xscale = curve.Length - 2;
+            var maxval = 0.0f;
+            for (var n = 0; n < curve.Length; n++)
+            {
+                maxval = Mathf.Max(maxval, Mathf.Abs(curve[n]));
+            }
+
+            yscale *= maxval > 0.0f ? gain / maxval : 0.0f;
+            AudioCurveRendering.DrawSymmetricFilledCurve(
+                r,
+                delegate(float x, out Color color)
+                {
+                    var f = Mathf.Clamp(x * xscale, 0.0f, xscale);
+                    var i = (int) Mathf.Floor(f);
+                    color = new Color(col.r, col.g, col.b, col.a * wetLevel);
+                    return (curve[i] + ((curve[i + 1] - curve[i]) * (f - i))) * yscale;
+                }
+            );
+        }
+
+        [DllImport("AudioPluginDemo")]
+        private static extern IntPtr ConvolutionReverb_GetSampleName(int index);
     }
 }

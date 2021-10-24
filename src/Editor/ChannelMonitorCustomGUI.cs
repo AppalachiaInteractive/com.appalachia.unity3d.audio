@@ -7,15 +7,14 @@ namespace Appalachia.Audio
 {
     public class ChannelMonitorCustomGUI : IAudioEffectPluginGUI
     {
-        private PropertyTree _loudnessTree;
-
         //private bool integratedFoldout = true;
 
         public AudioSignalSmoothAnalyzer loudness;
-        public override string Name => "Internal ChannelMonitor";
+        private PropertyTree _loudnessTree;
 
-        public override string Description =>
-            "Channel monitor plugin for Unity's audio plugin system";
+        public override string Description => "Channel monitor plugin for Unity's audio plugin system";
+
+        public override string Name => "Internal ChannelMonitor";
 
         public override string Vendor => "Unity";
 

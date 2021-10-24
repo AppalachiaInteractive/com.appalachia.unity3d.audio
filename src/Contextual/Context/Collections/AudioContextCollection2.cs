@@ -10,26 +10,13 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
     public abstract class
-        AudioContextCollection2<TEnumPrimary, TEnumSecondary, T> : AudioContextCollection<
-            AudioContext2, AudioContextParameters2, T>
+        AudioContextCollection2<TEnumPrimary, TEnumSecondary, T> : AudioContextCollection<AudioContext2,
+            AudioContextParameters2, T>
         where TEnumPrimary : Enum
         where TEnumSecondary : Enum
         where T : AudioContextCollection2<TEnumPrimary, TEnumSecondary, T>
     {
-        [NonSerialized]
-        private NonSerializedAppaLookup2<TEnumPrimary, TEnumSecondary, AudioContext2> index;
-
-        protected override void AddOrUpdate(AudioContext2 context)
-        {
-            context.parameters.primary.type = typeof(TEnumPrimary);
-            context.parameters.secondary.type = typeof(TEnumSecondary);
-
-            index.AddOrUpdate(
-                (TEnumPrimary) (object) context.parameters.primary,
-                (TEnumSecondary) (object) context.parameters.secondary,
-                context
-            );
-        }
+        [NonSerialized] private NonSerializedAppaLookup2<TEnumPrimary, TEnumSecondary, AudioContext2> index;
 
         public ContextualAudioPatch GetBest(
             TEnumPrimary primary,
@@ -62,6 +49,18 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
 
             return context.patch;
+        }
+
+        protected override void AddOrUpdate(AudioContext2 context)
+        {
+            context.parameters.primary.type = typeof(TEnumPrimary);
+            context.parameters.secondary.type = typeof(TEnumSecondary);
+
+            index.AddOrUpdate(
+                (TEnumPrimary) (object) context.parameters.primary,
+                (TEnumSecondary) (object) context.parameters.secondary,
+                context
+            );
         }
     }
 }

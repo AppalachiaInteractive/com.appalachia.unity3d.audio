@@ -6,53 +6,11 @@ namespace Appalachia.Audio
 {
     public class ModalFilterCustomGUI : FilterCurveUi
     {
+        public override string Description => "Modal filter demo plugin for Unity's audio plugin system";
+
         public override string Name => "Demo ModalFilter";
 
-        public override string Description =>
-            "Modal filter demo plugin for Unity's audio plugin system";
-
         public override string Vendor => "Unity";
-
-        public void DrawFilterCurve(
-            Rect r,
-            float[] coeffs,
-            Color color,
-            int numModes,
-            bool useLogScale,
-            bool filled,
-            double samplerate,
-            double magScale)
-        {
-            var wm = (-2.0f * 3.1415926) / samplerate;
-
-            var zero = new ComplexD(0.0f, 0.0f);
-            var one = new ComplexD(1.0f,  0.0f);
-            AudioCurveRendering.AudioCurveEvaluator d = delegate(float x)
-            {
-                var w = ComplexD.Exp(
-                    wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true)
-                );
-                var h = zero;
-                var num = numModes * 3;
-                for (var n = 0; n < num; n += 3)
-                {
-                    h += (coeffs[n] * (one - (w * w))) /
-                         ((w * ((w * coeffs[n + 2]) + coeffs[n + 1])) + 1.0);
-                }
-
-                var mag = 10.0 * Math.Log10(h.Mag2());
-                return (float) (mag * magScale);
-            };
-
-            if (filled)
-            {
-                AudioCurveRendering.DrawFilledCurve(r, d, color);
-            }
-            else
-            {
-                AudioCurveRendering.DrawCurve(r, d, color);
-            }
-        }
 
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -84,8 +42,7 @@ namespace Appalachia.Audio
                     (numModes < 1000))
                 {
                     float[] coeffs;
-                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int) numModes * 3) &&
-                        (coeffs != null))
+                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int) numModes * 3) && (coeffs != null))
                     {
                         // Draw filled curve
                         DrawFilterCurve(
@@ -148,6 +105,46 @@ namespace Appalachia.Audio
 
             AudioCurveRendering.EndCurveFrame();
             return false;
+        }
+
+        public void DrawFilterCurve(
+            Rect r,
+            float[] coeffs,
+            Color color,
+            int numModes,
+            bool useLogScale,
+            bool filled,
+            double samplerate,
+            double magScale)
+        {
+            var wm = (-2.0f * 3.1415926) / samplerate;
+
+            var zero = new ComplexD(0.0f, 0.0f);
+            var one = new ComplexD(1.0f,  0.0f);
+            AudioCurveRendering.AudioCurveEvaluator d = delegate(float x)
+            {
+                var w = ComplexD.Exp(
+                    wm * GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true)
+                );
+                var h = zero;
+                var num = numModes * 3;
+                for (var n = 0; n < num; n += 3)
+                {
+                    h += (coeffs[n] * (one - (w * w))) / ((w * ((w * coeffs[n + 2]) + coeffs[n + 1])) + 1.0);
+                }
+
+                var mag = 10.0 * Math.Log10(h.Mag2());
+                return (float) (mag * magScale);
+            };
+
+            if (filled)
+            {
+                AudioCurveRendering.DrawFilledCurve(r, d, color);
+            }
+            else
+            {
+                AudioCurveRendering.DrawCurve(r, d, color);
+            }
         }
 
         public override bool OnGUI(IAudioEffectPlugin plugin)

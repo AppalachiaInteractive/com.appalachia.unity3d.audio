@@ -13,12 +13,6 @@ namespace Appalachia.Audio.Components
         public static List<Cue> activeCues0 = new(64);
         public static List<Cue> activeCues1 = new(64);
 
-        public static void Reset()
-        {
-            activeCues0.Clear();
-            activeCues1.Clear();
-        }
-
         public static uint CueIn(AudioEmitter e, int i)
         {
             var c = new Cue {emitter = e, index = i, cueHandle = Synthesizer.GetNextHandle()};
@@ -31,10 +25,7 @@ namespace Appalachia.Audio.Components
             return c.cueHandle;
         }
 
-        public static void CueOut(
-            uint handle,
-            float release = 0f,
-            EnvelopeMode mode = EnvelopeMode.None)
+        public static void CueOut(uint handle, float release = 0f, EnvelopeMode mode = EnvelopeMode.None)
         {
             for (var x = activeCues0.GetEnumerator(); x.MoveNext();)
             {
@@ -53,11 +44,10 @@ namespace Appalachia.Audio.Components
             activeCues1.Clear();
         }
 
-        private static void Swap<T>(ref List<T> a, ref List<T> b)
+        public static void Reset()
         {
-            var y = a;
-            a = b;
-            b = y;
+            activeCues0.Clear();
+            activeCues1.Clear();
         }
 
         public static void Update(float dt)
@@ -81,5 +71,12 @@ namespace Appalachia.Audio.Components
             Swap(ref activeCues0, ref activeCues1);
             activeCues1.Clear();
         }
+
+        private static void Swap<T>(ref List<T> a, ref List<T> b)
+        {
+            var y = a;
+            a = b;
+            b = y;
+        }
     }
-} 
+}

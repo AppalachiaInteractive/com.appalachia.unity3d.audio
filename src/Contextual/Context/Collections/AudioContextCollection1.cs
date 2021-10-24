@@ -17,13 +17,6 @@ namespace Appalachia.Audio.Contextual.Context.Collections
     {
         [NonSerialized] private NonSerializedAppaLookup<TEnumPrimary, AudioContext1> index;
 
-        protected override void AddOrUpdate(AudioContext1 context)
-        {
-            context.parameters.primary.type = typeof(TEnumPrimary);
-
-            index.AddOrUpdate((TEnumPrimary) (object) context.parameters.primary.value, context);
-        }
-
         public ContextualAudioPatch GetBest(TEnumPrimary primary, out bool successful)
         {
             if (index == null)
@@ -50,6 +43,13 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
 
             return context.patch;
+        }
+
+        protected override void AddOrUpdate(AudioContext1 context)
+        {
+            context.parameters.primary.type = typeof(TEnumPrimary);
+
+            index.AddOrUpdate((TEnumPrimary) (object) context.parameters.primary.value, context);
         }
     }
 }

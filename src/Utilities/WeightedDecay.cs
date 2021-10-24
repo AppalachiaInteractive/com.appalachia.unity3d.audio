@@ -51,4 +51,4 @@ namespace Appalachia.Audio.Utilities
             return i;
         }
     }
-} 
+}
