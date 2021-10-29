@@ -799,7 +799,8 @@ namespace Appalachia.Audio
             return icon;
         }
 
-        [MenuItem(APPA_MENU.BASE_AppalachiaWindows + APPA_MENU.ASM_AppalachiaAudio + nameof(Monitor))]
+        
+        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Windows.Base + nameof(Monitor))]
         private static void Open()
         {
             ((Monitor) GetWindow(typeof(Monitor))).Show();

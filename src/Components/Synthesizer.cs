@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Appalachia.Audio.Effects;
 using Appalachia.Audio.Utilities;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -497,17 +496,17 @@ namespace Appalachia.Audio.Components
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                EditorApplication.CallbackFunction f = null;
+                UnityEditor.EditorApplication.CallbackFunction f = null;
                 var n = Time.realtimeSinceStartup;
                 f = () =>
                 {
                     if ((Time.realtimeSinceStartup - n) >= ap.delay)
                     {
-                        EditorApplication.update -= f;
+                        UnityEditor.EditorApplication.update -= f;
                         PlayClip(c, p.loop);
                     }
                 };
-                EditorApplication.update += f;
+                UnityEditor.EditorApplication.update += f;
                 return false;
             }
 #endif
@@ -811,7 +810,7 @@ namespace Appalachia.Audio.Components
         {
             if (_PlayClip == null)
             {
-                var a = typeof(EditorApplication).Assembly;
+                var a = typeof( UnityEditor.EditorApplication).Assembly;
                 var t = a.GetType("UnityEditor.AudioUtil");
                 _PlayClip = t.GetMethod("PlayClip", new[] {typeof(AudioClip), typeof(int), typeof(bool)});
             }
@@ -823,7 +822,7 @@ namespace Appalachia.Audio.Components
         {
             if (_StopAllClips == null)
             {
-                var a = typeof(EditorApplication).Assembly;
+                var a = typeof( UnityEditor.EditorApplication).Assembly;
                 var t = a.GetType("UnityEditor.AudioUtil");
                 _StopAllClips = t.GetMethod("StopAllClips", new Type[0]);
             }

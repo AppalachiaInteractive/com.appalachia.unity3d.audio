@@ -98,7 +98,7 @@ namespace Appalachia.Audio
                 }
             }
 
-            [MenuItem(APPA_MENU.BASE_AppalachiaData + APPA_MENU.ASM_AppalachiaAudio + "Patch")]
+            [UnityEditor.MenuItem(APPASTR.MENU.BASE_AppalachiaData + APPASTR.MENU.ASM.Audio + "Patch")]
             private static void CreateAudioProgram()
             {
                 var newInstance = Patch.CreateNew();

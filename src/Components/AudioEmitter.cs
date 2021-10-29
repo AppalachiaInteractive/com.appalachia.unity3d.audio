@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 
 namespace Appalachia.Audio.Components
 {
-    [AddComponentMenu(APPA_MENU.ASM_AppalachiaAudio + nameof(AudioEmitter))]
+    [AddComponentMenu(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
     public class AudioEmitter : MonoBehaviour
     {
         [Colorize] public AttachmentParams attachment;

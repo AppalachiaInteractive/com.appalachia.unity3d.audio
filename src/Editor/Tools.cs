@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Appalachia.Audio.Components;
-using Appalachia.CI.Constants;
 using Appalachia.CI.Integration.Assets;
 using UnityEditor;
 using UnityEngine;
@@ -12,9 +11,7 @@ namespace Appalachia.Audio
         private const string FIND_PATCHES_WITHOUT_CLIPS = "Find Patches Without AudioClips";
         private const string FIND_UNUSED_AUDIOCLIPS = "Find Unused AudioClips";
 
-        [MenuItem(
-            APPA_MENU.BASE_AppalachiaTools + APPA_MENU.ASM_AppalachiaAudio + FIND_PATCHES_WITHOUT_CLIPS
-        )]
+        [MenuItem(PKG.Menu.Appalachia.Tools.Base + FIND_PATCHES_WITHOUT_CLIPS)]
         private static void FindPatchWithoutAudioClips()
         {
             var root = "Assets/Audio";
@@ -63,7 +60,7 @@ namespace Appalachia.Audio
             );
         }
 
-        [MenuItem(APPA_MENU.BASE_AppalachiaTools + APPA_MENU.ASM_AppalachiaAudio + FIND_UNUSED_AUDIOCLIPS)]
+        [MenuItem(PKG.Menu.Appalachia.Tools.Base + FIND_UNUSED_AUDIOCLIPS)]
         private static void FindUnusedAudioClips()
         {
             var root = "Assets/Audio";

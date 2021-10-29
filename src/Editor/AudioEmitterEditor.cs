@@ -53,7 +53,7 @@ namespace Appalachia.Audio
             }
         }
 
-        [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioEmitter))]
+        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
         private static void CreateAudioEmitter()
         {
             var o = new GameObject("Audio Emitter");

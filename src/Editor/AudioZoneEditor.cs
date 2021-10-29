@@ -149,7 +149,7 @@ namespace Appalachia.Audio
             return string.Format("{0} ({1:N2})", z.name, z.GetRadius());
         }
 
-        [MenuItem(APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioZone))]
+        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioZone))]
         private static void CreateAudioZone()
         {
             var o = new GameObject("Audio Zone");

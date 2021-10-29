@@ -57,8 +57,7 @@ namespace Appalachia.Audio
             }
         }
 
-        [MenuItem(
-            APPA_MENU.BASE_AppalachiaComponents + APPA_MENU.ASM_AppalachiaAudio + nameof(AudioSlapback)
+        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioSlapback)
         )]
         private static void CreateAudioSlapback()
         {
