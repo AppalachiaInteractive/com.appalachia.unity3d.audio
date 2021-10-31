@@ -30,7 +30,8 @@
     "com.unity.mathematics": "1.2.4",
     "com.unity.collections": "1.0.0-pre.6",
     "com.unity.render-pipelines.core": "12.1.0",
-    "com.unity.timeline": "1.6.2"
+    "com.unity.timeline": "1.6.2",
+    "com.unity.inputsystem": "1.1.1"
   },
   "scripts": {
     "preversion": "bash ~/com.appalachia/appa/appa package unity3d preversion",

@@ -3,7 +3,7 @@ using Appalachia.Core.Scriptables;
 
 namespace Appalachia.Audio
 {
-    public class AudioImportSettings : SelfSavingSingletonScriptableObject<AudioImportSettings>
+    public class AudioImportSettings : SingletonAppalachiaObject<AudioImportSettings>
     {
         [Colorize] public AudioImportSettingsOverride[] overrides;
     }

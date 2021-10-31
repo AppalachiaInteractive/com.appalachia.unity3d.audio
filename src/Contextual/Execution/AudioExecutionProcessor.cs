@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Contextual.Execution
         where TCollection : AudioContextCollection<TContext, TParams, TCollection>
         where TContext : AudioContext<TParams>
         where TParams : AudioContextParameters, new()
-        where TOwner : AppalachiaMonoBehaviour
+        where TOwner : AppalachiaBehaviour
     {
         [SerializeField] public TCollection audio;
 

@@ -12,7 +12,7 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Core.AssetMetadata.AudioMetadata.Context.Base.Collections
 {
     [Serializable]
-public abstract class AudioContextCollection<TContext, T> : SelfSavingAndIdentifyingScriptableObject<T>
+public abstract class AudioContextCollection<TContext, T> : AppalachiaAndIdentifyingScriptableObject<T>
         where TContext : AudioContext
         where T : AudioContextCollection<TContext, T>
     {

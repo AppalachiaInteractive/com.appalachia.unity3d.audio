@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
     public abstract class
-        AudioContextCollection<TContext, TParams, T> : SelfSavingSingletonScriptableObject<T>
+        AudioContextCollection<TContext, TParams, T> : SingletonAppalachiaObject<T>
         where TParams : AudioContextParameters
         where TContext : AudioContext<TParams>
         where T : AudioContextCollection<TContext, TParams, T>

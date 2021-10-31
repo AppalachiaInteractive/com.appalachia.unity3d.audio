@@ -11,7 +11,7 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Audio.Contextual
 {
     [Serializable]
-    public sealed class ContextualAudioPatch : SelfSavingAndIdentifyingScriptableObject<ContextualAudioPatch>
+    public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject<ContextualAudioPatch>
     {
         [ToggleLeft]
         [SmartLabel]

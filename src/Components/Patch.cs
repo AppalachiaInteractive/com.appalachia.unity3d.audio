@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Appalachia.Audio.Components
 {
-    public sealed class Patch : SelfSavingScriptableObject<Patch>
+    public sealed class Patch : AppalachiaObject<Patch>
     {
         [Space(10)] [Colorize] public AudioProgram program;
 

@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Appalachia.Audio.Components
 {
-    public class OcclusionSettings : SelfSavingSingletonScriptableObject<OcclusionSettings>
+    public class OcclusionSettings : SingletonAppalachiaObject<OcclusionSettings>
     {
         public float speedOfSound = 340f;
         public LayerMask layerMask = 1;

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Appalachia.Audio.Contextual.Execution
 {
     [DisallowMultipleComponent]
-    public abstract class AudioExecutionManagerSingletonBehaviour<T> : SingletonMonoBehaviour<T>
+    public abstract class AudioExecutionManagerSingletonBehaviour<T> : SingletonAppalachiaBehaviour<T>
         where T : AudioExecutionManagerSingletonBehaviour<T>
     {
         protected void HandleExecution<TProcessor, TCollection, TContext, TParams>(
