@@ -21,11 +21,11 @@
     "registry": "http://35.211.123.13:4873/"
   },
   "dependencies": {
-    "com.appalachia.unity3d.core": "0.1.9",
-    "com.appalachia.unity3d.editing": "0.1.11",
-    "com.appalachia.unity3d.rendering": "0.1.10",
-    "com.appalachia.unity3d.utility": "0.1.5",
-    "com.appalachia.unity3d.ci": "0.1.5",
+    "com.appalachia.unity3d.core": "0.1.10",
+    "com.appalachia.unity3d.editing": "0.1.12",
+    "com.appalachia.unity3d.rendering": "0.1.11",
+    "com.appalachia.unity3d.utility": "0.1.6",
+    "com.appalachia.unity3d.ci": "0.1.6",
     "com.unity.addressables": "1.19.9",
     "com.unity.mathematics": "1.2.4",
     "com.unity.collections": "1.0.0-pre.6",
