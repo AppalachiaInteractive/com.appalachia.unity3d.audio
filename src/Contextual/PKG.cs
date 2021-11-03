@@ -8,7 +8,7 @@ namespace Appalachia.Audio.Contextual
 {
     internal static partial class PKG
     {
-        public const int Priority = -365000;
+        public const int Priority = -371000;
         public const string Name = "Audio/Contextual";
         public const string Prefix = Root + Name + "/";
         public const string Root = "Appalachia/";
