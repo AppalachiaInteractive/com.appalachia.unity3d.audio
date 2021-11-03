@@ -1,6 +1,6 @@
 ```
 C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
-[1;32;49m Let's go!  [0m
+ Let's go!  
  ______   ______   __       ______   ______   ______   ______    
 /\  == \ /\  ___\ /\ \     /\  ___\ /\  __ \ /\  ___\ /\  ___\   
 \ \  __< \ \  __\ \ \ \____\ \  __\ \ \  __ \\ \___  \\ \  __\   
@@ -15,6 +15,7 @@ C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
 `0.2.0`
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 6a4eb10236cf4f4472afe85952d1544fe86f1876 | 2021-11-02 | Chris Schubert | Updating changelog and releaselog |
 | 05850bf30d4fa18683376609eddec47a3467b077 | 2021-11-02 | Chris Schubert | Updating changelog and releaselog |
 | 8314ae5b7a7441d9e195544cbb439426c30e1518 | 2021-11-02 | Chris Schubert | Updating changelog and releaselog |
 | 9247b2c8bb84a3ff690b0e55911347dea5099972 | 2021-11-02 | Chris Schubert | Updating changelog and releaselog |
