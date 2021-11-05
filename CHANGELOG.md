@@ -14,6 +14,7 @@ C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 8540d6c97199af92fd0e7098b811488b975a84ff | 2021-11-05 | Chris Schubert | Updating changelog and releaselog |
 | 7e08ae717cf39581bc197c71360193e3bcdb0014 | 2021-11-05 | Chris Schubert | Updating changelog and releaselog |
 | ea0cb88260cfd5846aa4ee1661bd987537f764dd | 2021-11-05 | Chris Schubert | Updating changelog and releaselog |
 | ee1c234788e8e23758311e48fd017103eb1063dd | 2021-11-05 | Chris Schubert | Updating changelog and releaselog |
