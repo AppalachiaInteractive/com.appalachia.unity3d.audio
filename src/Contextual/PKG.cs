@@ -55,37 +55,37 @@ namespace Appalachia.Audio.Contextual
                 
                 public static partial class Components
                 { 
-                    public const int Priority = Behaviours.Priority + 100;
+                    public const int Priority = Behaviours.Priority + 10000;
                     public const string Base = Root + nameof(Components) + "/" + Name + "/";
                 }
 
                 public static partial class Add
                 { 
-                    public const int Priority = Components.Priority + 100;
+                    public const int Priority = Components.Priority + 10000;
                     public const string Base = Root + nameof(Add) +  "/" + Name + "/";
                 }
                 
                 public static partial class Create
                 { 
-                    public const int Priority = Add.Priority + 100;
+                    public const int Priority = Add.Priority + 10000;
                     public const string Base = Root + nameof(Create) +  "/" + Name + "/";
                 }
                 
                 public static partial class Update
                 { 
-                    public const int Priority = Create.Priority + 100;
+                    public const int Priority = Create.Priority + 10000;
                     public const string Base = Root + nameof(Update) +  "/" + Name + "/";
                 }
                 
                 public static partial class Manage
                 { 
-                    public const int Priority = Update.Priority + 100;
+                    public const int Priority = Update.Priority + 10000;
                     public const string Base = Root + nameof(Manage) +  "/" + Name + "/";
                 }
                 
                 public static partial class Data
                 { 
-                    public const int Priority = Manage.Priority + 100;
+                    public const int Priority = Manage.Priority + 10000;
                     public const string Base = Root + nameof(Data) +  "/" + Name + "/";
                 }
                 
@@ -97,7 +97,7 @@ namespace Appalachia.Audio.Contextual
                 
                 public static partial class State
                 { 
-                    public const int Priority = Data.Priority + 100;
+                    public const int Priority = Data.Priority + 10000;
                     public const string Base = Root + nameof(State) +  "/" + Name + "/";
                 }
                 
@@ -121,61 +121,61 @@ namespace Appalachia.Audio.Contextual
                 
                 public static partial class Jobs
                 { 
-                    public const int Priority = Tools.Priority + 100;
+                    public const int Priority = Tools.Priority + 10000;
                     public const string Base = Root + nameof(Jobs) +  "/" + Name + "/";
                 }
                 
                 public static partial class Timing
                 { 
-                    public const int Priority = Jobs.Priority + 100;
+                    public const int Priority = Jobs.Priority + 10000;
                     public const string Base = Root + nameof(Timing) +  "/" + Name + "/";
                 }
                                 
                 public static partial class Utility
                 { 
-                    public const int Priority = Timing.Priority + 100;
+                    public const int Priority = Timing.Priority + 10000;
                     public const string Base = Root + nameof(Utility) +  "/" + Name + "/";
                 }
                 
                 public static partial class Windows
                 { 
-                    public const int Priority = Utility.Priority + 100;
+                    public const int Priority = Utility.Priority + 10000;
                     public const string Base = Root + nameof(Windows) +  "/" + Name + "/";
                 }
                 
                 public static partial class Logging
                 { 
-                    public const int Priority = Windows.Priority + 100;
+                    public const int Priority = Windows.Priority + 10000;
                     public const string Base = Root + nameof(Logging) +  "/" + Name + "/";
                 }          
                 
                 public static partial class Settings
                 { 
-                    public const int Priority = Logging.Priority + 100;
+                    public const int Priority = Logging.Priority + 10000;
                     public const string Base = Root + nameof(Settings) + "/" + Name + "/";
                 }               
                 
                 public static partial class Packages
                 { 
-                    public const int Priority = Settings.Priority + 100;
+                    public const int Priority = Settings.Priority + 10000;
                     public const string Base = Root + nameof(Packages) + "/" + Name + "/";
                 }                          
                 
                 public static partial class External
                 { 
-                    public const int Priority = Packages.Priority + 100;
+                    public const int Priority = Packages.Priority + 10000;
                     public const string Base = Root + nameof(External) + "/" + Name + "/";
                 }           
                 
                 public static partial class Debug
                 { 
-                    public const int Priority = External.Priority + 100;
+                    public const int Priority = External.Priority + 10000;
                     public const string Base = Root + nameof(Debug) +  "/" + Name + "/";
                 }                                               
                 
                 public static partial class Gizmos
                 { 
-                    public const int Priority = Debug.Priority + 100;
+                    public const int Priority = Debug.Priority + 10000;
                     public const string Base = Root + nameof(Gizmos) +  "/" + Name + "/";
                 }                 
             }
