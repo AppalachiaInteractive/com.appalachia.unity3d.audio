@@ -1,11 +1,16 @@
 {
-  "name": "Appalachia.Audio.Contextual",
+  "versionDefines": [],
   "allowUnsafeCode": false,
   "autoReferenced": true,
   "noEngineReferences": false,
   "overrideReferences": false,
+  "name": "Appalachia.Audio.Contextual",
   "rootNamespace": "",
   "defineConstraints": [],
+  "excludePlatforms": [],
+  "includePlatforms": [],
+  "optionalUnityReferences": [],
+  "precompiledReferences": [],
   "references": [
     "GUID:27374ac3d2df75c448adb0e319b58fee",
     "GUID:e1d7d41c8bab3604794e1b502ac398bc",
@@ -46,6 +51,7 @@
     "GUID:5a230d34eb5ccf94f9781d31465451a3",
     "GUID:a7f476e9e88c6944baa2dd9a4affda86",
     "GUID:aab7d97d30d7abe41b8a38190b985fb5",
+    "GUID:5d54864b7d134154aa79d89803ee2e27",
     "GUID:bab61a001c58d3c468cdd73bdb97a91a",
     "GUID:68140b0200bbcad4f9c15f9f4447f256",
     "GUID:1a50594ad9450024c8d77b37e1961be3",
@@ -57,10 +63,5 @@
     "GUID:df380645f10b7bc4b97d4f5eb6303d95",
     "GUID:84651a3751eca9349aac36a66bba901b",
     "GUID:f06555f75b070af458a003d92f9efb00"
-  ],
-  "optionalUnityReferences": [],
-  "precompiledReferences": [],
-  "excludePlatforms": [],
-  "includePlatforms": [],
-  "versionDefines": []
+  ]
 }
