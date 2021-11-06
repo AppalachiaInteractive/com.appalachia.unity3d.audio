@@ -1,4 +1,5 @@
 using Appalachia.Audio.Components;
+using Appalachia.Core.Preferences;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Appalachia.Audio
 {
     internal static class ZoneGizmos
     {
-        private static bool alwaysShowZoneGizmosPrefs;
+        private static PREF<bool> alwaysShowZoneGizmosPrefs;
         private static bool prefsInited;
 
         [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
@@ -125,25 +126,7 @@ namespace Appalachia.Audio
 
         private static void InitPrefs()
         {
-            if (!prefsInited)
-            {
-                prefsInited = true;
-                alwaysShowZoneGizmosPrefs = EditorPrefs.GetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos");
-            }
-        }
-
-        [PreferenceItem("Appalachia/Audio")]
-        private static void OnPrefsGUI()
-        {
-            InitPrefs();
-            alwaysShowZoneGizmosPrefs = EditorGUILayout.Toggle(
-                "Always Show Zone Gizmos",
-                alwaysShowZoneGizmosPrefs
-            );
-            if (GUI.changed)
-            {
-                EditorPrefs.SetBool("Appalachia.Core.Audio:alwaysShowZoneGizmos", alwaysShowZoneGizmosPrefs);
-            }
+            alwaysShowZoneGizmosPrefs ??= PREFS.REG(PKG.Prefs.Group, "Always Show Zone Gizmos", false);
         }
     }
 }
