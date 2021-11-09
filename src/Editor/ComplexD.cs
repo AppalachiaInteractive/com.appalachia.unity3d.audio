@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Appalachia.Audio
 {
@@ -104,62 +105,62 @@ namespace Appalachia.Audio
             return new(a - b.real, -b.imag);
         }
 
-        public static ComplexD operator +(ComplexD a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator +(ComplexD a, ComplexD b)
         {
             return Add(a, b);
         }
 
-        public static ComplexD operator +(ComplexD a, double b)
+        [DebuggerStepThrough] public static ComplexD operator +(ComplexD a, double b)
         {
             return Add(a, b);
         }
 
-        public static ComplexD operator +(double a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator +(double a, ComplexD b)
         {
             return Add(a, b);
         }
 
-        public static ComplexD operator /(ComplexD a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator /(ComplexD a, ComplexD b)
         {
             return Div(a, b);
         }
 
-        public static ComplexD operator /(ComplexD a, double b)
+        [DebuggerStepThrough] public static ComplexD operator /(ComplexD a, double b)
         {
             return Div(a, b);
         }
 
-        public static ComplexD operator /(double a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator /(double a, ComplexD b)
         {
             return Div(a, b);
         }
 
-        public static ComplexD operator *(ComplexD a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator *(ComplexD a, ComplexD b)
         {
             return Mul(a, b);
         }
 
-        public static ComplexD operator *(ComplexD a, double b)
+        [DebuggerStepThrough] public static ComplexD operator *(ComplexD a, double b)
         {
             return Mul(a, b);
         }
 
-        public static ComplexD operator *(double a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator *(double a, ComplexD b)
         {
             return Mul(a, b);
         }
 
-        public static ComplexD operator -(ComplexD a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator -(ComplexD a, ComplexD b)
         {
             return Sub(a, b);
         }
 
-        public static ComplexD operator -(ComplexD a, double b)
+        [DebuggerStepThrough] public static ComplexD operator -(ComplexD a, double b)
         {
             return Sub(a, b);
         }
 
-        public static ComplexD operator -(double a, ComplexD b)
+        [DebuggerStepThrough] public static ComplexD operator -(double a, ComplexD b)
         {
             return Sub(a, b);
         }

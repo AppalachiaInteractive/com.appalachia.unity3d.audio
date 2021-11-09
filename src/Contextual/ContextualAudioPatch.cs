@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Diagnostics;
 using Appalachia.Audio.Components;
 using Appalachia.Core.Attributes.Editing;
 using Appalachia.Core.Scriptables;
@@ -30,7 +31,7 @@ namespace Appalachia.Audio.Contextual
         [ShowIf(nameof(dualPatch))]
         public Patch patch2;
 
-        public static Patch operator %(ContextualAudioPatch p, bool first)
+        [DebuggerStepThrough] public static Patch operator %(ContextualAudioPatch p, bool first)
         {
             /*var p1 = p.patch != null;
             var p2 = p.patch2 != null;

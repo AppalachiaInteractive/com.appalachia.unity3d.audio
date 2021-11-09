@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Appalachia.Audio.Utilities
 {
@@ -7,12 +8,12 @@ namespace Appalachia.Audio.Utilities
     {
         private int value;
 
-        public override bool Equals(object o)
+        [DebuggerStepThrough] public override bool Equals(object o)
         {
             return o is TernaryBool ? ((TernaryBool) o).value == value : false;
         }
 
-        public override int GetHashCode()
+        [DebuggerStepThrough] public override int GetHashCode()
         {
             return (value + 2) * 0x1357;
         }
@@ -22,17 +23,17 @@ namespace Appalachia.Audio.Utilities
             return polarity ? value > 0 : value < 0;
         }
 
-        public static implicit operator TernaryBool(bool b)
+        [DebuggerStepThrough] public static implicit operator TernaryBool(bool b)
         {
             return new() {value = b ? 1 : -1};
         }
 
-        public static bool operator ==(TernaryBool a, bool b)
+        [DebuggerStepThrough] public static bool operator ==(TernaryBool a, bool b)
         {
             return a.ToBool(b);
         }
 
-        public static bool operator !=(TernaryBool a, bool b)
+        [DebuggerStepThrough] public static bool operator !=(TernaryBool a, bool b)
         {
             return !a.ToBool(b);
         }
