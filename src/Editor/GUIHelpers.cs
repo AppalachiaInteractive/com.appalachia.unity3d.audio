@@ -75,7 +75,7 @@ namespace Appalachia.Audio
                 {
                     EditorGUI.DrawRect(new Rect(r.x, y, r.width, 1f), lineColor);
 
-                    var text = string.Format("{0:F0} dB", t);
+                    var text = $"{t:F0} dB";
                     GUI.Label(new Rect(r.x, y, 45f, 15f), text, textStyle10RightAligned);
 
                     py = y;
@@ -96,7 +96,7 @@ namespace Appalachia.Audio
                     EditorGUI.DrawRect(new Rect(x, r.yMax - 5f, 1f, 5f), col);
                     GUI.Label(
                         new Rect(x, r.yMax - 22f, 1, 15f),
-                        f < 1000.0f ? string.Format("{0:F0} Hz", f) : string.Format("{0:F1} kHz", f * 0.001f),
+                        f < 1000.0f ? $"{f:F0} Hz" : $"{f * 0.001f:F1} kHz",
                         textStyle10
                     );
                     px = x;
@@ -130,8 +130,8 @@ namespace Appalachia.Audio
                     EditorGUI.DrawRect(new Rect(x, r.y, 1f, r.height), lineColor);
 
                     var text = t0 > -1.0f
-                        ? string.Format("{0:F0} ms", t0 * 1000.0f)
-                        : string.Format("{0:F1} s",  t0);
+                        ? $"{t0 * 1000.0f:F0} ms"
+                        : $"{t0:F1} s";
                     GUI.Label(new Rect(x, r.y, 1f, 15f), text, textStyle10);
 
                     px = x;

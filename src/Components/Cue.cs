@@ -88,7 +88,7 @@ namespace Appalachia.Audio.Components
                         s = CueStatus.Repeating;
                     }
 #if SEQUENCER_PARANOIA
-                Debug.LogFormat(
+                AppaLog.Info(string.Format(
                     Time.frameCount.ToString("X4") +
                     " Cue.Update: {0} {1} {2} {3}/{4} {5}/{6}",
                     emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???",
@@ -112,7 +112,7 @@ namespace Appalachia.Audio.Components
         public bool KeyOn()
         {
 #if SEQUENCER_PARANOIA
-        Debug.LogFormat(
+        AppaLog.Info(string.Format(
             Time.frameCount.ToString("X4") +
             " Sequencer.KeyOn: {0} {1}",
             emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???");
@@ -168,7 +168,7 @@ namespace Appalachia.Audio.Components
         public void KeyOff(float release, EnvelopeMode mode)
         {
 #if SEQUENCER_PARANOIA
-        Debug.LogFormat(
+        AppaLog.Info(string.Format(
             Time.frameCount.ToString("X4") +
             " Sequencer.KeyOff: {0} {1} : {2} {3}",
             emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???",

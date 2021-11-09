@@ -1,5 +1,6 @@
 using Appalachia.Audio.Components;
 using Appalachia.Audio.Effects;
+using Appalachia.Utility.Logging;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Profiling;
@@ -19,7 +20,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-                Debug.LogWarning("StopRecording: no listener");
+               AppaLog.Warning("StopRecording: no listener");
                 return -1;
             }
 
@@ -31,7 +32,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-                Debug.LogWarning("StartRecording: no listener");
+               AppaLog.Warning("StartRecording: no listener");
             }
             else
             {
@@ -57,7 +58,7 @@ namespace Appalachia.Audio
                 var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
                 if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
                 {
-                    Debug.LogWarning("Failed to set audio mixer parameter: " + rotationAngleParameter);
+                   AppaLog.Warning("Failed to set audio mixer parameter: " + rotationAngleParameter);
                 }
             }
         }

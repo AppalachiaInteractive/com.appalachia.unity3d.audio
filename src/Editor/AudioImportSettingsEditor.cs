@@ -327,11 +327,7 @@ namespace Appalachia.Audio
 
             _stopwatch.Stop();
 
-            _refreshText = string.Format(
-                "Found {0} AudioClips in {1:N2}s",
-                guids.Length,
-                _stopwatch.Elapsed.TotalSeconds
-            );
+            _refreshText = $"Found {guids.Length} AudioClips in {_stopwatch.Elapsed.TotalSeconds:N2}s";
         }
 
         private void ResetCaches()

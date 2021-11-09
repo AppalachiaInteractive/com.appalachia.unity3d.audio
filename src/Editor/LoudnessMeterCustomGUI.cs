@@ -181,7 +181,7 @@ namespace Appalachia.Audio
                     (r.x + labeloffset) - 30,
                     peakPos + 6,
                     60,
-                    string.Format("{0:F1} dB", peakVal),
+                    $"{peakVal:F1} dB",
                     col2
                 );
             }

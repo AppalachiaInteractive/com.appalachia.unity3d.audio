@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Appalachia.Audio.Components;
 using Appalachia.CI.Integration.Assets;
+using Appalachia.Utility.Logging;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Appalachia.Audio
             var guids = AssetDatabaseManager.FindAssets("t:Object", new[] {root});
             var count = 0;
 
-            Debug.Log($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
+            AppaLog.Info($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
 
             foreach (var guid in guids)
             {
@@ -46,14 +47,14 @@ namespace Appalachia.Audio
 
                     if (noClips)
                     {
-                        Debug.LogWarning($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
+                       AppaLog.Warning($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
                     }
 
                     ++count;
                 }
             }
 
-            Debug.Log(
+            AppaLog.Info(
                 $"[{FIND_PATCHES_WITHOUT_CLIPS}]: All done, checked " +
                 count +
                 (count == 1 ? " patch" : " patches")
@@ -69,7 +70,7 @@ namespace Appalachia.Audio
             var patchCount = 0;
             int clipCount;
 
-            Debug.Log($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
+            AppaLog.Info($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
 
             foreach (var guid in guids)
             {
@@ -102,14 +103,14 @@ namespace Appalachia.Audio
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
                 if (!clips.Contains(path))
                 {
-                    Debug.LogWarning(
+                   AppaLog.Warning(
                         $"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path,
                         AssetDatabaseManager.LoadMainAssetAtPath(path)
                     );
                 }
             }
 
-            Debug.Log(
+            AppaLog.Info(
                 $"[{FIND_PATCHES_WITHOUT_CLIPS}]: All done, checked " +
                 patchCount +
                 (patchCount == 1 ? " patch " : " patches ") +

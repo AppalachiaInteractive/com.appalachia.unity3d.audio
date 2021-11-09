@@ -146,7 +146,7 @@ namespace Appalachia.Audio
 
         protected static string GetZoneCaption(Zone z)
         {
-            return string.Format("{0} ({1:N2})", z.name, z.GetRadius());
+            return $"{z.name} ({z.GetRadius():N2})";
         }
 
         [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioZone))]
