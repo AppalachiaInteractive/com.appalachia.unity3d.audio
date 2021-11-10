@@ -15,6 +15,7 @@ C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
 `0.2.0`
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| d2d3aa9b78bd068bc55c463904816f826d9a3251 | 2021-11-09 | Chris Schubert | Updating changelog and releaselog |
 | 9c18c6df137e1ec3ba89fd63ddabe4a8113b29e5 | 2021-11-09 | Chris Schubert | Removing empty directories, adding some debugger passthroughs, and reformatting asmdefs |
 | e594b895253cf69f0d3267306b9de1209ff1824e | 2021-11-08 | Chris Schubert | Updating changelog and releaselog |
 | be6478cb046c1d0e58446ae517986a6b96330e65 | 2021-11-08 | Chris Schubert | Cleanup of old directories, string interpolation updates, and new logging library integrated |
