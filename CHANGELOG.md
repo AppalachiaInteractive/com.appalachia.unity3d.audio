@@ -14,6 +14,15 @@ C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 3b59518be418a72ac553acadc929baf38f04987f | 2021-11-13 | Chris Schubert | EXR to gitlfs |
+| 658c8f7c708e08cc983323cf1f8108cd344cc184 | 2021-11-13 | Chris Schubert | Editor exlusions fro runtime build |
+| 1d0a5b8c7995d55c0941774624a04dc3aee3abcf | 2021-11-13 | Chris Schubert | Runtime build updates |
+
+
+ ## Tag: `v0.2.0`
+| Hash | Date | Author | Changes |
+|------|------|--------|---------|
+| a67e9f09fe60c410aebe989f23b639885e6a1be1 | 2021-11-09 | Chris Schubert | Updating changelog and releaselog |
 | d2d3aa9b78bd068bc55c463904816f826d9a3251 | 2021-11-09 | Chris Schubert | Updating changelog and releaselog |
 | 9c18c6df137e1ec3ba89fd63ddabe4a8113b29e5 | 2021-11-09 | Chris Schubert | Removing empty directories, adding some debugger passthroughs, and reformatting asmdefs |
 | e594b895253cf69f0d3267306b9de1209ff1824e | 2021-11-08 | Chris Schubert | Updating changelog and releaselog |
