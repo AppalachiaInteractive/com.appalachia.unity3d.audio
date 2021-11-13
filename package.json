@@ -24,6 +24,7 @@
     "com.appalachia.unity3d.ci": "0.2.0",
     "com.appalachia.unity3d.core": "0.2.0",
     "com.appalachia.unity3d.editing": "0.2.0",
+    "com.appalachia.unity3d.editor": "0.2.0",
     "com.appalachia.unity3d.rendering": "0.2.0",
     "com.appalachia.unity3d.third-party.sirenix": "0.2.0",
     "com.appalachia.unity3d.utility": "0.2.0",

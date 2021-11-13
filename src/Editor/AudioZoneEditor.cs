@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Appalachia.Audio
 {
     [CustomEditor(typeof(AudioZone))]
-    public class AudioZoneEditor : Editor
+    public class AudioZoneEditor : UnityEditor.Editor
     {
         protected static StringBuilder builder = new();
 

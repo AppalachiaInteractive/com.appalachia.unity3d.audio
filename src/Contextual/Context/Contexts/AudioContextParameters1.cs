@@ -8,9 +8,13 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     [Serializable]
     public sealed class AudioContextParameters1 : AudioContextParameters
     {
+        #region Fields
+
         [SerializeField]
         [SmartLabel]
         [InlineProperty]
         public AudioContextType primary;
+
+        #endregion
     }
 }

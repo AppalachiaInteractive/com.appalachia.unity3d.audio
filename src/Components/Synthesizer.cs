@@ -11,15 +11,14 @@ using Appalachia.Utility.Logging;
 using UnityEngine;
 using UnityEngine.Audio;
 
-#if UNITY_EDITOR
-#endif
-
 #endregion
 
 namespace Appalachia.Audio.Components
 {
     public static class Synthesizer
     {
+        #region Fields
+
 #if UNITY_EDITOR
         public static int sourceIndex;
 #endif
@@ -29,6 +28,8 @@ namespace Appalachia.Audio.Components
         public static Stack<SourceInfo> freeSources = new(64);
         public static uint activeHandle;
         private static float _masterVolume = 1f;
+
+        #endregion
 
         public static float masterVolume
         {
@@ -708,6 +709,8 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct ActiveSource
         {
+            #region Fields
+
             public bool keyOff;
             public Envelope envelope;
             public float keyOn;
@@ -720,6 +723,8 @@ namespace Appalachia.Audio.Components
             public Transform target;
             public uint handle;
             public Vector3 localPosition;
+
+            #endregion
 
             public bool Check(out bool playing)
             {
@@ -774,11 +779,15 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct SourceInfo
         {
+            #region Fields
+
             public AudioHighPassFilter highPassFilter;
             public AudioLowPassFilter lowPassFilter;
             public AudioSource audioSource;
             public Occlusion occlusion;
             public Transform transform;
+
+            #endregion
 
             public void Disable()
             {

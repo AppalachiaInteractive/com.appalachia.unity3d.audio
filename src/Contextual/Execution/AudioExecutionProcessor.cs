@@ -14,19 +14,24 @@ namespace Appalachia.Audio.Contextual.Execution
         where TParams : AudioContextParameters, new()
         where TOwner : AppalachiaBehaviour
     {
+        #region Fields
+
         [SerializeField] public TCollection audio;
 
         [NonSerialized] private bool _initialized;
+
+        #endregion
+
         public bool initialized => _initialized;
 
-        public abstract bool Update(
+        public abstract void Direct(
             TOwner owner,
             out Patch patch,
             out AudioParameters.EnvelopeParams envelope,
             out Vector3 position,
             out float volume);
 
-        public abstract void Direct(
+        public abstract bool Update(
             TOwner owner,
             out Patch patch,
             out AudioParameters.EnvelopeParams envelope,

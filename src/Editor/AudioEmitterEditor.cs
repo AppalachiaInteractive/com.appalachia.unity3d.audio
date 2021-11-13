@@ -8,7 +8,7 @@ namespace Appalachia.Audio
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(AudioEmitter))]
-    public class AudioEmitterEditor : Editor
+    public class AudioEmitterEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

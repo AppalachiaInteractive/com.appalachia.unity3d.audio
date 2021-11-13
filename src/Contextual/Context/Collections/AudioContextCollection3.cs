@@ -17,8 +17,12 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         where TEnumTertiary : Enum
         where T : AudioContextCollection3<TEnumPrimary, TEnumSecondary, TEnumTertiary, T>
     {
+        #region Fields
+
         [NonSerialized]
         private NonSerializedAppaLookup3<TEnumPrimary, TEnumSecondary, TEnumTertiary, AudioContext3> index;
+
+        #endregion
 
         public ContextualAudioPatch GetBest(
             TEnumPrimary primary,

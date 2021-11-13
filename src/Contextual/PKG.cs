@@ -12,6 +12,8 @@ namespace Appalachia.Audio.Contextual
         public const string Name = "Audio/Contextual";
         public const string Prefix = Root + Name + "/";
         public const string Root = "Appalachia/";
+        public const string Version = "0.2.0";
+        public const string BuildDate = "2021-11-12T23:51:04.3019522Z";
         
         public static partial class Prefs
         {
@@ -31,14 +33,14 @@ namespace Appalachia.Audio.Contextual
                 public const string Base =  "Assets/" + Prefix;
             }
 
-            public static partial class GameObject
+            public static partial class GameObjects
             {
                 public const int Priority = PKG.Priority;
                 public const string Base = "GameObject/" + Prefix;
                     
                 public static partial class Create
                 {
-                    public const int Priority = GameObject.Priority + 0;
+                    public const int Priority = GameObjects.Priority + 0;
                     public const string Base =  "GameObject/Create/" + Prefix;
                 }
             }

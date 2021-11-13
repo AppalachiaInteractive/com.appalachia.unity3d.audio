@@ -12,6 +12,8 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioProgram
     {
+        #region Fields
+
         [Space(10)] [Colorize] public AudioClipParams[] clips;
 
         [Space(10)] [Colorize] public AudioMixerGroup mixerGroup;
@@ -32,35 +34,7 @@ namespace Appalachia.Audio.Components
 
         [HideInInspector] public WeightedDecay weighted;
 
-        public AudioClip GetClip(out float gain)
-        {
-            if (randomize)
-            {
-                return GetClip(Randomizer.zeroToOne, out gain);
-            }
-
-            var i = clipIndex;
-            var c = clips[i];
-            if (increment)
-            {
-                clipIndex = (clipIndex + 1) % clips.Length;
-            }
-
-            gain = c.gain;
-            return c.clip;
-        }
-
-        public AudioClip GetClip(float q, out float gain)
-        {
-            return GetClipAt(clipIndex = weighted.Draw(q, clips.Length), out gain);
-        }
-
-        public AudioClip GetClipAt(int i, out float gain)
-        {
-            var c = clips[i];
-            gain = c.gain;
-            return c.clip;
-        }
+        #endregion
 
         public bool Activate(
             ActivationParams ap
@@ -128,6 +102,36 @@ namespace Appalachia.Audio.Components
             return false;
         }
 
+        public AudioClip GetClip(out float gain)
+        {
+            if (randomize)
+            {
+                return GetClip(Randomizer.zeroToOne, out gain);
+            }
+
+            var i = clipIndex;
+            var c = clips[i];
+            if (increment)
+            {
+                clipIndex = (clipIndex + 1) % clips.Length;
+            }
+
+            gain = c.gain;
+            return c.clip;
+        }
+
+        public AudioClip GetClip(float q, out float gain)
+        {
+            return GetClipAt(clipIndex = weighted.Draw(q, clips.Length), out gain);
+        }
+
+        public AudioClip GetClipAt(int i, out float gain)
+        {
+            var c = clips[i];
+            gain = c.gain;
+            return c.clip;
+        }
+
         public void Initialize()
         {
             lastFrame = -1;
@@ -145,11 +149,19 @@ namespace Appalachia.Audio.Components
             return n;
         }
 
+        #region Nested type: AudioClipParams
+
         [Serializable]
         public struct AudioClipParams
         {
+            #region Fields
+
             public AudioClip clip;
             [Range(-1, 1)] public float gain;
+
+            #endregion
         }
+
+        #endregion
     }
 }

@@ -11,9 +11,11 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSequence
     {
+        #region Fields
+
         [Space(10)]
-        [MinMax(0, 600, colorize = true)]
-        public MinMaxFloat duration;
+        [FloatRange(0, 600, colorize = true)]
+        public FloatRange duration;
 
         [NonSerialized] public Patch patch;
 
@@ -21,6 +23,8 @@ namespace Appalachia.Audio.Components
         [Space(10)] [Colorize] public Timing[] timing;
 
         [NonSerialized] public uint lastHandle;
+
+        #endregion
 
         public bool Activate(ActivationParams ap)
         {
@@ -50,11 +54,19 @@ namespace Appalachia.Audio.Components
             return duration.max * (1 + repeat.count);
         }
 
+        #region Nested type: RepeatParams
+
         [Serializable]
         public struct RepeatParams
         {
-            [Range(0, 99)] public int count;
+            #region Fields
+
             public bool forever;
+            [Range(0, 99)] public int count;
+
+            #endregion
         }
+
+        #endregion
     }
 }

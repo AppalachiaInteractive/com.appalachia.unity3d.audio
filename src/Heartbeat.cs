@@ -20,7 +20,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-               AppaLog.Warning("StopRecording: no listener");
+               AppaLog.Warn("StopRecording: no listener");
                 return -1;
             }
 
@@ -32,7 +32,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-               AppaLog.Warning("StartRecording: no listener");
+               AppaLog.Warn("StartRecording: no listener");
             }
             else
             {
@@ -58,7 +58,7 @@ namespace Appalachia.Audio
                 var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
                 if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
                 {
-                   AppaLog.Warning("Failed to set audio mixer parameter: " + rotationAngleParameter);
+                   AppaLog.Warn("Failed to set audio mixer parameter: " + rotationAngleParameter);
                 }
             }
         }

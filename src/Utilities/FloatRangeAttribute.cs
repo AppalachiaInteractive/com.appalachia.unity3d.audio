@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Appalachia.Audio.Utilities
 {
-    public class MinMaxAttribute : PropertyAttribute
+    public class FloatRangeAttribute : PropertyAttribute
     {
-        public MinMaxAttribute(float mv, float nv)
+        public FloatRangeAttribute(float mv, float nv)
         {
             min = mv;
             max = nv;

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Appalachia.Audio.Utilities
 {
     [Serializable]
-    public struct MinMaxFloat
+    public struct FloatRange
     {
         public float min;
         public float max;

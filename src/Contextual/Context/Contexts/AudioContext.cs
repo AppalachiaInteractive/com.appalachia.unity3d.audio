@@ -12,6 +12,8 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     public abstract class AudioContext<T>
         where T : AudioContextParameters
     {
+        #region Fields
+
         [ToggleLeft]
         [SmartLabel]
         [HorizontalGroup("B")]
@@ -27,5 +29,7 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
         [InlineProperty]
         [PropertyOrder(0)]
         public T parameters;
+
+        #endregion
     }
 }

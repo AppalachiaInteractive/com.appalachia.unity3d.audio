@@ -11,7 +11,14 @@ namespace Appalachia.Audio.Components
 {
     public abstract class Zone : MonoBehaviour
     {
+        #region Constants and Static Readonly
+
         public static readonly List<Zone> allZones = new();
+
+        #endregion
+
+        #region Fields
+
         public static bool dontProbeZones;
 
         [Range(0, 1)] public float parentExclusion;
@@ -32,46 +39,13 @@ namespace Appalachia.Audio.Components
         protected Collider _trigger;
         protected int _triggerRefs;
 
+        #endregion
+
         public bool isVolumeExcluded => volumeExclusion > 0f;
 
         public Collider trigger => inited ? _trigger : FindTrigger(this);
 
-        public float GetRadius()
-        {
-            var t = trigger;
-            return t ? GetTriggerRadius(t) : radius;
-        }
-
-        public Zone FindParentZone()
-        {
-            return FindParentZoneRecursive(transform.parent);
-        }
-
-        protected bool OnUpdateActivation(bool state)
-        {
-            if (active == state)
-            {
-                return false;
-            }
-
-            active = state;
-            if (children != null)
-            {
-                foreach (var i in children)
-                {
-                    i.enabled = state;
-                }
-            }
-
-            return true;
-        }
-
-        protected void OnDisable()
-        {
-            allZones.Remove(this);
-            OnUpdateActivation(false);
-            _triggerRefs = 0;
-        }
+        #region Event Functions
 
         protected void OnEnable()
         {
@@ -83,6 +57,15 @@ namespace Appalachia.Audio.Components
             allZones.Add(this);
             OnUpdateActivation(wantActive);
         }
+
+        protected void OnDisable()
+        {
+            allZones.Remove(this);
+            OnUpdateActivation(false);
+            _triggerRefs = 0;
+        }
+
+        #endregion
 
         protected virtual void OnInit()
         {
@@ -101,37 +84,6 @@ namespace Appalachia.Audio.Components
 
         protected virtual void OnUpdateEmitters()
         {
-        }
-
-        protected void SetActive(bool state)
-        {
-            wantActive = state;
-        }
-
-        private void RegisterWithParentZone()
-        {
-            var z = FindParentZone();
-            if (z != null)
-            {
-                if (z.children == null)
-                {
-                    z.children = new List<Zone>(4);
-                }
-
-                z.children.Add(this);
-                parent = z;
-            }
-        }
-
-        private Zone FindParentZoneRecursive(Transform t)
-        {
-            if (t != null)
-            {
-                var z = t.GetComponent<Zone>();
-                return z != null ? z : FindParentZoneRecursive(t.parent);
-            }
-
-            return null;
         }
 
         public static Collider FindTrigger(Zone z)
@@ -250,12 +202,77 @@ namespace Appalachia.Audio.Components
             }
         }
 
+        public Zone FindParentZone()
+        {
+            return FindParentZoneRecursive(transform.parent);
+        }
+
+        public float GetRadius()
+        {
+            var t = trigger;
+            return t ? GetTriggerRadius(t) : radius;
+        }
+
+        protected bool OnUpdateActivation(bool state)
+        {
+            if (active == state)
+            {
+                return false;
+            }
+
+            active = state;
+            if (children != null)
+            {
+                foreach (var i in children)
+                {
+                    i.enabled = state;
+                }
+            }
+
+            return true;
+        }
+
+        protected void SetActive(bool state)
+        {
+            wantActive = state;
+        }
+
+        private Zone FindParentZoneRecursive(Transform t)
+        {
+            if (t != null)
+            {
+                var z = t.GetComponent<Zone>();
+                return z != null ? z : FindParentZoneRecursive(t.parent);
+            }
+
+            return null;
+        }
+
+        private void RegisterWithParentZone()
+        {
+            var z = FindParentZone();
+            if (z != null)
+            {
+                if (z.children == null)
+                {
+                    z.children = new List<Zone>(4);
+                }
+
+                z.children.Add(this);
+                parent = z;
+            }
+        }
+
 #if UNITY_EDITOR
         [Serializable]
         public struct GizmoParams
         {
+            #region Fields
+
             public Color activeColor;
             public Color inactiveColor;
+
+            #endregion
         }
 
         [Colorize] public GizmoParams gizmo = new() {activeColor = Color.magenta, inactiveColor = Color.blue};

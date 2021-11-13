@@ -8,11 +8,15 @@ namespace Appalachia.Audio.Components
 {
     public struct ActivationParams
     {
-        public Transform transform;
-        public Vector3 position;
+        #region Fields
+
         public float delay;
-        public float volume;
         public float modVolume;
+        public float volume;
+        public Transform transform;
         public uint handle;
+        public Vector3 position;
+
+        #endregion
     }
 }

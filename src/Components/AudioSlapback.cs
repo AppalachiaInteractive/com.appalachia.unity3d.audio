@@ -9,7 +9,19 @@ namespace Appalachia.Audio.Components
 {
     public class AudioSlapback : Zone
     {
+        #region Constants and Static Readonly
+
         public static readonly HashSet<AudioSlapback> allSlapbacks = new();
+
+        #endregion
+
+        #region Event Functions
+
+        protected new void OnEnable()
+        {
+            base.OnEnable();
+            allSlapbacks.Add(this);
+        }
 
         protected new void OnDisable()
         {
@@ -17,11 +29,7 @@ namespace Appalachia.Audio.Components
             base.OnDisable();
         }
 
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            allSlapbacks.Add(this);
-        }
+        #endregion
 
         public static AudioSlapback FindClosest(Vector3 p, out Vector3 rp, out Vector3 rd)
         {

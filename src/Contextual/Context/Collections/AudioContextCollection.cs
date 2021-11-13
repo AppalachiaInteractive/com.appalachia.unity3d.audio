@@ -11,12 +11,13 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Audio.Contextual.Context.Collections
 {
     [Serializable]
-    public abstract class
-        AudioContextCollection<TContext, TParams, T> : SingletonAppalachiaObject<T>
+    public abstract class AudioContextCollection<TContext, TParams, T> : SingletonAppalachiaObject<T>
         where TParams : AudioContextParameters
         where TContext : AudioContext<TParams>
         where T : AudioContextCollection<TContext, TParams, T>
     {
+        #region Fields
+
         [SmartLabel]
         [ToggleLeft]
         [HorizontalGroup("A", .2f)]
@@ -31,6 +32,21 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         [DisableIf(nameof(locked))]
         [ListDrawerSettings]
         public TContext[] contexts;
+
+        #endregion
+
+        #region Event Functions
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+#if UNITY_EDITOR
+            Refresh();
+#endif
+        }
+
+        #endregion
 
         protected abstract void AddOrUpdate(TContext context);
 
@@ -52,12 +68,5 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
         }
 #endif
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-            Refresh();
-        }
     }
 }

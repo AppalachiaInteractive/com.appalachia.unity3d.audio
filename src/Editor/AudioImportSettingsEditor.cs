@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Appalachia.Audio
 {
     [CustomEditor(typeof(AudioImportSettings))]
-    public class AudioImportSettingsEditor : Editor
+    public class AudioImportSettingsEditor : UnityEditor.Editor
     {
         public static readonly Dictionary<string, int> overridesTable = new();
 

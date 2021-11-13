@@ -10,6 +10,15 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public struct Envelope
     {
+        internal enum Cadence
+        {
+            Snappy,
+            Normal,
+            Hesitant
+        }
+
+        #region Constants and Static Readonly
+
         public static readonly Envelope instant = new()
         {
             attackTime = 0f,
@@ -18,6 +27,10 @@ namespace Appalachia.Audio.Components
             releaseValue = 0f,
             sustainValue = 1f
         };
+
+        #endregion
+
+        #region Fields
 
         public float attackTime;
 
@@ -28,26 +41,11 @@ namespace Appalachia.Audio.Components
         internal float attackValue;
         internal float releaseValue;
 
-        public void SetAttack(float t)
-        {
-            attackTime = t;
-            attackValue = 0f;
-            attackCadence = t <= 1f
-                ? Cadence.Snappy
-                : t <= 10f
-                    ? Cadence.Normal
-                    : Cadence.Hesitant;
-        }
+        #endregion
 
         public float GetAttackValue()
         {
             return attackValue;
-        }
-
-        public void SetRelease(float t)
-        {
-            releaseTime = t;
-            releaseValue = 0f;
         }
 
         public float GetReleaseValue()
@@ -72,6 +70,23 @@ namespace Appalachia.Audio.Components
             return a * r * sustainValue;
         }
 
+        public void SetAttack(float t)
+        {
+            attackTime = t;
+            attackValue = 0f;
+            attackCadence = t <= 1f
+                ? Cadence.Snappy
+                : t <= 10f
+                    ? Cadence.Normal
+                    : Cadence.Hesitant;
+        }
+
+        public void SetRelease(float t)
+        {
+            releaseTime = t;
+            releaseValue = 0f;
+        }
+
         public float UpdateAttack(float dt)
         {
             var speed = attackTime > 0f ? 1f / attackTime : Mathf.Infinity;
@@ -82,13 +97,6 @@ namespace Appalachia.Audio.Components
         {
             var speed = releaseTime > 0f ? 1f / releaseTime : Mathf.Infinity;
             return releaseValue = Mathf.Clamp01(releaseValue + (dt * speed));
-        }
-
-        internal enum Cadence
-        {
-            Snappy,
-            Normal,
-            Hesitant
         }
     }
 }

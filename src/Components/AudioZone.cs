@@ -9,9 +9,16 @@ namespace Appalachia.Audio.Components
 {
     public class AudioZone : Zone
     {
-        public LayerMask layerMask = -1;
+        public enum Ownership
+        {
+            Local,
+            Deep
+        }
 
-        [MinMax(0, 1)] public MinMaxFloat peripheralFade = new() {min = 1f, max = 1f};
+        #region Fields
+
+        [FloatRange(0, 1)] public FloatRange peripheralFade = new() {min = 1f, max = 1f};
+        public LayerMask layerMask = -1;
 
         public Ownership ownership;
 
@@ -22,7 +29,17 @@ namespace Appalachia.Audio.Components
 
         private TernaryBool hasEnabledEmitters;
 
+        #endregion
+
         public bool hasPeripheralFade => peripheralFade.min < 1f;
+
+        #region Event Functions
+
+        protected new void OnEnable()
+        {
+            base.OnEnable();
+            lastFrame = -1;
+        }
 
         protected new void OnDisable()
         {
@@ -32,12 +49,6 @@ namespace Appalachia.Audio.Components
             }
 
             base.OnDisable();
-        }
-
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            lastFrame = -1;
         }
 
         protected void OnTriggerEnter(Collider c)
@@ -54,6 +65,15 @@ namespace Appalachia.Audio.Components
             {
                 SetActive(false);
             }
+        }
+
+        #endregion
+
+        public static AudioEmitter[] FindEmitters(AudioZone z)
+        {
+            return z.ownership == Ownership.Local
+                ? z.GetComponents<AudioEmitter>()
+                : z.GetComponentsInChildren<AudioEmitter>();
         }
 
         protected override void OnInit()
@@ -90,19 +110,6 @@ namespace Appalachia.Audio.Components
                     emitters[i].enabled = wantEnabledEmitters;
                 }
             }
-        }
-
-        public static AudioEmitter[] FindEmitters(AudioZone z)
-        {
-            return z.ownership == Ownership.Local
-                ? z.GetComponents<AudioEmitter>()
-                : z.GetComponentsInChildren<AudioEmitter>();
-        }
-
-        public enum Ownership
-        {
-            Local,
-            Deep
         }
     }
 }

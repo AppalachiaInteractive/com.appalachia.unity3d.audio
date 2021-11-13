@@ -8,7 +8,13 @@ namespace Appalachia.Audio.Components
 {
     public sealed class AudioAnimHandler : MonoBehaviour
     {
+        #region Fields
+
         private AudioAnimEvent[] events;
+
+        #endregion
+
+        #region Event Functions
 
         private void Awake()
         {
@@ -26,5 +32,7 @@ namespace Appalachia.Audio.Components
                 e.KeyOff();
             }
         }
+
+        #endregion
     }
 }

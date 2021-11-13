@@ -8,7 +8,7 @@ namespace Appalachia.Audio
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Patch))]
-    public class PatchEditor : Editor
+    public class PatchEditor : UnityEditor.Editor
     {
         private bool _foldout;
         private float _random;

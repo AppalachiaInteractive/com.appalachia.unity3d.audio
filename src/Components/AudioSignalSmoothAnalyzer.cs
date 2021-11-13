@@ -12,6 +12,8 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSignalSmoothAnalyzer
     {
+        #region Fields
+
         [HorizontalGroup("Trend/B", .5f)]
         [ReadOnly]
         [NonSerialized]
@@ -83,6 +85,8 @@ namespace Appalachia.Audio.Components
         [HideInInspector] public int referenceID;
 
         private Queue<float> buffer = new(128);
+
+        #endregion
 
         [HorizontalGroup("Trend/E", .5f)]
         [ReadOnly]

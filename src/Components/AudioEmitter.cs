@@ -2,7 +2,6 @@
 
 using System;
 using Appalachia.Audio.Utilities;
-using Appalachia.CI.Constants;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,6 +12,15 @@ namespace Appalachia.Audio.Components
     [AddComponentMenu(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
     public class AudioEmitter : MonoBehaviour
     {
+        public enum Controller
+        {
+            None,
+            User,
+            Zone
+        }
+
+        #region Fields
+
         [Colorize] public AttachmentParams attachment;
 
         [Colorize] public AuxiliaryParams auxiliary;
@@ -27,7 +35,7 @@ namespace Appalachia.Audio.Components
         [Colorize] public GizmoParams gizmo = new() {color = Color.red};
 
         [Colorize]
-        public ModulationParams modulation = new() {volume = new MinMaxFloat {min = 0.95f, max = 1.05f}};
+        public ModulationParams modulation = new() {volume = new FloatRange {min = 0.95f, max = 1.05f}};
 
         [FormerlySerializedAs("assets")]
         public Patch[] patches;
@@ -40,12 +48,41 @@ namespace Appalachia.Audio.Components
 
         private uint[] cueHandles;
 
+        #endregion
+
         public bool isModulated => (modulation.custom != null) || (modulation.period > 0f);
 
-        public bool IsPaused()
+        #region Event Functions
+
+        protected void Awake()
         {
-            return paused;
+            Reset();
         }
+
+        protected void Reset()
+        {
+            if (controller == Controller.None)
+            {
+                controller = !zone && !GetComponent<Zone>() ? Controller.User : Controller.Zone;
+            }
+
+            enabled = controller != Controller.Zone;
+        }
+
+        protected void OnEnable()
+        {
+            if (autoCue)
+            {
+                CueIn();
+            }
+        }
+
+        protected void OnDisable()
+        {
+            CueOut();
+        }
+
+        #endregion
 
         public void CueIn()
         {
@@ -88,86 +125,100 @@ namespace Appalachia.Audio.Components
             }
         }
 
+        public bool IsPaused()
+        {
+            return paused;
+        }
+
         public void SetPaused(bool p)
         {
             paused = p;
         }
 
-        protected void Awake()
+        #region Nested type: AttachmentParams
+
+        [Serializable]
+        public struct AttachmentParams
         {
-            Reset();
+            #region Fields
+
+            public bool useListenerTransform;
+            public Transform transform;
+
+            #endregion
         }
 
-        protected void OnDisable()
+        #endregion
+
+        #region Nested type: AuxiliaryParams
+
+        [Serializable]
+        public struct AuxiliaryParams
         {
-            CueOut();
+            #region Fields
+
+            public AudioSource source;
+
+            #endregion
         }
 
-        protected void OnEnable()
-        {
-            if (autoCue)
-            {
-                CueIn();
-            }
-        }
+        #endregion
 
-        protected void Reset()
-        {
-            if (controller == Controller.None)
-            {
-                controller = !zone && !GetComponent<Zone>() ? Controller.User : Controller.Zone;
-            }
-
-            enabled = controller != Controller.Zone;
-        }
-
-        public enum Controller
-        {
-            None,
-            User,
-            Zone
-        }
+        #region Nested type: CustomModulator
 
         public interface CustomModulator
         {
             float GetCustomModulation();
         }
 
-        [Serializable]
-        public struct AttachmentParams
-        {
-            public Transform transform;
-            public bool useListenerTransform;
-        }
+        #endregion
 
-        [Serializable]
-        public struct AuxiliaryParams
-        {
-            public AudioSource source;
-        }
+        #region Nested type: GizmoParams
 
         [Serializable]
         public struct GizmoParams
         {
+            #region Fields
+
             public Color color;
+
+            #endregion
         }
+
+        #endregion
+
+        #region Nested type: ModulationParams
 
         [Serializable]
         public struct ModulationParams
         {
-            [MinMax(0, 2)] public MinMaxFloat volume;
-            [Range(0, 1800)] public float period;
+            #region Fields
+
             public bool inverted;
+            [Range(0, 1800)] public float period;
+            [FloatRange(0, 2)] public FloatRange volume;
 
             // ReSharper disable once UnassignedField.Global
             internal CustomModulator custom;
+
+            #endregion
         }
+
+        #endregion
+
+        #region Nested type: RandomizationParams
 
         [Serializable]
         public struct RandomizationParams
         {
+            #region Fields
+
             [Range(0, 1)] public float chance;
-            [MinMax(0, 1)] public MinMaxFloat distance;
+            [FloatRange(0, 1)] public FloatRange distance;
+
+            #endregion
         }
+
+        #endregion
     }
 }

@@ -14,6 +14,8 @@ namespace Appalachia.Audio.Contextual
     [Serializable]
     public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject<ContextualAudioPatch>
     {
+        #region Fields
+
         [ToggleLeft]
         [SmartLabel]
         [HorizontalGroup("A", .2f)]
@@ -31,7 +33,10 @@ namespace Appalachia.Audio.Contextual
         [ShowIf(nameof(dualPatch))]
         public Patch patch2;
 
-        [DebuggerStepThrough] public static Patch operator %(ContextualAudioPatch p, bool first)
+        #endregion
+
+        [DebuggerStepThrough]
+        public static Patch operator %(ContextualAudioPatch p, bool first)
         {
             /*var p1 = p.patch != null;
             var p2 = p.patch2 != null;

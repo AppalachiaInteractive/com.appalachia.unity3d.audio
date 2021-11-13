@@ -9,6 +9,8 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     [Serializable]
     public sealed class AudioContextType
     {
+        #region Fields
+
         [SerializeField]
         [HideInInspector]
         public SerializableType type;
@@ -17,6 +19,8 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
         [HorizontalGroup("A")]
         [ValueDropdown(nameof(value))]
         public short value;
+
+        #endregion
 
         private ValueDropdownList<short> values => type.EnumValues;
     }

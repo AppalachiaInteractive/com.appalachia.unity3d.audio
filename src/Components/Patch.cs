@@ -11,11 +11,34 @@ namespace Appalachia.Audio.Components
 {
     public sealed class Patch : AppalachiaObject<Patch>
     {
+        #region Fields
+
         [Space(10)] [Colorize] public AudioProgram program;
 
         [Space(10)] [Colorize] public AudioSequence sequence;
 
         [NonSerialized] public bool hasTimings;
+
+        #endregion
+
+        #region Event Functions
+
+        private void OnEnable()
+        {
+            if (program != null)
+            {
+                program.patch = this;
+                program.Initialize();
+            }
+
+            if (sequence != null)
+            {
+                sequence.patch = this;
+                hasTimings = (sequence.timing != null) && (sequence.timing.Length > 0);
+            }
+        }
+
+        #endregion
 
         public bool Activate(ActivationParams ap)
         {
@@ -42,6 +65,11 @@ namespace Appalachia.Audio.Components
             );
         }
 
+        public int GetClipIndex()
+        {
+            return !program.randomize ? program.clipIndex : -1;
+        }
+
         public bool GetCueInfo(out float duration, out int repeats)
         {
             if (hasTimings)
@@ -52,11 +80,6 @@ namespace Appalachia.Audio.Components
             duration = 0f;
             repeats = 0;
             return false;
-        }
-
-        public int GetClipIndex()
-        {
-            return !program.randomize ? program.clipIndex : -1;
         }
 
         public void SetClipIndex(int index)
@@ -70,21 +93,6 @@ namespace Appalachia.Audio.Components
         internal float GetMaxDuration()
         {
             return Mathf.Max(program.GetMaxDuration(), sequence.GetMaxDuration());
-        }
-
-        private void OnEnable()
-        {
-            if (program != null)
-            {
-                program.patch = this;
-                program.Initialize();
-            }
-
-            if (sequence != null)
-            {
-                sequence.patch = this;
-                hasTimings = (sequence.timing != null) && (sequence.timing.Length > 0);
-            }
         }
     }
 }

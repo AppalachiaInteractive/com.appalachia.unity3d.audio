@@ -47,7 +47,7 @@ namespace Appalachia.Audio
 
                     if (noClips)
                     {
-                       AppaLog.Warning($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
+                       AppaLog.Warn($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
                     }
 
                     ++count;
@@ -103,7 +103,7 @@ namespace Appalachia.Audio
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
                 if (!clips.Contains(path))
                 {
-                   AppaLog.Warning(
+                   AppaLog.Warn(
                         $"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path,
                         AssetDatabaseManager.LoadMainAssetAtPath(path)
                     );
