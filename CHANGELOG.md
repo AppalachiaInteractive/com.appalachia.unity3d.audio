@@ -1,6 +1,6 @@
 ```
 C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
- Let's go!  
+Let's go!  
  ________   ___  ___   ________   ________    ________   _______    ________      
 |\   ____\ |\  \|\  \ |\   __  \ |\   ___  \ |\   ____\ |\  ___ \  |\   ____\     
 \ \  \___| \ \  \\\  \\ \  \|\  \\ \  \\ \  \\ \  \___| \ \   __/| \ \  \___|_    
@@ -14,6 +14,7 @@ C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 4a9ce4f92221502631323f5f0e1e3c8af10ddbdd | 2021-11-13 | Chris Schubert | Updating changelog and releaselog |
 | 6fb80e96a2f113512980d99b997613544b40a970 | 2021-11-13 | Chris Schubert | Updating changelog and releaselog |
 | 3b59518be418a72ac553acadc929baf38f04987f | 2021-11-13 | Chris Schubert | EXR to gitlfs |
 | 658c8f7c708e08cc983323cf1f8108cd344cc184 | 2021-11-13 | Chris Schubert | Editor exlusions fro runtime build |
