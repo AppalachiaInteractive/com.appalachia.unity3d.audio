@@ -1,5 +1,6 @@
 **/.vs/**
 **/*.pdb
+**/*.pdb.meta
 .backup-files
 .dist
 .env
