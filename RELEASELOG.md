@@ -1,6 +1,6 @@
 ```
 C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
-Let's go!  
+Development environment loaded!  
  ______   ______   __       ______   ______   ______   ______    
 /\  == \ /\  ___\ /\ \     /\  ___\ /\  __ \ /\  ___\ /\  ___\   
 \ \  __< \ \  __\ \ \ \____\ \  __\ \ \  __ \\ \___  \\ \  __\   
@@ -15,6 +15,8 @@ Let's go!
 `0.2.0`
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| df706585541162ae624698f2443336d7536f1c81 | 2021-11-20 | Chris Schubert | Packaging updates and formatting for titles |
+| 239c6be52dd4de7a2c0ac06eeea923b17358e226 | 2021-11-20 | Chris Schubert | Updating changelog and releaselog |
 | c8db297321e6dd306ed2c87a9ff59db1ab1aa8cd | 2021-11-20 | Chris Schubert | Code cleanup and base class refactoring |
 | 1b117fb6305e91a93730a4098a7c8fb7e2df0e82 | 2021-11-14 | Chris Schubert | Updating changelog and releaselog |
 | 4a9ce4f92221502631323f5f0e1e3c8af10ddbdd | 2021-11-13 | Chris Schubert | Updating changelog and releaselog |
