@@ -23,8 +23,9 @@ namespace Appalachia.Audio.Components
 
         #region Event Functions
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             if (program != null)
             {
                 program.patch = this;
