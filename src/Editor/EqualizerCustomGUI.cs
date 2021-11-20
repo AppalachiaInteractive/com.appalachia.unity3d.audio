@@ -6,6 +6,8 @@ namespace Appalachia.Audio
 {
     public class EqualizerCustomGUI : FilterCurveUi
     {
+        #region Fields and Autoproperties
+
         private bool _showSpectrum;
         private bool _useLogScale;
         private float _lowFreq, _midFreq, _highFreq;
@@ -13,11 +15,50 @@ namespace Appalachia.Audio
         private float _masterGain;
         private float _midQ, _lowQ, _highQ;
 
+        #endregion
+
         public override string Description => "3-band equalizer demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo Equalizer";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            float useLogScaleFloat;
+            float showSpectrumFloat;
+            plugin.GetFloatParameter("MasterGain",   out _masterGain);
+            plugin.GetFloatParameter("LowGain",      out _lowGain);
+            plugin.GetFloatParameter("MidGain",      out _midGain);
+            plugin.GetFloatParameter("HighGain",     out _highGain);
+            plugin.GetFloatParameter("LowFreq",      out _lowFreq);
+            plugin.GetFloatParameter("MidFreq",      out _midFreq);
+            plugin.GetFloatParameter("HighFreq",     out _highFreq);
+            plugin.GetFloatParameter("LowQ",         out _lowQ);
+            plugin.GetFloatParameter("HighQ",        out _highQ);
+            plugin.GetFloatParameter("MidQ",         out _midQ);
+            plugin.GetFloatParameter("UseLogScale",  out useLogScaleFloat);
+            plugin.GetFloatParameter("ShowSpectrum", out showSpectrumFloat);
+            _useLogScale = useLogScaleFloat > 0.5f;
+            _showSpectrum = showSpectrumFloat > 0.5f;
+            GUILayout.Space(5f);
+            var r = GUILayoutUtility.GetRect(200, 100, GUILayout.ExpandWidth(true));
+            if (DrawControl(plugin, r, plugin.GetSampleRate()))
+            {
+                plugin.SetFloatParameter("MasterGain", _masterGain);
+                plugin.SetFloatParameter("LowGain",    _lowGain);
+                plugin.SetFloatParameter("MidGain",    _midGain);
+                plugin.SetFloatParameter("HighGain",   _highGain);
+                plugin.SetFloatParameter("LowFreq",    _lowFreq);
+                plugin.SetFloatParameter("HighFreq",   _highFreq);
+                plugin.SetFloatParameter("MidFreq",    _midFreq);
+                plugin.SetFloatParameter("LowQ",       _lowQ);
+                plugin.SetFloatParameter("MidQ",       _midQ);
+                plugin.SetFloatParameter("HighQ",      _highQ);
+            }
+
+            return true;
+        }
 
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -326,43 +367,6 @@ namespace Appalachia.Audio
             {
                 AudioCurveRendering.DrawCurve(r, d, color);
             }
-        }
-
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            float useLogScaleFloat;
-            float showSpectrumFloat;
-            plugin.GetFloatParameter("MasterGain",   out _masterGain);
-            plugin.GetFloatParameter("LowGain",      out _lowGain);
-            plugin.GetFloatParameter("MidGain",      out _midGain);
-            plugin.GetFloatParameter("HighGain",     out _highGain);
-            plugin.GetFloatParameter("LowFreq",      out _lowFreq);
-            plugin.GetFloatParameter("MidFreq",      out _midFreq);
-            plugin.GetFloatParameter("HighFreq",     out _highFreq);
-            plugin.GetFloatParameter("LowQ",         out _lowQ);
-            plugin.GetFloatParameter("HighQ",        out _highQ);
-            plugin.GetFloatParameter("MidQ",         out _midQ);
-            plugin.GetFloatParameter("UseLogScale",  out useLogScaleFloat);
-            plugin.GetFloatParameter("ShowSpectrum", out showSpectrumFloat);
-            _useLogScale = useLogScaleFloat > 0.5f;
-            _showSpectrum = showSpectrumFloat > 0.5f;
-            GUILayout.Space(5f);
-            var r = GUILayoutUtility.GetRect(200, 100, GUILayout.ExpandWidth(true));
-            if (DrawControl(plugin, r, plugin.GetSampleRate()))
-            {
-                plugin.SetFloatParameter("MasterGain", _masterGain);
-                plugin.SetFloatParameter("LowGain",    _lowGain);
-                plugin.SetFloatParameter("MidGain",    _midGain);
-                plugin.SetFloatParameter("HighGain",   _highGain);
-                plugin.SetFloatParameter("LowFreq",    _lowFreq);
-                plugin.SetFloatParameter("HighFreq",   _highFreq);
-                plugin.SetFloatParameter("MidFreq",    _midFreq);
-                plugin.SetFloatParameter("LowQ",       _lowQ);
-                plugin.SetFloatParameter("MidQ",       _midQ);
-                plugin.SetFloatParameter("HighQ",      _highQ);
-            }
-
-            return true;
         }
     }
 }

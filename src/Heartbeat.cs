@@ -9,69 +9,26 @@ namespace Appalachia.Audio
 {
     public class Heartbeat : MonoBehaviour
     {
+        #region Static Fields and Autoproperties
+
         public static Transform listenerTransform;
         public static Transform playerTransform;
         public static Transform hierarchyTransform { get; private set; }
 
+        #endregion
+
+        #region Fields and Autoproperties
+
         public AudioMixer audioMixer;
         public string rotationAngleParameter = "Appalachia.Core.Audio Rotation Angle";
 
-        public int StopRecording()
-        {
-            if (listenerTransform == null)
-            {
-               AppaLog.Warn("StopRecording: no listener");
-                return -1;
-            }
+        #endregion
 
-            var r = listenerTransform.GetComponent<RecordToFile>();
-            return r ? r.StopRecording() : -1;
-        }
-
-        public void StartRecording(string name)
-        {
-            if (listenerTransform == null)
-            {
-               AppaLog.Warn("StartRecording: no listener");
-            }
-            else
-            {
-                var r = listenerTransform.GetComponent<RecordToFile>();
-                if (!r)
-                {
-                    r = listenerTransform.gameObject.AddComponent<RecordToFile>();
-                }
-
-                r.StartRecording(name);
-            }
-        }
+        #region Event Functions
 
         protected void Awake()
         {
             hierarchyTransform = transform;
-        }
-
-        protected void LateUpdate()
-        {
-            if (playerTransform && audioMixer)
-            {
-                var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
-                if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
-                {
-                   AppaLog.Warn("Failed to set audio mixer parameter: " + rotationAngleParameter);
-                }
-            }
-        }
-
-        protected void OnDestroy()
-        {
-            Sequencer.Reset();
-            Synthesizer.Reset();
-
-            if (hierarchyTransform == transform)
-            {
-                hierarchyTransform = null;
-            }
         }
 
         protected void Update()
@@ -90,6 +47,61 @@ namespace Appalachia.Audio
             Profiler.BeginSample("Update Synthesizer");
             Synthesizer.Update(dt);
             Profiler.EndSample();
+        }
+
+        protected void LateUpdate()
+        {
+            if (playerTransform && audioMixer)
+            {
+                var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
+                if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
+                {
+                    AppaLog.Warn("Failed to set audio mixer parameter: " + rotationAngleParameter);
+                }
+            }
+        }
+
+        protected void OnDestroy()
+        {
+            Sequencer.Reset();
+            Synthesizer.Reset();
+
+            if (hierarchyTransform == transform)
+            {
+                hierarchyTransform = null;
+            }
+        }
+
+        #endregion
+
+        public void StartRecording(string name)
+        {
+            if (listenerTransform == null)
+            {
+                AppaLog.Warn("StartRecording: no listener");
+            }
+            else
+            {
+                var r = listenerTransform.GetComponent<RecordToFile>();
+                if (!r)
+                {
+                    r = listenerTransform.gameObject.AddComponent<RecordToFile>();
+                }
+
+                r.StartRecording(name);
+            }
+        }
+
+        public int StopRecording()
+        {
+            if (listenerTransform == null)
+            {
+                AppaLog.Warn("StopRecording: no listener");
+                return -1;
+            }
+
+            var r = listenerTransform.GetComponent<RecordToFile>();
+            return r ? r.StopRecording() : -1;
         }
     }
 }

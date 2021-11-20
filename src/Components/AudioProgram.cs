@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioProgram
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [Space(10)] [Colorize] public AudioClipParams[] clips;
 
@@ -154,7 +154,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct AudioClipParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public AudioClip clip;
             [Range(-1, 1)] public float gain;

@@ -17,7 +17,7 @@ namespace Appalachia.Audio.Components
 {
     public static class Synthesizer
     {
-        #region Fields
+        #region Static Fields and Autoproperties
 
 #if UNITY_EDITOR
         public static int sourceIndex;
@@ -704,13 +704,13 @@ namespace Appalachia.Audio.Components
             b = y;
         }
 
+        #region Nested type: ActiveSource
+
         #region Nested Types
 
         [Serializable]
         public struct ActiveSource
         {
-            #region Fields
-
             public bool keyOff;
             public Envelope envelope;
             public float keyOn;
@@ -776,10 +776,14 @@ namespace Appalachia.Audio.Components
             }
         }
 
+        #endregion
+
+        #region Nested type: SourceInfo
+
         [Serializable]
         public struct SourceInfo
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public AudioHighPassFilter highPassFilter;
             public AudioLowPassFilter lowPassFilter;

@@ -7,16 +7,28 @@ namespace Appalachia.Audio
 {
     public class ChannelMonitorCustomGUI : IAudioEffectPluginGUI
     {
+        #region Fields and Autoproperties
+
         //private bool integratedFoldout = true;
 
         public AudioSignalSmoothAnalyzer loudness;
         private PropertyTree _loudnessTree;
+
+        #endregion
 
         public override string Description => "Channel monitor plugin for Unity's audio plugin system";
 
         public override string Name => "Internal ChannelMonitor";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            GUILayout.Space(5f);
+            DrawControl(plugin);
+            GUILayout.Space(5f);
+            return true;
+        }
 
         public void DrawControl(IAudioEffectPlugin plugin)
         {
@@ -41,14 +53,6 @@ namespace Appalachia.Audio
             _loudnessTree.Draw(false);
             _loudnessTree.ApplyChanges();
             GUI.enabled = guie;
-        }
-
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            GUILayout.Space(5f);
-            DrawControl(plugin);
-            GUILayout.Space(5f);
-            return true;
         }
     }
 }

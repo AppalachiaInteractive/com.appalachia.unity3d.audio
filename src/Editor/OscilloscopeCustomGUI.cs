@@ -5,17 +5,54 @@ namespace Appalachia.Audio
 {
     public class OscilloscopeCustomGUI : IAudioEffectPluginGUI
     {
+        #region Constants and Static Readonly
+
         private const int maxspeclen = 4096;
         private const int scopeheight = 120;
+
+        #endregion
+
+        #region Fields and Autoproperties
+
         private readonly Color[] spec = new Color[maxspeclen];
         private readonly int[] specpos = new int[8];
         private readonly Texture2D[] spectex = new Texture2D[8];
+
+        #endregion
 
         public override string Description => "Oscilloscope demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo Oscilloscope";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            float active, window, scale, mode;
+            plugin.GetFloatParameter("Active", out active);
+            plugin.GetFloatParameter("Window", out window);
+            plugin.GetFloatParameter("Scale",  out scale);
+            plugin.GetFloatParameter("Mode",   out mode);
+            GUILayout.Space(5.0f);
+
+            DrawControl(
+                plugin,
+                GUILayoutUtility.GetRect(200, scopeheight, GUILayout.ExpandWidth(true)),
+                plugin.GetSampleRate(),
+                0
+            );
+            GUILayout.Space(5.0f);
+
+            DrawControl(
+                plugin,
+                GUILayoutUtility.GetRect(200, scopeheight, GUILayout.ExpandWidth(true)),
+                plugin.GetSampleRate(),
+                1
+            );
+            GUILayout.Space(5.0f);
+
+            return true;
+        }
 
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate, int channel)
         {
@@ -123,34 +160,6 @@ namespace Appalachia.Audio
 
             AudioCurveRendering.EndCurveFrame();
             return false;
-        }
-
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            float active, window, scale, mode;
-            plugin.GetFloatParameter("Active", out active);
-            plugin.GetFloatParameter("Window", out window);
-            plugin.GetFloatParameter("Scale",  out scale);
-            plugin.GetFloatParameter("Mode",   out mode);
-            GUILayout.Space(5.0f);
-
-            DrawControl(
-                plugin,
-                GUILayoutUtility.GetRect(200, scopeheight, GUILayout.ExpandWidth(true)),
-                plugin.GetSampleRate(),
-                0
-            );
-            GUILayout.Space(5.0f);
-
-            DrawControl(
-                plugin,
-                GUILayoutUtility.GetRect(200, scopeheight, GUILayout.ExpandWidth(true)),
-                plugin.GetSampleRate(),
-                1
-            );
-            GUILayout.Space(5.0f);
-
-            return true;
         }
     }
 }

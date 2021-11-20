@@ -15,7 +15,7 @@ namespace Appalachia.Audio.Components
             Deep
         }
 
-        #region Fields
+        #region Fields and Autoproperties
 
         [FloatRange(0, 1)] public FloatRange peripheralFade = new() {min = 1f, max = 1f};
         public LayerMask layerMask = -1;

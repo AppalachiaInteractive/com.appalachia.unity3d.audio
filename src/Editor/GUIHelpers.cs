@@ -6,6 +6,8 @@ namespace Appalachia.Audio
 {
     public abstract class GUIHelpers
     {
+        #region Static Fields and Autoproperties
+
         public static GUIStyle textStyle10 = BuildGUIStyleForLabel(
             Color.grey,
             10,
@@ -22,23 +24,7 @@ namespace Appalachia.Audio
             TextAnchor.MiddleRight
         );
 
-        // Maps from normalized frequency to real frequency
-        public static double MapNormalizedFrequency(double f, double sr, bool useLogScale, bool forward)
-        {
-            var maxFreq = 0.5 * sr;
-            if (useLogScale)
-            {
-                const double lowestFreq = 10.0;
-                if (forward)
-                {
-                    return lowestFreq * Math.Pow(maxFreq / lowestFreq, f);
-                }
-
-                return Math.Log(f / lowestFreq) / Math.Log(maxFreq / lowestFreq);
-            }
-
-            return forward ? f * maxFreq : f / maxFreq;
-        }
+        #endregion
 
         public static GUIStyle BuildGUIStyleForLabel(
             Color color,
@@ -66,6 +52,11 @@ namespace Appalachia.Audio
             Color textColor,
             Color lineColor)
         {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
             textStyle10RightAligned.normal.textColor = textColor;
             float py = 10000.0f, h = 30, sy = 0.5f * r.height * yscale, cy = r.y + sy;
             for (float t = -200; t < 200; t += 1.0f)
@@ -85,6 +76,11 @@ namespace Appalachia.Audio
 
         public static void DrawFrequencyTickMarks(Rect r, float samplerate, bool logScale, Color col)
         {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
             textStyle10.normal.textColor = col;
             float px = r.x, w = 60.0f;
             for (float normFreq = 0; normFreq < 1.0f; normFreq += 0.01f)
@@ -118,6 +114,11 @@ namespace Appalachia.Audio
 
         public static void DrawTimeTickMarks(Rect r, float window, Color textColor, Color lineColor)
         {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
             textStyle10.normal.textColor = textColor;
             float px = 0.0f, w = 60;
             for (float t = 0; t < window; t += window * 0.01f)
@@ -129,14 +130,30 @@ namespace Appalachia.Audio
 
                     EditorGUI.DrawRect(new Rect(x, r.y, 1f, r.height), lineColor);
 
-                    var text = t0 > -1.0f
-                        ? $"{t0 * 1000.0f:F0} ms"
-                        : $"{t0:F1} s";
+                    var text = t0 > -1.0f ? $"{t0 * 1000.0f:F0} ms" : $"{t0:F1} s";
                     GUI.Label(new Rect(x, r.y, 1f, 15f), text, textStyle10);
 
                     px = x;
                 }
             }
+        }
+
+        // Maps from normalized frequency to real frequency
+        public static double MapNormalizedFrequency(double f, double sr, bool useLogScale, bool forward)
+        {
+            var maxFreq = 0.5 * sr;
+            if (useLogScale)
+            {
+                const double lowestFreq = 10.0;
+                if (forward)
+                {
+                    return lowestFreq * Math.Pow(maxFreq / lowestFreq, f);
+                }
+
+                return Math.Log(f / lowestFreq) / Math.Log(maxFreq / lowestFreq);
+            }
+
+            return forward ? f * maxFreq : f / maxFreq;
         }
     }
 }

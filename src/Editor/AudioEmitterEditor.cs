@@ -1,5 +1,4 @@
 using Appalachia.Audio.Components;
-using Appalachia.CI.Constants;
 using Appalachia.CI.Integration.Assets;
 using UnityEditor;
 using UnityEngine;
@@ -10,14 +9,7 @@ namespace Appalachia.Audio
     [CustomEditor(typeof(AudioEmitter))]
     public class AudioEmitterEditor : UnityEditor.Editor
     {
-        public override void OnInspectorGUI()
-        {
-            ColorizeDrawer.Reset();
-            var oldColor = GUI.color;
-            GUI.color = ColorizeDrawer.GetColor("");
-            DrawDefaultInspector();
-            GUI.color = oldColor;
-        }
+        #region Event Functions
 
         protected void OnSceneGUI()
         {
@@ -53,7 +45,20 @@ namespace Appalachia.Audio
             }
         }
 
-        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
+        #endregion
+
+        public override void OnInspectorGUI()
+        {
+            ColorizeDrawer.Reset();
+            var oldColor = GUI.color;
+            GUI.color = ColorizeDrawer.GetColor("");
+            DrawDefaultInspector();
+            GUI.color = oldColor;
+        }
+
+        #region Menu Items
+
+        [MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
         private static void CreateAudioEmitter()
         {
             var o = new GameObject("Audio Emitter");
@@ -67,5 +72,7 @@ namespace Appalachia.Audio
 
             EditorGUIUtility.PingObject(o);
         }
+
+        #endregion
     }
 }

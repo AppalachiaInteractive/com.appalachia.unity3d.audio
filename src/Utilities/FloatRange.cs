@@ -6,8 +6,17 @@ namespace Appalachia.Audio.Utilities
     [Serializable]
     public struct FloatRange
     {
-        public float min;
+        #region Fields and Autoproperties
+
         public float max;
+        public float min;
+
+        #endregion
+
+        public float GetClampedValue(float v)
+        {
+            return Mathf.Clamp(v, min, max);
+        }
 
         public float GetRandomValue()
         {
@@ -17,11 +26,6 @@ namespace Appalachia.Audio.Utilities
         public float GetRangedValue(float v)
         {
             return (v * (max - min)) + min;
-        }
-
-        public float GetClampedValue(float v)
-        {
-            return Mathf.Clamp(v, min, max);
         }
     }
 }

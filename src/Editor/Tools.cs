@@ -3,14 +3,19 @@ using Appalachia.Audio.Components;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.Utility.Logging;
 using UnityEditor;
-using UnityEngine;
 
 namespace Appalachia.Audio
 {
     public static class Tools
     {
+        #region Constants and Static Readonly
+
         private const string FIND_PATCHES_WITHOUT_CLIPS = "Find Patches Without AudioClips";
         private const string FIND_UNUSED_AUDIOCLIPS = "Find Unused AudioClips";
+
+        #endregion
+
+        #region Menu Items
 
         [MenuItem(PKG.Menu.Appalachia.Tools.Base + FIND_PATCHES_WITHOUT_CLIPS)]
         private static void FindPatchWithoutAudioClips()
@@ -47,7 +52,7 @@ namespace Appalachia.Audio
 
                     if (noClips)
                     {
-                       AppaLog.Warn($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
+                        AppaLog.Warn($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
                     }
 
                     ++count;
@@ -103,7 +108,7 @@ namespace Appalachia.Audio
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
                 if (!clips.Contains(path))
                 {
-                   AppaLog.Warn(
+                    AppaLog.Warn(
                         $"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path,
                         AssetDatabaseManager.LoadMainAssetAtPath(path)
                     );
@@ -119,5 +124,7 @@ namespace Appalachia.Audio
                 (clipCount == 1 ? " AudioClip " : " AudioClips")
             );
         }
+
+        #endregion
     }
 }

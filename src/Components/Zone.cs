@@ -17,9 +17,13 @@ namespace Appalachia.Audio.Components
 
         #endregion
 
-        #region Fields
+        #region Static Fields and Autoproperties
 
         public static bool dontProbeZones;
+
+        #endregion
+
+        #region Fields and Autoproperties
 
         [Range(0, 1)] public float parentExclusion;
 
@@ -67,6 +71,32 @@ namespace Appalachia.Audio.Components
 
         #endregion
 
+        public static Collider FindTrigger(Zone z)
+        {
+            var c = z.GetComponent<Collider>();
+            return (c != null) && c.isTrigger ? c : null;
+        }
+
+        public Zone FindParentZone()
+        {
+            return FindParentZoneRecursive(transform.parent);
+        }
+
+        public float GetRadius()
+        {
+            var t = trigger;
+            return t ? GetTriggerRadius(t) : radius;
+        }
+
+        internal static void UpdateZone(int thisFrame)
+        {
+            UpdateProbes(thisFrame);
+            UpdateActivation();
+            UpdateInfluence();
+            UpdateExclusion();
+            UpdateEmitters();
+        }
+
         protected virtual void OnInit()
         {
             if ((_trigger = FindTrigger(this)) == null)
@@ -86,19 +116,28 @@ namespace Appalachia.Audio.Components
         {
         }
 
-        public static Collider FindTrigger(Zone z)
+        protected bool OnUpdateActivation(bool state)
         {
-            var c = z.GetComponent<Collider>();
-            return (c != null) && c.isTrigger ? c : null;
+            if (active == state)
+            {
+                return false;
+            }
+
+            active = state;
+            if (children != null)
+            {
+                foreach (var i in children)
+                {
+                    i.enabled = state;
+                }
+            }
+
+            return true;
         }
 
-        internal static void UpdateZone(int thisFrame)
+        protected void SetActive(bool state)
         {
-            UpdateProbes(thisFrame);
-            UpdateActivation();
-            UpdateInfluence();
-            UpdateExclusion();
-            UpdateEmitters();
+            wantActive = state;
         }
 
         private static float GetTriggerRadius(Collider c)
@@ -202,41 +241,6 @@ namespace Appalachia.Audio.Components
             }
         }
 
-        public Zone FindParentZone()
-        {
-            return FindParentZoneRecursive(transform.parent);
-        }
-
-        public float GetRadius()
-        {
-            var t = trigger;
-            return t ? GetTriggerRadius(t) : radius;
-        }
-
-        protected bool OnUpdateActivation(bool state)
-        {
-            if (active == state)
-            {
-                return false;
-            }
-
-            active = state;
-            if (children != null)
-            {
-                foreach (var i in children)
-                {
-                    i.enabled = state;
-                }
-            }
-
-            return true;
-        }
-
-        protected void SetActive(bool state)
-        {
-            wantActive = state;
-        }
-
         private Zone FindParentZoneRecursive(Transform t)
         {
             if (t != null)
@@ -267,7 +271,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct GizmoParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public Color activeColor;
             public Color inactiveColor;

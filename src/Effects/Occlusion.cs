@@ -5,6 +5,8 @@ namespace Appalachia.Audio.Effects
 {
     public sealed class Occlusion : MonoBehaviour
     {
+        #region Fields and Autoproperties
+
         public AudioParameters.OcclusionParams occlusion;
         public AudioParameters.SpatialParams spatial;
         private AudioHighPassFilter _highPassFilter;
@@ -16,15 +18,9 @@ namespace Appalachia.Audio.Effects
         private int _lastFrame;
         private OcclusionSettings _settings;
 
-        public float GetCurrent()
-        {
-            return _current;
-        }
+        #endregion
 
-        public float GetTarget()
-        {
-            return _target;
-        }
+        #region Event Functions
 
         private void LateUpdate()
         {
@@ -55,6 +51,18 @@ namespace Appalachia.Audio.Effects
 
             _lastFrame = -1;
             Test(Mathf.Infinity);
+        }
+
+        #endregion
+
+        public float GetCurrent()
+        {
+            return _current;
+        }
+
+        public float GetTarget()
+        {
+            return _target;
         }
 
         private void Test(float dt)

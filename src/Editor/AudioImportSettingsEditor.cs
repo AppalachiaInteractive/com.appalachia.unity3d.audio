@@ -11,9 +11,16 @@ namespace Appalachia.Audio
     [CustomEditor(typeof(AudioImportSettings))]
     public class AudioImportSettingsEditor : UnityEditor.Editor
     {
+        #region Constants and Static Readonly
+
         public static readonly Dictionary<string, int> overridesTable = new();
 
         private static readonly char[] splitSeparators = {';'};
+
+        #endregion
+
+        #region Fields and Autoproperties
+
         private bool _resetCaches;
         private bool _unfilteredVisible;
         private Dictionary<string, int> _nameCount;
@@ -31,6 +38,25 @@ namespace Appalachia.Audio
 
         private string _refreshText;
         private string _unfilteredText;
+
+        #endregion
+
+        #region Event Functions
+
+        protected void OnEnable()
+        {
+            _audioClipPaths = new SortedDictionary<string, string>();
+            _cacheTables = new List<SortedDictionary<string, string>>();
+            _nameCount = new Dictionary<string, int>();
+            _unfilteredPaths = new SortedDictionary<string, string>();
+            _filteredPaths = new HashSet<string>();
+            _stopwatch = new Stopwatch();
+
+            InitLine();
+            RefreshAudioClips();
+        }
+
+        #endregion
 
         public override void OnInspectorGUI()
         {
@@ -227,17 +253,27 @@ namespace Appalachia.Audio
             }
         }
 
-        protected void OnEnable()
+        private void DrawLine()
         {
-            _audioClipPaths = new SortedDictionary<string, string>();
-            _cacheTables = new List<SortedDictionary<string, string>>();
-            _nameCount = new Dictionary<string, int>();
-            _unfilteredPaths = new SortedDictionary<string, string>();
-            _filteredPaths = new HashSet<string>();
-            _stopwatch = new Stopwatch();
+            var c = GUI.color;
+            var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUI.color = EditorGUIUtility.isProSkin
+                    ? new Color(0.157f, 0.157f, 0.157f)
+                    : new Color(0.5f,   0.5f,   0.5f);
+                _lineStyle.Draw(p, false, false, false, false);
+            }
 
-            InitLine();
-            RefreshAudioClips();
+            GUI.color = c;
+        }
+
+        private void InitLine()
+        {
+            _lineStyle = new GUIStyle();
+            _lineStyle.normal.background = EditorGUIUtility.whiteTexture;
+            _lineStyle.stretchWidth = true;
+            _lineStyle.margin = new RectOffset(0, 0, 7, 7);
         }
 
         private SerializedProperty IterateOverrides(
@@ -272,29 +308,6 @@ namespace Appalachia.Audio
             }
 
             return overridesProperty;
-        }
-
-        private void DrawLine()
-        {
-            var c = GUI.color;
-            var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
-            if (Event.current.type == EventType.Repaint)
-            {
-                GUI.color = EditorGUIUtility.isProSkin
-                    ? new Color(0.157f, 0.157f, 0.157f)
-                    : new Color(0.5f,   0.5f,   0.5f);
-                _lineStyle.Draw(p, false, false, false, false);
-            }
-
-            GUI.color = c;
-        }
-
-        private void InitLine()
-        {
-            _lineStyle = new GUIStyle();
-            _lineStyle.normal.background = EditorGUIUtility.whiteTexture;
-            _lineStyle.stretchWidth = true;
-            _lineStyle.margin = new RectOffset(0, 0, 7, 7);
         }
 
         private void RefreshAudioClips()
@@ -384,7 +397,13 @@ namespace Appalachia.Audio
             _unfilteredText = _unfilteredPaths.Count + " AudioClips left unmodified";
         }
 
+        #region Nested type: EndFunction
+
         private delegate void EndFunction(SerializedProperty overrideProperty);
+
+        #endregion
+
+        #region Nested type: OverrideFunction
 
         private delegate bool OverrideFunction(
             SerializedProperty overrideProperty,
@@ -392,6 +411,12 @@ namespace Appalachia.Audio
             int overrideCount,
             int matchCount);
 
+        #endregion
+
+        #region Nested type: PathFunction
+
         private delegate void PathFunction(string path, string name, int overrideIndex);
+
+        #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace Appalachia.Audio.Components
             Zone
         }
 
-        #region Fields
+        #region Fields and Autoproperties
 
         [Colorize] public AttachmentParams attachment;
 
@@ -140,7 +140,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct AttachmentParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public bool useListenerTransform;
             public Transform transform;
@@ -155,7 +155,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct AuxiliaryParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public AudioSource source;
 
@@ -178,7 +178,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct GizmoParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public Color color;
 
@@ -192,7 +192,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct ModulationParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public bool inverted;
             [Range(0, 1800)] public float period;
@@ -211,7 +211,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct RandomizationParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [Range(0, 1)] public float chance;
             [FloatRange(0, 1)] public FloatRange distance;

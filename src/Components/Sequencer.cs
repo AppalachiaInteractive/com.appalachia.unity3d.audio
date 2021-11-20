@@ -10,7 +10,7 @@ namespace Appalachia.Audio.Components
 {
     public static class Sequencer
     {
-        #region Fields
+        #region Static Fields and Autoproperties
 
         public static List<Cue> activeCues0 = new(64);
         public static List<Cue> activeCues1 = new(64);

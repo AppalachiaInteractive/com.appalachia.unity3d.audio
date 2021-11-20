@@ -5,6 +5,12 @@ namespace Appalachia.Audio
 {
     public static class HandleUtilityWrapper
     {
+        #region Static Fields and Autoproperties
+
+        private static Material s_Mat;
+
+        #endregion
+
         public static Material handleWireMaterial
         {
             get
@@ -17,7 +23,5 @@ namespace Appalachia.Audio
                 return s_Mat;
             }
         }
-
-        private static Material s_Mat;
     }
 }

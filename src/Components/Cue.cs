@@ -9,7 +9,7 @@ namespace Appalachia.Audio.Components
 {
     public struct Cue
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         public AudioEmitter emitter;
         public bool looping;

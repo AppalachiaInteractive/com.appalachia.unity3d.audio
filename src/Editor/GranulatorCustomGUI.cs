@@ -7,6 +7,8 @@ namespace Appalachia.Audio
 {
     public class GranulatorCustomGUI : IAudioEffectPluginGUI
     {
+        #region Fields and Autoproperties
+
         protected DragOperation dragOperation = DragOperation.None;
 
         protected string[] DragParams = {"None", "Rnd offset", "Offset", "Window len", "Rnd window len"};
@@ -16,12 +18,23 @@ namespace Appalachia.Audio
         private Color m_Wave3Color = new(0.7f, 0.3f, 0.3f, 1.0f);
         private Color m_Wave4Color = AudioCurveRendering.kAudioOrange;
 
+        #endregion
+
         public override string Description =>
             "Granular synthesizer demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo Granulator";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            GUILayout.Space(5f);
+            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
+            DrawControl(plugin, r, plugin.GetSampleRate());
+            GUILayout.Space(5f);
+            return true;
+        }
 
         public void DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -158,14 +171,8 @@ namespace Appalachia.Audio
             AudioCurveRendering.EndCurveFrame();
         }
 
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            GUILayout.Space(5f);
-            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
-            DrawControl(plugin, r, plugin.GetSampleRate());
-            GUILayout.Space(5f);
-            return true;
-        }
+        [DllImport("AudioPluginDemo")]
+        private static extern IntPtr Granulator_GetSampleName(int index);
 
         private void DrawCurve(
             Rect r,
@@ -242,8 +249,7 @@ namespace Appalachia.Audio
             );
         }
 
-        [DllImport("AudioPluginDemo")]
-        private static extern IntPtr Granulator_GetSampleName(int index);
+        #region Nested type: DragOperation
 
         protected enum DragOperation
         {
@@ -253,5 +259,7 @@ namespace Appalachia.Audio
             WindowLen,
             RandomWindowLen
         }
+
+        #endregion
     }
 }

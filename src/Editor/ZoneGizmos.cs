@@ -7,8 +7,17 @@ namespace Appalachia.Audio
 {
     internal static class ZoneGizmos
     {
+        #region Preferences
+
         private static PREF<bool> alwaysShowZoneGizmosPrefs;
+
+        #endregion
+
+        #region Static Fields and Autoproperties
+
         private static bool prefsInited;
+
+        #endregion
 
         [DrawGizmo(GizmoType.Pickable | GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
         private static void DrawGizmo(AudioEmitter e, GizmoType t)

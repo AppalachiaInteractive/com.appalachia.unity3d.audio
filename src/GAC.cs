@@ -7,10 +7,34 @@ namespace Appalachia.Audio
 {
     public static class GAC
     {
+        #region Constants and Static Readonly
+
         public const float THRESHOLD_DB_HIGH = 0.0F;
         public const float THRESHOLD_DB_LOW = -80.0F;
 
+        #endregion
+
+        #region Static Fields and Autoproperties
+
         public static float THRESHOLD_LINEAR_LOW = 20.0f * Mathf.Pow(10.0f, THRESHOLD_DB_LOW * 0.05f);
+
+        #endregion
+
+        public static void ChannelMonitor_GetCorrelationData(int index, float[] data)
+        {
+            var numsamples = data.Length;
+            ChannelMonitor_GetCorrelation(index, numsamples, data);
+        }
+
+        public static void ChannelMonitor_GetCorrelationData_dB(int index, float[] data)
+        {
+            ChannelMonitor_GetCorrelationData(index, data);
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = floatTodB(data[i]);
+            }
+        }
 
         public static float ChannelMonitor_GetLoudnessData(int index)
         {
@@ -21,6 +45,23 @@ namespace Appalachia.Audio
         {
             var m = ChannelMonitor_GetLoudnessData(index);
             return floatTodB(m);
+        }
+
+        public static void ChannelMonitor_GetSpectrumData(int index, int channel, float[] data)
+        {
+            var numsamples = data.Length;
+
+            ChannelMonitor_GetSpectrum(index, numsamples, channel, data);
+        }
+
+        public static void ChannelMonitor_GetSpectrumData_dB(int index, int channel, float[] data)
+        {
+            ChannelMonitor_GetSpectrumData(index, channel, data);
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = floatTodB(data[i]);
+            }
         }
 
         public static float dBToGain(float dB)
@@ -61,44 +102,11 @@ namespace Appalachia.Audio
             throw new NotSupportedException($"Mixer [{mixer.name}] does not have property [{property}].");
         }
 
-        public static void ChannelMonitor_GetCorrelationData(int index, float[] data)
-        {
-            var numsamples = data.Length;
-            ChannelMonitor_GetCorrelation(index, numsamples, data);
-        }
-
-        public static void ChannelMonitor_GetCorrelationData_dB(int index, float[] data)
-        {
-            ChannelMonitor_GetCorrelationData(index, data);
-
-            for (var i = 0; i < data.Length; i++)
-            {
-                data[i] = floatTodB(data[i]);
-            }
-        }
-
-        public static void ChannelMonitor_GetSpectrumData(int index, int channel, float[] data)
-        {
-            var numsamples = data.Length;
-
-            ChannelMonitor_GetSpectrum(index, numsamples, channel, data);
-        }
-
-        public static void ChannelMonitor_GetSpectrumData_dB(int index, int channel, float[] data)
-        {
-            ChannelMonitor_GetSpectrumData(index, channel, data);
-
-            for (var i = 0; i < data.Length; i++)
-            {
-                data[i] = floatTodB(data[i]);
-            }
-        }
+        [DllImport("AudioPluginDemo")]
+        private static extern void ChannelMonitor_GetCorrelation(int index, int numsamples, float[] data);
 
         [DllImport("AudioPluginDemo")]
         private static extern float ChannelMonitor_GetLoudness(int index);
-
-        [DllImport("AudioPluginDemo")]
-        private static extern void ChannelMonitor_GetCorrelation(int index, int numsamples, float[] data);
 
         [DllImport("AudioPluginDemo")]
         private static extern void ChannelMonitor_GetSpectrum(
@@ -107,8 +115,12 @@ namespace Appalachia.Audio
             int channel,
             float[] data);
 
+        #region Nested type: WIND
+
         public static class WIND
         {
+            #region Constants and Static Readonly
+
             public const float WIND_THRESHOLD_HIGH_DB = -20.0f;
             public const float WIND_THRESHOLD_LOW_DB = -75.0f;
 
@@ -124,6 +136,10 @@ namespace Appalachia.Audio
             //public const string _GUST_CHANNEL_MONITOR_INSTANCE_RAW = "_WIND_GUST_CHANNEL_MONITOR_INSTANCE_RAW";
             public const string _GUST_CHANNEL_MONITOR_INSTANCE_VERYHIGH =
                 "_WIND_GUST_CHANNEL_MONITOR_INSTANCE_VERYHIGH";
+
+            #endregion
         }
+
+        #endregion
     }
 }

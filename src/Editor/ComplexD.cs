@@ -12,18 +12,12 @@ namespace Appalachia.Audio
             this.imag = imag;
         }
 
+        #region Fields and Autoproperties
+
         public double imag;
         public double real;
 
-        public double Mag()
-        {
-            return Math.Sqrt(Mag2());
-        }
-
-        public double Mag2()
-        {
-            return (real * real) + (imag * imag);
-        }
+        #endregion
 
         public static ComplexD Add(ComplexD a, ComplexD b)
         {
@@ -83,6 +77,78 @@ namespace Appalachia.Audio
             return new(a * b.real, a * b.imag);
         }
 
+        [DebuggerStepThrough]
+        public static ComplexD operator +(ComplexD a, ComplexD b)
+        {
+            return Add(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator +(ComplexD a, double b)
+        {
+            return Add(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator +(double a, ComplexD b)
+        {
+            return Add(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator /(ComplexD a, ComplexD b)
+        {
+            return Div(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator /(ComplexD a, double b)
+        {
+            return Div(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator /(double a, ComplexD b)
+        {
+            return Div(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator *(ComplexD a, ComplexD b)
+        {
+            return Mul(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator *(ComplexD a, double b)
+        {
+            return Mul(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator *(double a, ComplexD b)
+        {
+            return Mul(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator -(ComplexD a, ComplexD b)
+        {
+            return Sub(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator -(ComplexD a, double b)
+        {
+            return Sub(a, b);
+        }
+
+        [DebuggerStepThrough]
+        public static ComplexD operator -(double a, ComplexD b)
+        {
+            return Sub(a, b);
+        }
+
         public static ComplexD Pow(ComplexD a, double b)
         {
             var p = Math.Atan2(a.imag, a.real);
@@ -105,64 +171,14 @@ namespace Appalachia.Audio
             return new(a - b.real, -b.imag);
         }
 
-        [DebuggerStepThrough] public static ComplexD operator +(ComplexD a, ComplexD b)
+        public double Mag()
         {
-            return Add(a, b);
+            return Math.Sqrt(Mag2());
         }
 
-        [DebuggerStepThrough] public static ComplexD operator +(ComplexD a, double b)
+        public double Mag2()
         {
-            return Add(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator +(double a, ComplexD b)
-        {
-            return Add(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator /(ComplexD a, ComplexD b)
-        {
-            return Div(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator /(ComplexD a, double b)
-        {
-            return Div(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator /(double a, ComplexD b)
-        {
-            return Div(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator *(ComplexD a, ComplexD b)
-        {
-            return Mul(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator *(ComplexD a, double b)
-        {
-            return Mul(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator *(double a, ComplexD b)
-        {
-            return Mul(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator -(ComplexD a, ComplexD b)
-        {
-            return Sub(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator -(ComplexD a, double b)
-        {
-            return Sub(a, b);
-        }
-
-        [DebuggerStepThrough] public static ComplexD operator -(double a, ComplexD b)
-        {
-            return Sub(a, b);
+            return (real * real) + (imag * imag);
         }
     }
 }

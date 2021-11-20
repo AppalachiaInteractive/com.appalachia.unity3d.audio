@@ -17,7 +17,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         where TEnumTertiary : Enum
         where T : AudioContextCollection3<TEnumPrimary, TEnumSecondary, TEnumTertiary, T>
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [NonSerialized]
         private NonSerializedAppaLookup3<TEnumPrimary, TEnumSecondary, TEnumTertiary, AudioContext3> index;

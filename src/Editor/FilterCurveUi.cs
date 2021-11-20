@@ -6,7 +6,11 @@ namespace Appalachia.Audio
 {
     public abstract class FilterCurveUi : IAudioEffectPluginGUI
     {
+        #region Fields and Autoproperties
+
         protected DragOperation dragOperation = DragOperation.Low;
+
+        #endregion
 
         public void DrawBandSplitMarker(
             IAudioEffectPlugin plugin,
@@ -57,11 +61,15 @@ namespace Appalachia.Audio
             return new(col.r, col.g, col.b, col.a * blend);
         }
 
+        #region Nested type: DragOperation
+
         protected enum DragOperation
         {
             Low,
             Mid,
             High
         }
+
+        #endregion
     }
 }

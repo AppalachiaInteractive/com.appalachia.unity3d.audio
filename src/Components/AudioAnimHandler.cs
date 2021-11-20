@@ -8,7 +8,7 @@ namespace Appalachia.Audio.Components
 {
     public sealed class AudioAnimHandler : MonoBehaviour
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         private AudioAnimEvent[] events;
 

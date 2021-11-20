@@ -5,15 +5,47 @@ namespace Appalachia.Audio
 {
     public class CorrelationMeterCustomGUI : IAudioEffectPluginGUI
     {
+        #region Constants and Static Readonly
+
         private static readonly Vector3[] circle = new Vector3[40];
         private static readonly Vector3[] coord1 = new Vector3[2];
         private static readonly Vector3[] coord2 = new Vector3[2];
+
+        #endregion
 
         public override string Description => "Correlation meter demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo CorrelationMeter";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            // ReSharper disable once NotAccessedVariable
+            float active, window, scale;
+            plugin.GetFloatParameter("Active", out active);
+            plugin.GetFloatParameter("Window", out window);
+            plugin.GetFloatParameter("Scale",  out scale);
+            GUILayout.Space(5.0f);
+            var r = GUILayoutUtility.GetRect(200, 200, GUILayout.ExpandWidth(true));
+            if (r.width > r.height)
+            {
+                r.width = r.height;
+            }
+            else
+            {
+                r.height = r.width;
+            }
+
+            if (DrawControl(plugin, r, plugin.GetSampleRate()))
+            {
+                plugin.SetFloatParameter("Window", window);
+                plugin.SetFloatParameter("Scale",  scale);
+            }
+
+            GUILayout.Space(5.0f);
+            return true;
+        }
 
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -85,34 +117,6 @@ namespace Appalachia.Audio
 
             AudioCurveRendering.EndCurveFrame();
             return false;
-        }
-
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            // ReSharper disable once NotAccessedVariable
-            float active, window, scale;
-            plugin.GetFloatParameter("Active", out active);
-            plugin.GetFloatParameter("Window", out window);
-            plugin.GetFloatParameter("Scale",  out scale);
-            GUILayout.Space(5.0f);
-            var r = GUILayoutUtility.GetRect(200, 200, GUILayout.ExpandWidth(true));
-            if (r.width > r.height)
-            {
-                r.width = r.height;
-            }
-            else
-            {
-                r.height = r.width;
-            }
-
-            if (DrawControl(plugin, r, plugin.GetSampleRate()))
-            {
-                plugin.SetFloatParameter("Window", window);
-                plugin.SetFloatParameter("Scale",  scale);
-            }
-
-            GUILayout.Space(5.0f);
-            return true;
         }
     }
 

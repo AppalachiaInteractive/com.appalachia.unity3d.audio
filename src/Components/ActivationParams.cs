@@ -8,7 +8,7 @@ namespace Appalachia.Audio.Components
 {
     public struct ActivationParams
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         public float delay;
         public float modVolume;

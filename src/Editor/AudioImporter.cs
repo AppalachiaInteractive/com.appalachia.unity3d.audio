@@ -5,6 +5,8 @@ namespace Appalachia.Audio
 {
     public class AudioImporter : AssetPostprocessor
     {
+        #region Event Functions
+
         protected void OnPreprocessAudio()
         {
             int overrideIndex;
@@ -50,5 +52,7 @@ namespace Appalachia.Audio
                 }
             }
         }
+
+        #endregion
     }
 }

@@ -9,12 +9,24 @@ namespace Appalachia.Audio
 {
     public class Monitor : AppalachiaEditorWindow
     {
+        #region Constants and Static Readonly
+
         private static readonly Dictionary<int, string> _intLookup = new();
         private static readonly Dictionary<string, int> _srcColors = new();
         private static readonly StringBuilder _builder = new(256);
+
+        #endregion
+
+        #region Static Fields and Autoproperties
+
         private static bool _showOcclusion;
         private static bool _showSequencer = true;
         private static bool _showSynthesizer = true;
+
+        #endregion
+
+        #region Fields and Autoproperties
+
         private GUIStyle _lineStyle;
         private int _paintCount;
 
@@ -23,11 +35,9 @@ namespace Appalachia.Audio
         private Vector3 _scrollSequencer;
         private Vector3 _scrollSynthesizer;
 
-        protected void OnDisable()
-        {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            SceneView.duringSceneGui -= OnSceneGUI;
-        }
+        #endregion
+
+        #region Event Functions
 
         protected void OnEnable()
         {
@@ -44,6 +54,12 @@ namespace Appalachia.Audio
 
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             SceneView.duringSceneGui += OnSceneGUI;
+        }
+
+        protected void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            SceneView.duringSceneGui -= OnSceneGUI;
         }
 
         protected void OnGUI()
@@ -90,6 +106,15 @@ namespace Appalachia.Audio
             GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();
+        }
+
+        #endregion
+
+        public static int GetSourceColor(string name)
+        {
+            int i;
+            _srcColors.TryGetValue(name, out i);
+            return i;
         }
 
         protected void OnSceneGUI(SceneView sv)
@@ -161,6 +186,70 @@ namespace Appalachia.Audio
             }
 
             Handles.color = c;
+        }
+
+        private static Texture2D GetIcon()
+        {
+            const int w = 16;
+            var p = new Color[w * w];
+            for (var i = 0; i < (w * w); ++i)
+            {
+                if (((i % w) == 0) || ((i % w) == 1))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i % w) == ((w / 2) - 1)) || ((i % w) == (w / 2)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i % w) == (w - 2)) || ((i % w) == (w - 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == 0) || ((i / w) == 1))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 1) - 1)) || ((i / w) == ((w / 4) * 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 2) - 1)) || ((i / w) == ((w / 4) * 2)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (((w / 4) * 3) - 1)) || ((i / w) == ((w / 4) * 3)))
+                {
+                    p[i] = Color.black;
+                }
+                else if (((i / w) == (w - 2)) || ((i / w) == (w - 1)))
+                {
+                    p[i] = Color.black;
+                }
+                else if ((i / w) < ((w / 4) * 1))
+                {
+                    p[i] = Color.green;
+                }
+                else if ((i / w) < ((w / 4) * 2))
+                {
+                    p[i] = Color.green;
+                }
+                else if ((i / w) < ((w / 4) * 3))
+                {
+                    p[i] = Color.yellow;
+                }
+                else if ((i / w) < ((w / 4) * 4))
+                {
+                    p[i] = Color.red;
+                }
+            }
+
+            var icon = new Texture2D(w, w, TextureFormat.RGBA32, false);
+            icon.hideFlags = HideFlags.HideAndDontSave;
+            icon.filterMode = FilterMode.Point;
+            icon.SetPixels(p);
+            icon.Apply();
+            return icon;
         }
 
         private void DrawHeader()
@@ -727,82 +816,14 @@ namespace Appalachia.Audio
             }
         }
 
-        public static int GetSourceColor(string name)
-        {
-            int i;
-            _srcColors.TryGetValue(name, out i);
-            return i;
-        }
+        #region Menu Items
 
-        private static Texture2D GetIcon()
-        {
-            const int w = 16;
-            var p = new Color[w * w];
-            for (var i = 0; i < (w * w); ++i)
-            {
-                if (((i % w) == 0) || ((i % w) == 1))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i % w) == ((w / 2) - 1)) || ((i % w) == (w / 2)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i % w) == (w - 2)) || ((i % w) == (w - 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == 0) || ((i / w) == 1))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 1) - 1)) || ((i / w) == ((w / 4) * 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 2) - 1)) || ((i / w) == ((w / 4) * 2)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (((w / 4) * 3) - 1)) || ((i / w) == ((w / 4) * 3)))
-                {
-                    p[i] = Color.black;
-                }
-                else if (((i / w) == (w - 2)) || ((i / w) == (w - 1)))
-                {
-                    p[i] = Color.black;
-                }
-                else if ((i / w) < ((w / 4) * 1))
-                {
-                    p[i] = Color.green;
-                }
-                else if ((i / w) < ((w / 4) * 2))
-                {
-                    p[i] = Color.green;
-                }
-                else if ((i / w) < ((w / 4) * 3))
-                {
-                    p[i] = Color.yellow;
-                }
-                else if ((i / w) < ((w / 4) * 4))
-                {
-                    p[i] = Color.red;
-                }
-            }
-
-            var icon = new Texture2D(w, w, TextureFormat.RGBA32, false);
-            icon.hideFlags = HideFlags.HideAndDontSave;
-            icon.filterMode = FilterMode.Point;
-            icon.SetPixels(p);
-            icon.Apply();
-            return icon;
-        }
-
-        
-        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Windows.Base + nameof(Monitor))]
+        [MenuItem(PKG.Menu.Appalachia.Windows.Base + nameof(Monitor))]
         private static void Open()
         {
             ((Monitor) GetWindow(typeof(Monitor))).Show();
         }
+
+        #endregion
     }
 }

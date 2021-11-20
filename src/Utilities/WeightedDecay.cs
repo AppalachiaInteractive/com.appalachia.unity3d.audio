@@ -4,11 +4,20 @@ namespace Appalachia.Audio.Utilities
 {
     public struct WeightedDecay
     {
-        private const float restoreSpeed = 0.05f;
+        #region Constants and Static Readonly
+
         private const float redrawPenalty = 1f;
+        private const float restoreSpeed = 0.05f;
+
+        #endregion
+
+        #region Fields and Autoproperties
+
+        public float weightSum;
 
         public float[] weights;
-        public float weightSum;
+
+        #endregion
 
         public int count
         {

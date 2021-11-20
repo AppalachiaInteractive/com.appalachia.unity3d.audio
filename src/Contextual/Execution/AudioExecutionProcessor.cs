@@ -14,7 +14,7 @@ namespace Appalachia.Audio.Contextual.Execution
         where TParams : AudioContextParameters, new()
         where TOwner : AppalachiaBehaviour
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [SerializeField] public TCollection audio;
 
@@ -38,8 +38,6 @@ namespace Appalachia.Audio.Contextual.Execution
             out Vector3 position,
             out float volume);
 
-        protected abstract void OnInitialize(TOwner owner);
-
         public void Initialize(TOwner owner)
         {
             if (_initialized)
@@ -51,5 +49,7 @@ namespace Appalachia.Audio.Contextual.Execution
 
             OnInitialize(owner);
         }
+
+        protected abstract void OnInitialize(TOwner owner);
     }
 }

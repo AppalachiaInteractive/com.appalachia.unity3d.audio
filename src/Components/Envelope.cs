@@ -30,7 +30,7 @@ namespace Appalachia.Audio.Components
 
         #endregion
 
-        #region Fields
+        #region Fields and Autoproperties
 
         public float attackTime;
 

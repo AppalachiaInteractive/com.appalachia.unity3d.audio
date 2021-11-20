@@ -9,9 +9,9 @@ using UnityEngine;
 
 namespace Appalachia.Audio.Components
 {
-    public sealed class Patch : AppalachiaObject<Patch>
+    public sealed class Patch : AppalachiaObject
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [Space(10)] [Colorize] public AudioProgram program;
 

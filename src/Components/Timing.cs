@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class Timing
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [FloatRange(0, 600)] public FloatRange delay;
 
@@ -33,7 +33,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct RandomizationParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [Range(0, 1)] public float chance;
 

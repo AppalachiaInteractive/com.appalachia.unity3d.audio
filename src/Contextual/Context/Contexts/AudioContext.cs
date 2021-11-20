@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Contextual.Context.Contexts
     public abstract class AudioContext<T>
         where T : AudioContextParameters
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [ToggleLeft]
         [SmartLabel]

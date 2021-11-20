@@ -11,7 +11,7 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSequence
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [Space(10)]
         [FloatRange(0, 600, colorize = true)]
@@ -59,7 +59,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct RepeatParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public bool forever;
             [Range(0, 99)] public int count;

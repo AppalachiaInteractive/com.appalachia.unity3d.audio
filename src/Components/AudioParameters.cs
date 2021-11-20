@@ -54,7 +54,7 @@ namespace Appalachia.Audio.Components
 
         #endregion
 
-        #region Fields
+        #region Fields and Autoproperties
 
         public bool loop;
 
@@ -93,7 +93,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct EnvelopeParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [Range(0, 60)] public float attack;
             [Range(0, 60)] public float release;
@@ -108,7 +108,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct OcclusionParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public OcclusionFunction function;
 
@@ -122,7 +122,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct RandomizationParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [FloatRange(0, 1)] public FloatRange distance;
 
@@ -136,7 +136,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct RuntimeParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             public Priority priority;
 
@@ -150,7 +150,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct SlapbackParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [FormerlySerializedAs("asset")]
             public Patch patch;
@@ -165,7 +165,7 @@ namespace Appalachia.Audio.Components
         [Serializable]
         public struct SpatialParams
         {
-            #region Fields
+            #region Fields and Autoproperties
 
             [Range(0, 1)] public float blend;
             [Range(0, 5)] public float doppler;

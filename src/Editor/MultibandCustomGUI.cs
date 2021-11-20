@@ -6,6 +6,8 @@ namespace Appalachia.Audio
 {
     public class MultibandCustomGUI : FilterCurveUi
     {
+        #region Fields and Autoproperties
+
         private bool showSpectrum;
         private bool useLogScale;
         private float filterOrder;
@@ -18,12 +20,74 @@ namespace Appalachia.Audio
         private float lowThreshold, midThreshold, highThreshold;
         private float masterGain;
 
+        #endregion
+
         public override string Description =>
             "Multiband compressor demo plugin for Unity's audio plugin system";
 
         public override string Name => "Demo Multiband";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            float useLogScaleFloat;
+            float showSpectrumFloat;
+            plugin.GetFloatParameter("MasterGain",      out masterGain);
+            plugin.GetFloatParameter("LowGain",         out lowGain);
+            plugin.GetFloatParameter("MidGain",         out midGain);
+            plugin.GetFloatParameter("HighGain",        out highGain);
+            plugin.GetFloatParameter("LowFreq",         out lowFreq);
+            plugin.GetFloatParameter("HighFreq",        out highFreq);
+            plugin.GetFloatParameter("LowAttackTime",   out lowAttackTime);
+            plugin.GetFloatParameter("MidAttackTime",   out midAttackTime);
+            plugin.GetFloatParameter("HighAttackTime",  out highAttackTime);
+            plugin.GetFloatParameter("LowReleaseTime",  out lowReleaseTime);
+            plugin.GetFloatParameter("MidReleaseTime",  out midReleaseTime);
+            plugin.GetFloatParameter("HighReleaseTime", out highReleaseTime);
+            plugin.GetFloatParameter("LowThreshold",    out lowThreshold);
+            plugin.GetFloatParameter("MidThreshold",    out midThreshold);
+            plugin.GetFloatParameter("HighThreshold",   out highThreshold);
+            plugin.GetFloatParameter("LowRatio",        out lowRatio);
+            plugin.GetFloatParameter("MidRatio",        out midRatio);
+            plugin.GetFloatParameter("HighRatio",       out highRatio);
+            plugin.GetFloatParameter("LowKnee",         out lowKnee);
+            plugin.GetFloatParameter("MidKnee",         out midKnee);
+            plugin.GetFloatParameter("HighKnee",        out highKnee);
+            plugin.GetFloatParameter("FilterOrder",     out filterOrder);
+            plugin.GetFloatParameter("UseLogScale",     out useLogScaleFloat);
+            plugin.GetFloatParameter("ShowSpectrum",    out showSpectrumFloat);
+            useLogScale = useLogScaleFloat > 0.5f;
+            showSpectrum = showSpectrumFloat > 0.5f;
+            GUILayout.Space(5f);
+            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
+            if (DrawControl(plugin, r, plugin.GetSampleRate()))
+            {
+                plugin.SetFloatParameter("MasterGain",      masterGain);
+                plugin.SetFloatParameter("LowGain",         lowGain);
+                plugin.SetFloatParameter("MidGain",         midGain);
+                plugin.SetFloatParameter("HighGain",        highGain);
+                plugin.SetFloatParameter("LowFreq",         lowFreq);
+                plugin.SetFloatParameter("HighFreq",        highFreq);
+                plugin.SetFloatParameter("LowAttackTime",   lowAttackTime);
+                plugin.SetFloatParameter("MidAttackTime",   midAttackTime);
+                plugin.SetFloatParameter("HighAttackTime",  highAttackTime);
+                plugin.SetFloatParameter("LowReleaseTime",  lowReleaseTime);
+                plugin.SetFloatParameter("MidReleaseTime",  midReleaseTime);
+                plugin.SetFloatParameter("HighReleaseTime", highReleaseTime);
+                plugin.SetFloatParameter("LowThreshold",    lowThreshold);
+                plugin.SetFloatParameter("MidThreshold",    midThreshold);
+                plugin.SetFloatParameter("HighThreshold",   highThreshold);
+                plugin.SetFloatParameter("LowRatio",        lowRatio);
+                plugin.SetFloatParameter("MidRatio",        midRatio);
+                plugin.SetFloatParameter("HighRatio",       highRatio);
+                plugin.SetFloatParameter("LowKnee",         lowKnee);
+                plugin.SetFloatParameter("MidKnee",         midKnee);
+                plugin.SetFloatParameter("HighKnee",        highKnee);
+            }
+
+            return true;
+        }
 
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -270,66 +334,6 @@ namespace Appalachia.Audio
 
             AudioCurveRendering.EndCurveFrame();
             return changed;
-        }
-
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            float useLogScaleFloat;
-            float showSpectrumFloat;
-            plugin.GetFloatParameter("MasterGain",      out masterGain);
-            plugin.GetFloatParameter("LowGain",         out lowGain);
-            plugin.GetFloatParameter("MidGain",         out midGain);
-            plugin.GetFloatParameter("HighGain",        out highGain);
-            plugin.GetFloatParameter("LowFreq",         out lowFreq);
-            plugin.GetFloatParameter("HighFreq",        out highFreq);
-            plugin.GetFloatParameter("LowAttackTime",   out lowAttackTime);
-            plugin.GetFloatParameter("MidAttackTime",   out midAttackTime);
-            plugin.GetFloatParameter("HighAttackTime",  out highAttackTime);
-            plugin.GetFloatParameter("LowReleaseTime",  out lowReleaseTime);
-            plugin.GetFloatParameter("MidReleaseTime",  out midReleaseTime);
-            plugin.GetFloatParameter("HighReleaseTime", out highReleaseTime);
-            plugin.GetFloatParameter("LowThreshold",    out lowThreshold);
-            plugin.GetFloatParameter("MidThreshold",    out midThreshold);
-            plugin.GetFloatParameter("HighThreshold",   out highThreshold);
-            plugin.GetFloatParameter("LowRatio",        out lowRatio);
-            plugin.GetFloatParameter("MidRatio",        out midRatio);
-            plugin.GetFloatParameter("HighRatio",       out highRatio);
-            plugin.GetFloatParameter("LowKnee",         out lowKnee);
-            plugin.GetFloatParameter("MidKnee",         out midKnee);
-            plugin.GetFloatParameter("HighKnee",        out highKnee);
-            plugin.GetFloatParameter("FilterOrder",     out filterOrder);
-            plugin.GetFloatParameter("UseLogScale",     out useLogScaleFloat);
-            plugin.GetFloatParameter("ShowSpectrum",    out showSpectrumFloat);
-            useLogScale = useLogScaleFloat > 0.5f;
-            showSpectrum = showSpectrumFloat > 0.5f;
-            GUILayout.Space(5f);
-            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
-            if (DrawControl(plugin, r, plugin.GetSampleRate()))
-            {
-                plugin.SetFloatParameter("MasterGain",      masterGain);
-                plugin.SetFloatParameter("LowGain",         lowGain);
-                plugin.SetFloatParameter("MidGain",         midGain);
-                plugin.SetFloatParameter("HighGain",        highGain);
-                plugin.SetFloatParameter("LowFreq",         lowFreq);
-                plugin.SetFloatParameter("HighFreq",        highFreq);
-                plugin.SetFloatParameter("LowAttackTime",   lowAttackTime);
-                plugin.SetFloatParameter("MidAttackTime",   midAttackTime);
-                plugin.SetFloatParameter("HighAttackTime",  highAttackTime);
-                plugin.SetFloatParameter("LowReleaseTime",  lowReleaseTime);
-                plugin.SetFloatParameter("MidReleaseTime",  midReleaseTime);
-                plugin.SetFloatParameter("HighReleaseTime", highReleaseTime);
-                plugin.SetFloatParameter("LowThreshold",    lowThreshold);
-                plugin.SetFloatParameter("MidThreshold",    midThreshold);
-                plugin.SetFloatParameter("HighThreshold",   highThreshold);
-                plugin.SetFloatParameter("LowRatio",        lowRatio);
-                plugin.SetFloatParameter("MidRatio",        midRatio);
-                plugin.SetFloatParameter("HighRatio",       highRatio);
-                plugin.SetFloatParameter("LowKnee",         lowKnee);
-                plugin.SetFloatParameter("MidKnee",         midKnee);
-                plugin.SetFloatParameter("HighKnee",        highKnee);
-            }
-
-            return true;
         }
 
         private void DrawFilterCurve(

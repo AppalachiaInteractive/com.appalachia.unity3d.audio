@@ -101,7 +101,7 @@ namespace Appalachia.Audio
             [UnityEditor.MenuItem(APPASTR.MENU.BASE_AppalachiaData + APPASTR.MENU.ASM.Audio + "Patch")]
             private static void CreateAudioProgram()
             {
-                var newInstance = Patch.CreateNew();
+                var newInstance = AppalachiaObject.CreateNew<Patch>();
 
                 Create<Patch, AudioClip>(
                     (a, c) =>

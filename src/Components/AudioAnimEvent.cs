@@ -9,7 +9,7 @@ namespace Appalachia.Audio.Components
 {
     public sealed class AudioAnimEvent : StateMachineBehaviour
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [Range(0, 30)] public float delay;
 

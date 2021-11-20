@@ -12,9 +12,9 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Audio.Contextual
 {
     [Serializable]
-    public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject<ContextualAudioPatch>
+    public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [ToggleLeft]
         [SmartLabel]

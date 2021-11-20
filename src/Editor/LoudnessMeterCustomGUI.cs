@@ -12,6 +12,15 @@ namespace Appalachia.Audio
 
         public override string Vendor => "Unity";
 
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            GUILayout.Space(5f);
+            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
+            DrawControl(plugin, r, plugin.GetSampleRate());
+            GUILayout.Space(5f);
+            return true;
+        }
+
         [SuppressMessage("ReSharper", "NotAccessedVariable")]
         public bool DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -129,15 +138,6 @@ namespace Appalachia.Audio
             return false;
         }
 
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            GUILayout.Space(5f);
-            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
-            DrawControl(plugin, r, plugin.GetSampleRate());
-            GUILayout.Space(5f);
-            return true;
-        }
-
         private void DrawCurve(
             Rect r,
             float[] curve,
@@ -177,13 +177,7 @@ namespace Appalachia.Audio
             {
                 var col2 = new Color(col.r, col.g, col.b, 0.7f);
                 GUIHelpers.DrawLine(r.x, peakPos, r.x + r.width, peakPos, col2);
-                GUIHelpers.DrawText(
-                    (r.x + labeloffset) - 30,
-                    peakPos + 6,
-                    60,
-                    $"{peakVal:F1} dB",
-                    col2
-                );
+                GUIHelpers.DrawText((r.x + labeloffset) - 30, peakPos + 6, 60, $"{peakVal:F1} dB", col2);
             }
         }
     }

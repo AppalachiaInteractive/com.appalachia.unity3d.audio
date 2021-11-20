@@ -16,7 +16,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         where TContext : AudioContext<TParams>
         where T : AudioContextCollection<TContext, TParams, T>
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [SmartLabel]
         [ToggleLeft]
@@ -48,8 +48,6 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
         #endregion
 
-        protected abstract void AddOrUpdate(TContext context);
-
 #if UNITY_EDITOR
         [Button]
         [DisableIf(nameof(locked))]
@@ -68,5 +66,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             }
         }
 #endif
+
+        protected abstract void AddOrUpdate(TContext context);
     }
 }

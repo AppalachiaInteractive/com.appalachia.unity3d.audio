@@ -7,8 +7,12 @@ namespace Appalachia.Audio
 {
     public class ConvolutionReverbCustomGUI : IAudioEffectPluginGUI
     {
+        #region Fields and Autoproperties
+
         private Color m_Impulse1Color = AudioCurveRendering.kAudioOrange;
         private Color m_Impulse2Color = AudioCurveRendering.kAudioOrange;
+
+        #endregion
 
         public override string Description =>
             "Convolution reverb demo plugin for Unity's audio plugin system";
@@ -16,6 +20,15 @@ namespace Appalachia.Audio
         public override string Name => "Demo ConvolutionReverb";
 
         public override string Vendor => "Unity";
+
+        public override bool OnGUI(IAudioEffectPlugin plugin)
+        {
+            GUILayout.Space(5f);
+            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
+            DrawControl(plugin, r, plugin.GetSampleRate());
+            GUILayout.Space(5f);
+            return true;
+        }
 
         public void DrawControl(IAudioEffectPlugin plugin, Rect r, float samplerate)
         {
@@ -55,14 +68,8 @@ namespace Appalachia.Audio
             AudioCurveRendering.EndCurveFrame();
         }
 
-        public override bool OnGUI(IAudioEffectPlugin plugin)
-        {
-            GUILayout.Space(5f);
-            var r = GUILayoutUtility.GetRect(200, 150, GUILayout.ExpandWidth(true));
-            DrawControl(plugin, r, plugin.GetSampleRate());
-            GUILayout.Space(5f);
-            return true;
-        }
+        [DllImport("AudioPluginDemo")]
+        private static extern IntPtr ConvolutionReverb_GetSampleName(int index);
 
         private void DrawCurve(
             Rect r,
@@ -94,8 +101,5 @@ namespace Appalachia.Audio
                 }
             );
         }
-
-        [DllImport("AudioPluginDemo")]
-        private static extern IntPtr ConvolutionReverb_GetSampleName(int index);
     }
 }

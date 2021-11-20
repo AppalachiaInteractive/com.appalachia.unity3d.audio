@@ -10,10 +10,14 @@ namespace Appalachia.Audio
     [CustomEditor(typeof(Patch))]
     public class PatchEditor : UnityEditor.Editor
     {
+        #region Fields and Autoproperties
+
         private bool _foldout;
         private float _random;
         private float[] _weights;
         private string _played;
+
+        #endregion
 
         public override void OnInspectorGUI()
         {

@@ -12,7 +12,7 @@ namespace Appalachia.Audio.Components
     [Serializable]
     public class AudioSignalSmoothAnalyzer
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [HorizontalGroup("Trend/B", .5f)]
         [ReadOnly]

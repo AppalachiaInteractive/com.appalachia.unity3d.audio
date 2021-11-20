@@ -10,8 +10,12 @@ namespace Appalachia.Audio.Utilities
             max = nv;
         }
 
+        #region Fields and Autoproperties
+
         public bool colorize;
         public float max;
         public float min;
+
+        #endregion
     }
 }

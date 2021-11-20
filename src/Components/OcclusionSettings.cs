@@ -10,7 +10,7 @@ namespace Appalachia.Audio.Components
 {
     public class OcclusionSettings : SingletonAppalachiaObject<OcclusionSettings>
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         public float speedOfSound = 340f;
         public LayerMask layerMask = 1;

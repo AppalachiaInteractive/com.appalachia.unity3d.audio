@@ -15,7 +15,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         where TEnumPrimary : Enum
         where T : AudioContextCollection1<TEnumPrimary, T>
     {
-        #region Fields
+        #region Fields and Autoproperties
 
         [NonSerialized] private NonSerializedAppaLookup<TEnumPrimary, AudioContext1> index;
 

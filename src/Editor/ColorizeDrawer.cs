@@ -8,6 +8,8 @@ namespace Appalachia.Audio
     [CustomPropertyDrawer(typeof(ColorizeAttribute))]
     public class ColorizeDrawer : PropertyDrawer
     {
+        #region Constants and Static Readonly
+
         private static readonly Color _disabledColor = new(0.75f, 0.75f, 0.75f);
 
         private static readonly Color[] _colors =
@@ -23,22 +25,15 @@ namespace Appalachia.Audio
 
         private static readonly Dictionary<object, int> _lookup = new();
 
-        public static Color disabledColor => _disabledColor;
+        #endregion
+
+        #region Static Fields and Autoproperties
 
         private static int _index;
 
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        {
-            return EditorGUI.GetPropertyHeight(prop, label, true);
-        }
+        #endregion
 
-        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
-        {
-            var oldColor = GUI.color;
-            GUI.color = GetColor(prop.propertyPath);
-            EditorGUI.PropertyField(pos, prop, label, true);
-            GUI.color = oldColor;
-        }
+        public static Color disabledColor => _disabledColor;
 
         public static Color GetColor(int index)
         {
@@ -68,6 +63,19 @@ namespace Appalachia.Audio
         {
             _lookup.Clear();
             _index = 0;
+        }
+
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
+        {
+            return EditorGUI.GetPropertyHeight(prop, label, true);
+        }
+
+        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
+        {
+            var oldColor = GUI.color;
+            GUI.color = GetColor(prop.propertyPath);
+            EditorGUI.PropertyField(pos, prop, label, true);
+            GUI.color = oldColor;
         }
     }
 }

@@ -1,5 +1,4 @@
 using Appalachia.Audio.Components;
-using Appalachia.CI.Constants;
 using Appalachia.CI.Integration.Assets;
 using UnityEditor;
 using UnityEngine;
@@ -57,8 +56,9 @@ namespace Appalachia.Audio
             }
         }
 
-        [UnityEditor.MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioSlapback)
-        )]
+        #region Menu Items
+
+        [MenuItem(PKG.Menu.Appalachia.Components.Base + nameof(AudioSlapback))]
         private static void CreateAudioSlapback()
         {
             var o = new GameObject("Audio Slapback");
@@ -72,5 +72,7 @@ namespace Appalachia.Audio
 
             EditorGUIUtility.PingObject(o);
         }
+
+        #endregion
     }
 }
