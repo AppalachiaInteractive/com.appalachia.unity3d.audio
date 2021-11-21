@@ -14,6 +14,7 @@ Development environment loaded!
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 6b89020357dc21d35280bf2aca3ee0a42002b5f0 | 2021-11-20 | Chris Schubert | Updating changelog and releaselog |
 | 79b89527ff65c844e489967ec72bacf6a69c0076 | 2021-11-20 | Chris Schubert | Expanding initialization setup class, and fixing some initialization in appa object bases |
 | 8e59721f6c76e2c7adc38859c0da0c48e1c378de | 2021-11-20 | Chris Schubert | Removing empty directories |
 | 7eca6a92d63e07184af0723288766adcf32b1540 | 2021-11-20 | Chris Schubert | Updating changelog and releaselog |
