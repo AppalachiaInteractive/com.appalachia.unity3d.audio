@@ -1,9 +1,11 @@
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Core;
+using Appalachia.Audio.Scriptables;
+using Appalachia.Core.Behaviours;
 using UnityEngine;
 
 namespace Appalachia.Audio.Effects
 {
-    public sealed class Occlusion : MonoBehaviour
+    public sealed class Occlusion: AppalachiaBehaviour
     {
         #region Fields and Autoproperties
 
@@ -27,8 +29,10 @@ namespace Appalachia.Audio.Effects
             Test(Time.deltaTime);
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             if (_source == null)
             {
                 _source = GetComponent<AudioSource>();
@@ -77,30 +81,30 @@ namespace Appalachia.Audio.Effects
                     var d = transform.position - lpos;
                     if (occlusion.function == OcclusionFunction.Distance)
                     {
-                        if (Mathf.Approximately(spatial.distance.max - spatial.distance.min, 0f))
+                        if (Mathf.Approximately(spatial.distance.y - spatial.distance.x, 0f))
                         {
-                            _target = d.magnitude >= spatial.distance.max ? 0f : 1f;
+                            _target = d.magnitude >= spatial.distance.y ? 0f : 1f;
                         }
                         else
                         {
                             _target = 1f -
                                       Mathf.Clamp01(
-                                          Mathf.Max(0f, d.magnitude - spatial.distance.min) /
-                                          (spatial.distance.max - spatial.distance.min)
+                                          Mathf.Max(0f, d.magnitude - spatial.distance.x) /
+                                          (spatial.distance.y - spatial.distance.x)
                                       );
                         }
                     }
                     else if (occlusion.function == OcclusionFunction.Slapback)
                     {
-                        if (Mathf.Approximately(spatial.distance.max - spatial.distance.min, 0f))
+                        if (Mathf.Approximately(spatial.distance.y - spatial.distance.x, 0f))
                         {
-                            _target = d.magnitude >= spatial.distance.max ? 0f : 1f;
+                            _target = d.magnitude >= spatial.distance.y ? 0f : 1f;
                         }
                         else
                         {
                             _target = Mathf.Clamp01(
-                                Mathf.Max(0f, d.magnitude - spatial.distance.min) /
-                                (spatial.distance.max - spatial.distance.min)
+                                Mathf.Max(0f, d.magnitude - spatial.distance.x) /
+                                (spatial.distance.y - spatial.distance.x)
                             );
                         }
                     }
@@ -123,11 +127,11 @@ namespace Appalachia.Audio.Effects
             }
 
             _current = Mathf.Lerp(_current, _target, dt * 8f);
-            _lowPassFilter.cutoffFrequency = _settings.lowPassRange.min +
-                                             ((_settings.lowPassRange.max - _settings.lowPassRange.min) *
+            _lowPassFilter.cutoffFrequency = _settings.lowPassRange.x +
+                                             ((_settings.lowPassRange.y - _settings.lowPassRange.x) *
                                               _current);
-            _highPassFilter.cutoffFrequency = _settings.highPassRange.min +
-                                              ((_settings.highPassRange.max - _settings.highPassRange.min) *
+            _highPassFilter.cutoffFrequency = _settings.highPassRange.x +
+                                              ((_settings.highPassRange.y - _settings.highPassRange.x) *
                                                (1f - _current));
         }
     }

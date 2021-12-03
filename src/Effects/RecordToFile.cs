@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Appalachia.Core.Behaviours;
 using UnityEngine;
 
 namespace Appalachia.Audio.Effects
 {
-    public sealed class RecordToFile : MonoBehaviour
+    public sealed class RecordToFile: AppalachiaBehaviour
     {
         #region Fields and Autoproperties
 
@@ -50,8 +51,10 @@ namespace Appalachia.Audio.Effects
             }
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+            
             StopRecording();
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Behaviours;
+using Appalachia.Audio.Core;
 using Appalachia.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
@@ -505,7 +506,7 @@ namespace Appalachia.Audio
 
             if (Application.isPlaying)
             {
-                using (var enumerator = Sequencer.activeCues0.GetEnumerator())
+                using (var enumerator = Sequencer.activeCues.GetEnumerator())
                 {
                     for (var x = enumerator; x.MoveNext();)
                     {

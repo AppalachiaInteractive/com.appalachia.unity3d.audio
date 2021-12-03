@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Scriptables;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.Utility.Logging;
 using UnityEditor;

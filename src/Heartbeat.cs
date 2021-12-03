@@ -1,5 +1,7 @@
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Behaviours;
+using Appalachia.Audio.Core;
 using Appalachia.Audio.Effects;
+using Appalachia.Core.Behaviours;
 using Appalachia.Utility.Logging;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -7,7 +9,8 @@ using UnityEngine.Profiling;
 
 namespace Appalachia.Audio
 {
-    public class Heartbeat : MonoBehaviour
+    [ExecuteAlways]
+    public class Heartbeat : AppalachiaBehaviour
     {
         #region Static Fields and Autoproperties
 
@@ -20,14 +23,16 @@ namespace Appalachia.Audio
         #region Fields and Autoproperties
 
         public AudioMixer audioMixer;
-        public string rotationAngleParameter = "Appalachia.Core.Audio Rotation Angle";
+        public string rotationAngleParameter = "Rotation Angle";
 
         #endregion
 
         #region Event Functions
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             hierarchyTransform = transform;
         }
 
@@ -61,8 +66,10 @@ namespace Appalachia.Audio
             }
         }
 
-        protected void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             Sequencer.Reset();
             Synthesizer.Reset();
 

@@ -1,4 +1,4 @@
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Behaviours;
 using Appalachia.Core.Preferences;
 using UnityEditor;
 using UnityEngine;
@@ -87,14 +87,14 @@ namespace Appalachia.Audio
             }
 
             Gizmos.color = c;
-            if (z.peripheralFade.min < 1f)
+            if (z.peripheralFade.x < 1f)
             {
                 Gizmos.color *= 0.5f;
             }
 
             if (((t & GizmoType.NotInSelectionHierarchy) == 0) || alwaysShowZoneGizmosPrefs)
             {
-                DrawZ(z, z.peripheralFade.min, t);
+                DrawZ(z, z.peripheralFade.x, t);
             }
         }
 

@@ -1,4 +1,4 @@
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Analysis;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;

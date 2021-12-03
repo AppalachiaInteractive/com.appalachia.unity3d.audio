@@ -14,13 +14,13 @@ namespace Appalachia.Audio
 
         private static readonly Color[] _colors =
         {
-            new(0.85f, 1.00f, 1.00f),
-            new(0.85f, 1.00f, 0.85f),
-            new(0.95f, 1.00f, 0.75f),
-            new(1.00f, 0.75f, 0.65f),
-            new(1.00f, 0.75f, 0.95f),
-            new(0.75f, 0.75f, 1.00f),
-            new(0.75f, 0.85f, 1.00f)
+            new(0.85f, 1.00f, 1.00f, 1.0f),
+            new(0.85f, 1.00f, 0.85f, 1.0f),
+            new(0.95f, 1.00f, 0.75f, 1.0f),
+            new(1.00f, 0.75f, 0.65f, 1.0f),
+            new(1.00f, 0.75f, 0.95f, 1.0f),
+            new(0.75f, 0.75f, 1.00f, 1.0f),
+            new(0.75f, 0.85f, 1.00f, 1.0f)
         };
 
         private static readonly Dictionary<object, int> _lookup = new();
@@ -67,7 +67,9 @@ namespace Appalachia.Audio
 
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
         {
-            return EditorGUI.GetPropertyHeight(prop, label, true);
+            var height = EditorGUI.GetPropertyHeight(prop, label, true);
+
+            return height;
         }
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)

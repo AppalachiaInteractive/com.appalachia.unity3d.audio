@@ -1,7 +1,7 @@
 #region
 
 using System;
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Scriptables;
 using Appalachia.Core.Overrides;
 
 #endregion
@@ -9,17 +9,17 @@ using Appalachia.Core.Overrides;
 namespace Appalachia.Audio.Contextual
 {
     [Serializable]
-    public class Patch_OVERRIDE : Overridable<Patch, Patch_OVERRIDE>
+    public class OverridablePatch : Overridable<Patch, OverridablePatch>
     {
-        public Patch_OVERRIDE(bool overrideEnabled, Patch value) : base(overrideEnabled, value)
+        public OverridablePatch(bool overrideEnabled, Patch value) : base(overrideEnabled, value)
         {
         }
 
-        public Patch_OVERRIDE(Overridable<Patch, Patch_OVERRIDE> value) : base(value)
+        public OverridablePatch(Overridable<Patch, OverridablePatch> value) : base(value)
         {
         }
 
-        public Patch_OVERRIDE() : base(false, default)
+        public OverridablePatch() : base(false, default)
         {
         }
     }

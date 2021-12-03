@@ -2,7 +2,7 @@
 
 using System;
 using System.Diagnostics;
-using Appalachia.Audio.Components;
+using Appalachia.Audio.Scriptables;
 using Appalachia.Core.Attributes.Editing;
 using Appalachia.Core.Scriptables;
 using Sirenix.OdinInspector;
