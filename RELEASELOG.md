@@ -15,6 +15,9 @@ Development environment loaded!
 `0.2.0`
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 23368f6f9e55d7218e32cd45b67628c2f78b7bee | 2021-12-02 | Chris Schubert | General code cleanup |
+| 917f8c56cb92619fdda75a4eca0ad49a487a72dd | 2021-12-02 | Chris Schubert | Refactoring UI and adding timeline integrations |
+| e527273301f5a53501c4f7c26c33dec32a9686e8 | 2021-11-21 | Chris Schubert | Updating changelog and releaselog |
 | f45119e1a7a5f1c730cb3205338027f17c56078a | 2021-11-21 | Chris Schubert | Updating asset manager usages |
 | 16ac618059a2ce9f2803420d2b4ee6a6f7fabba4 | 2021-11-20 | Chris Schubert | Updating changelog and releaselog |
 | 6b89020357dc21d35280bf2aca3ee0a42002b5f0 | 2021-11-20 | Chris Schubert | Updating changelog and releaselog |
