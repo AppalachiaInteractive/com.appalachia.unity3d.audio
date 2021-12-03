@@ -1,6 +1,4 @@
 ```
-C:/Users/Chris/com.appalachia/unity3d/appa/Assets/Appalachia.Audio
-Development environment loaded!  
  ________   ___  ___   ________   ________    ________   _______    ________      
 |\   ____\ |\  \|\  \ |\   __  \ |\   ___  \ |\   ____\ |\  ___ \  |\   ____\     
 \ \  \___| \ \  \\\  \\ \  \|\  \\ \  \\ \  \\ \  \___| \ \   __/| \ \  \___|_    
@@ -14,6 +12,7 @@ Development environment loaded!
 ## Releasing
 | Hash | Date | Author | Changes |
 |------|------|--------|---------|
+| 1f55da8e51c27aa6284d9f0ee52e18fa90d3998d | 2021-12-02 | Chris Schubert | Updating changelog and releaselog |
 | 23368f6f9e55d7218e32cd45b67628c2f78b7bee | 2021-12-02 | Chris Schubert | General code cleanup |
 | 917f8c56cb92619fdda75a4eca0ad49a487a72dd | 2021-12-02 | Chris Schubert | Refactoring UI and adding timeline integrations |
 | e527273301f5a53501c4f7c26c33dec32a9686e8 | 2021-11-21 | Chris Schubert | Updating changelog and releaselog |
