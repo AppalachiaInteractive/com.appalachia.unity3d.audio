@@ -3,6 +3,7 @@
 using System;
 using Appalachia.Audio.Contextual.Context.Contexts;
 using Appalachia.Core.Collections.NonSerialized;
+using Appalachia.Utility.Strings;
 
 #endregion
 
@@ -32,8 +33,8 @@ namespace Appalachia.Audio.Contextual.Context.Collections
                 primary,
                 out var context,
                 si => si.defaultFallback,
-                $"No context patch found for [{primary}].",
-                $"No fallback context patch found for [{primary}]."
+                ZString.Format("No context patch found for [{0}].",          primary),
+                ZString.Format("No fallback context patch found for [{0}].", primary)
             );
 
             if (context == null)

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Appalachia.Utility.Strings;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -99,7 +100,9 @@ namespace Appalachia.Audio
                 return result;
             }
 
-            throw new NotSupportedException($"Mixer [{mixer.name}] does not have property [{property}].");
+            throw new NotSupportedException(
+                ZString.Format("Mixer [{0}] does not have property [{1}].", mixer.name, property)
+            );
         }
 
         [DllImport("AudioPluginDemo")]

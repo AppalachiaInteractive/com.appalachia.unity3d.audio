@@ -4,24 +4,42 @@ using Appalachia.Audio.Core;
 using Appalachia.Audio.Scriptables;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.CI.Integration.FileSystem;
-using Appalachia.Core.Scriptables;
+using Appalachia.Core.Attributes;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Strings;
 using UnityEngine;
 
 namespace Appalachia.Audio
 {
+    [CallStaticConstructorInEditor]
     public static class Factory
     {
         public delegate void Initializer<X, Y>(X x, Y y);
+
+        static Factory()
+        {
+            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+        }
+
+        #region Static Fields and Autoproperties
+
+        private static AudioImportSettings _audioImportSettings;
+
+        #endregion
 
         public static void Create<X, Y>(Initializer<X, Y> init)
             where X : AppalachiaObject
             where Y : UnityEngine.Object
         {
+            if (!AudioImportSettings.IsInstanceAvailable)
+            {
+                return;
+            }
+
             var p = AssetDatabaseManager.GetAssetPath(UnityEditor.Selection.activeObject);
             if (string.IsNullOrEmpty(p))
             {
-                var importSettings = AudioImportSettings.instance;
-                p = importSettings.AssetPath;
+                p = _audioImportSettings.AssetPath;
             }
 
             if (!AppaDirectory.Exists(p))
@@ -80,10 +98,10 @@ namespace Appalachia.Audio
             }
 
             p = AssetDatabaseManager.GenerateUniqueAssetPath(
-                AppaPath.Combine(p, r != "" ? r : string.Format("New {0}.asset", typeof(X).Name))
+                AppaPath.Combine(p, r != "" ? r : ZString.Format("New {0}.asset", typeof(X).Name))
             );
             p = UnityEditor.EditorUtility.SaveFilePanel(
-                string.Format("Save {0} Asset", typeof(X).Name),
+                ZString.Format("Save {0} Asset", typeof(X).Name),
                 AppaPath.GetDirectoryName(p),
                 AppaPath.GetFileName(p),
                 "asset"
@@ -112,7 +130,7 @@ namespace Appalachia.Audio
         [UnityEditor.MenuItem(PKG.Menu.Assets.Base + "Patch")]
         private static void CreateAudioProgram()
         {
-            var newInstance = AppalachiaObject.CreateNew<Patch>();
+            /*var newInstance = Patch.CreateNew();*/
 
             Create<Patch, AudioClip>(
                 (a, c) =>

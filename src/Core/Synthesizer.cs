@@ -1,5 +1,3 @@
-// #define SYNTHESIZER_PARANOIA
-
 #region
 
 using System;
@@ -8,8 +6,12 @@ using Appalachia.Audio.Behaviours;
 using Appalachia.Audio.Effects;
 using Appalachia.Audio.Scriptables;
 using Appalachia.Audio.Utilities;
+using Appalachia.CI.Constants;
+using Appalachia.Core.Attributes;
+using Appalachia.Core.Preferences;
+using Appalachia.Utility.Execution;
 using Appalachia.Utility.Extensions;
-using Appalachia.Utility.Logging;
+using Appalachia.Utility.Strings;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -17,8 +19,37 @@ using UnityEngine.Audio;
 
 namespace Appalachia.Audio.Core
 {
+    [CallStaticConstructorInEditor]
     public static class Synthesizer
     {
+        static Synthesizer()
+        {
+            OcclusionSettings.InstanceAvailable += i => _occlusionSettings = i;
+        }
+
+        private static OcclusionSettings _occlusionSettings;
+        private static PREF<bool> _synthesizerLoggingEnabled;
+
+        public static PREF<bool> SynthesizerLoggingEnabled
+        {
+            get =>
+                _synthesizerLoggingEnabled ??= PREFS.REG(
+                    PKG.Prefs.Group,
+                    nameof(SynthesizerLoggingEnabled),
+                    false
+                );
+            set
+            {
+                if (_synthesizerLoggingEnabled == null)
+                {
+                    var _ = SynthesizerLoggingEnabled;
+                }
+
+                // ReSharper disable once PossibleNullReferenceException
+                _synthesizerLoggingEnabled.v = value;
+            }
+        }
+        
         #region Static Fields and Autoproperties
 
 #if UNITY_EDITOR
@@ -29,6 +60,8 @@ namespace Appalachia.Audio.Core
 
         public static Stack<SourceInfo> freeSources = new(64);
         public static uint activeHandle;
+
+        [NonSerialized] private static AppaContext _context;
         private static float _masterVolume = 1f;
 
         #endregion
@@ -39,11 +72,24 @@ namespace Appalachia.Audio.Core
             set => _masterVolume = Mathf.Clamp01(value);
         }
 
+        private static AppaContext Context
+        {
+            get
+            {
+                if (_context == null)
+                {
+                    _context = new AppaContext(typeof(Synthesizer));
+                }
+
+                return _context;
+            }
+        }
+
         public static bool IsKeyedOn(uint handle)
         {
             if (handle == 0)
             {
-                AppaLog.Error("IsKeyedOn: bad handle");
+                Context.Log.Error("IsKeyedOn: bad handle");
                 return false;
             }
 
@@ -62,7 +108,7 @@ namespace Appalachia.Audio.Core
         {
             if (handle == 0)
             {
-                AppaLog.Error("KeyOff: bad handle");
+                Context.Log.Error("KeyOff: bad handle");
                 return;
             }
 
@@ -73,13 +119,19 @@ namespace Appalachia.Audio.Core
                     var z = x.Current;
                     if (z.handle == handle)
                     {
-#if SYNTHESIZER_PARANOIA
-                AppaLog.Info(string.Format(
-                    Time.frameCount.ToString("X4") +
-                    " Synthesizer.KeyOff: {0} ({1}) : {2} {3}",
-                    z.info.audioSource.clip.name, z.info.audioSource.name,
-                    release, mode);
-#endif
+                        if (SynthesizerLoggingEnabled)
+                        {
+                            Context.Log.Info(
+                                ZString.Format(
+                                    Time.frameCount.ToString("X4") +
+                                    " Synthesizer.KeyOff: {0} ({1}) : {2} {3}",
+                                    z.info.audioSource.clip.name,
+                                    z.info.audioSource.name,
+                                    release,
+                                    mode
+                                )
+                            );
+                        }
                         switch (mode)
                         {
                             case EnvelopeMode.Exact:
@@ -116,7 +168,7 @@ namespace Appalachia.Audio.Core
         {
             if (c == null)
             {
-                AppaLog.Error("KeyOn: missing audio clip reference");
+                Context.Log.Error("KeyOn: missing audio clip reference");
                 return 0;
             }
 
@@ -153,7 +205,7 @@ namespace Appalachia.Audio.Core
         {
             if (patch == null)
             {
-                AppaLog.Error("KeyOn: missing patch reference");
+                Context.Log.Error("KeyOn: missing patch reference");
                 looping = false;
                 return 0;
             }
@@ -185,7 +237,7 @@ namespace Appalachia.Audio.Core
         {
             if (patch == null)
             {
-                AppaLog.Error("KeyOn: missing patch reference");
+                Context.Log.Error("KeyOn: missing patch reference");
                 looping = false;
                 return 0;
             }
@@ -210,7 +262,7 @@ namespace Appalachia.Audio.Core
         {
             if (patch == null)
             {
-                AppaLog.Error("KeyOn: missing patch reference");
+                Context.Log.Error("KeyOn: missing patch reference");
                 return;
             }
 
@@ -229,7 +281,7 @@ namespace Appalachia.Audio.Core
         {
             if (handle == 0)
             {
-                AppaLog.Error("Stop: bad handle");
+                Context.Log.Error("Stop: bad handle");
                 return;
             }
 
@@ -240,12 +292,18 @@ namespace Appalachia.Audio.Core
                     var z = x.Current;
                     if ((z.handle == handle) && z.info.audioSource)
                     {
-#if SYNTHESIZER_PARANOIA
-                AppaLog.Info(string.Format(
-                    Time.frameCount.ToString("X4") +
-                    " Synthesizer.Update: {0} ({1}) : stopped by envelope",
-                    z.info.audioSource.clip.name, z.info.audioSource.name);
-#endif
+                        if (SynthesizerLoggingEnabled)
+                        {
+                            Context.Log.Info(
+                                ZString.Format(
+                                    Time.frameCount.ToString("X4") +
+                                    " Synthesizer.Update: {0} ({1}) : stopped by envelope",
+                                    z.info.audioSource.clip.name,
+                                    z.info.audioSource.name
+                                )
+                            );
+                        }
+
                         z.info.audioSource.Stop();
                     }
                 }
@@ -254,11 +312,13 @@ namespace Appalachia.Audio.Core
 
         public static void StopAll()
         {
-#if SYNTHESIZER_PARANOIA
-        AppaLog.Info(string.Format("Synthesizer.StopAll");
-#endif
+            if (SynthesizerLoggingEnabled)
+            {
+                Context.Log.Info("Synthesizer.StopAll");
+            }
+
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
+            if (!AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 AudioUtil.StopAllPreviewClips();
                 return;
@@ -288,6 +348,11 @@ namespace Appalachia.Audio.Core
 #endif
         )
         {
+            if (!OcclusionSettings.IsInstanceAvailable)
+            {
+                return false;
+            }
+            
             var r = p.randomization.distance.RandomValue();
             if (!Mathf.Approximately(r, 0f))
             {
@@ -320,7 +385,7 @@ namespace Appalachia.Audio.Core
             {
                 AudioSlapback s;
                 Vector3 pos3, d3;
-                if ((bool) (s = AudioSlapback.FindClosest(pos2, out pos3, out d3)))
+                if ((bool)(s = AudioSlapback.FindClosest(pos2, out pos3, out d3)))
                 {
                     var patch2 = p.slapback.patch;
                     var p2 = patch2.program.audioParameters;
@@ -328,7 +393,7 @@ namespace Appalachia.Audio.Core
                     var lpos = Heartbeat.listenerTransform.position;
                     var d = pos3 - lpos;
                     var pos4 = pos3 + (d.normalized * s.radius);
-                    var dt = s.radius / OcclusionSettings.instance.speedOfSound;
+                    var dt = s.radius / _occlusionSettings.speedOfSound;
 
                     p2.randomization.distance.x = 0f;
                     p2.randomization.distance.y = 0f;
@@ -338,7 +403,10 @@ namespace Appalachia.Audio.Core
                     var clip = patch2.program.GetClip(out gain);
                     if (!clip)
                     {
-                        AppaLog.Error("Activate: Null AudioClip from patch: " + patch2, patch2);
+                        Context.Log.Error(
+                            ZString.Format("Activate: Null AudioClip from patch: {0}", patch2),
+                            patch2
+                        );
                     }
 
                     Activate(
@@ -372,7 +440,7 @@ namespace Appalachia.Audio.Core
             var clip = patch.program.GetClip(out gain);
             if (!clip)
             {
-                AppaLog.Error("Activate: Null AudioClip from patch: " + patch, patch);
+                Context.Log.Error(ZString.Format("Activate: Null AudioClip from patch: {0}", patch), patch);
             }
 
             var looping = ActivateStatic(
@@ -402,7 +470,7 @@ namespace Appalachia.Audio.Core
 #if UNITY_EDITOR
             if (!clip)
             {
-                AppaLog.Error("Activate: Null AudioClip from patch: " + patch, patch);
+                Context.Log.Error(ZString.Format("Activate: Null AudioClip from patch: {0}", patch), patch);
             }
 #endif
             ap.volume *= 1f + gain;
@@ -436,7 +504,7 @@ namespace Appalachia.Audio.Core
 #if UNITY_EDITOR
             if (!clip)
             {
-                AppaLog.Error("Activate: Null AudioClip from patch: " + patch, patch);
+                Context.Log.Error(ZString.Format("Activate: Null AudioClip from patch: {0}", patch), patch);
             }
 #endif
             ap.volume *= 1f + gain;
@@ -498,7 +566,7 @@ namespace Appalachia.Audio.Core
         )
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
+            if (!AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 UnityEditor.EditorApplication.CallbackFunction f = null;
                 var n = Time.realtimeSinceStartup;
@@ -535,12 +603,17 @@ namespace Appalachia.Audio.Core
                 envelope = Envelope.instant
             };
 
-#if SYNTHESIZER_PARANOIA
-        AppaLog.Info(string.Format(
-            Time.frameCount.ToString("X4") +
-            " Synthesizer.ActivateInternal: {0} {1} ({2})",
-            g, c.name, z.target);
-#endif
+            if (SynthesizerLoggingEnabled)
+            {
+                Context.Log.Info(
+                    ZString.Format(
+                        Time.frameCount.ToString("X4") + " Synthesizer.ActivateInternal: {0} {1} ({2})",
+                        g,
+                        c.name,
+                        z.target
+                    )
+                );
+            }
 
             if (p.envelope.attack > Mathf.Epsilon)
             {
@@ -567,7 +640,7 @@ namespace Appalachia.Audio.Core
         {
             if (handle == 0)
             {
-                AppaLog.Error("SetModVolume: bad handle");
+                Context.Log.Error("SetModVolume: bad handle");
                 return;
             }
 
@@ -610,24 +683,34 @@ namespace Appalachia.Audio.Core
                             }
                             else
                             {
-#if SYNTHESIZER_PARANOIA
-                        AppaLog.Info(string.Format(
-                            Time.frameCount.ToString("X4") +
-                            " Synthesizer.Update: {0} ({1}) : stopped by envelope",
-                            z.info.audioSource.clip.name, z.info.audioSource.name);
-#endif
+                                if (SynthesizerLoggingEnabled)
+                                {
+                                    Context.Log.Info(
+                                        ZString.Format(
+                                            Time.frameCount.ToString("X4") +
+                                            " Synthesizer.Update: {0} ({1}) : stopped by envelope",
+                                            z.info.audioSource.clip.name,
+                                            z.info.audioSource.name
+                                        )
+                                    );
+                                }
                                 z.info.audioSource.Stop();
                             }
                         }
 
                         if (!playing)
                         {
-#if SYNTHESIZER_PARANOIA
-                    AppaLog.Info(string.Format(
-                        Time.frameCount.ToString("X4") +
-                        " Synthesizer.Update: {0} ({1}) : freed",
-                        z.info.audioSource.clip.name, z.info.audioSource.name);
-#endif
+                            if (SynthesizerLoggingEnabled)
+                            {
+                                Context.Log.Info(
+                                    ZString.Format(
+                                        Time.frameCount.ToString("X4") +
+                                        " Synthesizer.Update: {0} ({1}) : freed",
+                                        z.info.audioSource.clip.name,
+                                        z.info.audioSource.name
+                                    )
+                                );
+                            }
                             z.info.Disable();
                             freeSources.Push(z.info);
                         }
@@ -657,7 +740,7 @@ namespace Appalachia.Audio.Core
             s.minDistance = p.spatial.distance.x;
             s.maxDistance = p.spatial.distance.y;
             s.dopplerLevel = p.spatial.doppler;
-            s.priority = (int) p.runtime.priority;
+            s.priority = (int)p.runtime.priority;
             s.outputAudioMixerGroup = g;
 
             if (delay <= Mathf.Epsilon)
@@ -669,12 +752,22 @@ namespace Appalachia.Audio.Core
                 s.PlayDelayed(delay);
             }
 
-#if SYNTHESIZER_PARANOIA
-        AppaLog.Info(string.Format(
-            Time.frameCount.ToString("X4") +
-            " Synthesizer.ActivateStatic: {0} {1} ({2}) : {3:N2} {4:N2} {5:N2} -> {6}",
-            g, c.name, s.name, delay, volume, pitch, s.isPlaying);
-#endif
+            if (SynthesizerLoggingEnabled)
+            {
+                Context.Log.Info(
+                    ZString.Format(
+                        Time.frameCount.ToString("X4") +
+                        " Synthesizer.ActivateStatic: {0} {1} ({2}) : {3:N2} {4:N2} {5:N2} -> {6}",
+                        g,
+                        c.name,
+                        s.name,
+                        delay,
+                        volume,
+                        pitch,
+                        s.isPlaying
+                    )
+                );
+            }
 
             return p.loop;
         }
@@ -683,7 +776,7 @@ namespace Appalachia.Audio.Core
         {
             var o = new GameObject(
 #if UNITY_EDITOR
-                $"Appalachia.Core.Audio.Source #{sourceIndex++:X2}"
+                ZString.Format("Appalachia.Core.Audio.Source #{0:X2}", sourceIndex++)
 #endif
             );
             o.transform.parent = Heartbeat.hierarchyTransform;

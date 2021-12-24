@@ -1,13 +1,30 @@
+using System;
 using System.Collections.Generic;
 using Appalachia.Audio.Scriptables;
+using Appalachia.CI.Constants;
 using Appalachia.CI.Integration.Assets;
-using Appalachia.Utility.Logging;
+using Appalachia.Utility.Strings;
 using UnityEditor;
 
 namespace Appalachia.Audio
 {
     public static class Tools
     {
+        [NonSerialized] private static AppaContext _context;
+
+        private static AppaContext Context
+        {
+            get
+            {
+                if (_context == null)
+                {
+                    _context = new AppaContext(typeof(Tools));
+                }
+
+                return _context;
+            }
+        }
+        
         #region Constants and Static Readonly
 
         private const string FIND_PATCHES_WITHOUT_CLIPS = "Find Patches Without AudioClips";
@@ -24,7 +41,9 @@ namespace Appalachia.Audio
             var guids = AssetDatabaseManager.FindAssets("t:Object", new[] {root});
             var count = 0;
 
-            AppaLog.Info($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
+            Context.Log.Info(
+                ZString.Format("[{0}]: Searching for patches in ", FIND_PATCHES_WITHOUT_CLIPS) + root
+            );
 
             foreach (var guid in guids)
             {
@@ -52,15 +71,18 @@ namespace Appalachia.Audio
 
                     if (noClips)
                     {
-                        AppaLog.Warn($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path, asset);
+                        Context.Log.Warn(
+                            ZString.Format("[{0}]: Found ", FIND_PATCHES_WITHOUT_CLIPS) + path,
+                            asset
+                        );
                     }
 
                     ++count;
                 }
             }
 
-            AppaLog.Info(
-                $"[{FIND_PATCHES_WITHOUT_CLIPS}]: All done, checked " +
+            Context.Log.Info(
+                ZString.Format("[{0}]: All done, checked ", FIND_PATCHES_WITHOUT_CLIPS) +
                 count +
                 (count == 1 ? " patch" : " patches")
             );
@@ -75,7 +97,9 @@ namespace Appalachia.Audio
             var patchCount = 0;
             int clipCount;
 
-            AppaLog.Info($"[{FIND_PATCHES_WITHOUT_CLIPS}]: Searching for patches in " + root);
+            Context.Log.Info(
+                ZString.Format("[{0}]: Searching for patches in ", FIND_PATCHES_WITHOUT_CLIPS) + root
+            );
 
             foreach (var guid in guids)
             {
@@ -108,15 +132,15 @@ namespace Appalachia.Audio
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
                 if (!clips.Contains(path))
                 {
-                    AppaLog.Warn(
-                        $"[{FIND_PATCHES_WITHOUT_CLIPS}]: Found " + path,
+                    Context.Log.Warn(
+                        ZString.Format("[{0}]: Found ", FIND_PATCHES_WITHOUT_CLIPS) + path,
                         AssetDatabaseManager.LoadMainAssetAtPath(path)
                     );
                 }
             }
 
-            AppaLog.Info(
-                $"[{FIND_PATCHES_WITHOUT_CLIPS}]: All done, checked " +
+            Context.Log.Info(
+                ZString.Format("[{0}]: All done, checked ", FIND_PATCHES_WITHOUT_CLIPS) +
                 patchCount +
                 (patchCount == 1 ? " patch " : " patches ") +
                 "and " +

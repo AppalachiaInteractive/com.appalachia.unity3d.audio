@@ -1,15 +1,16 @@
 using System;
 using Appalachia.Utility.Interpolation;
 using Appalachia.Utility.Interpolation.Modes;
-using Appalachia.Utility.Logging;
+using Appalachia.Utility.Strings;
 using Sirenix.OdinInspector;
+using Unity.Profiling;
 using UnityEngine.Audio;
 using UnityEngine.Playables;
 
 namespace Appalachia.Audio.Playables.MixerGroup
 {
     [Serializable]
-    public class AudioMixerGroupControlBehaviour : PlayableBehaviour
+    public class AudioMixerGroupControlBehaviour : AppalachiaPlayable
     {
         #region Fields and Autoproperties
 
@@ -41,64 +42,88 @@ namespace Appalachia.Audio.Playables.MixerGroup
                     return null;
                 }
 
-                return $"{_audioMixerGroup.name}_Volume";
+                return ZString.Format("{0}_Volume", _audioMixerGroup.name);
             }
         }
 
-        public override void OnPlayableDestroy(Playable playable)
+        private static readonly ProfilerMarker _PRF_ExecuteFrame =
+            new ProfilerMarker(_PRF_PFX + nameof(ExecuteFrame));
+
+        private const string _PRF_PFX = nameof(AudioMixerGroupControlBehaviour) + ".";
+
+        protected override void ExecuteFrame(Playable playable, FrameData info, object playerData)
         {
-            if (_audioMixerGroup != null)
+            using (_PRF_ExecuteFrame.Auto())
             {
-                var parameterName = AudioMixerGroupParameterName;
-                if (!_audioMixerGroup.audioMixer.SetFloat(parameterName, _originalVolume))
+                _audioMixerGroup = playerData as AudioMixerGroup;
+
+                if (_audioMixerGroup == null)
                 {
-                    AppaLog.Error(
-                        $"Must initialize audio mixer parameter [{parameterName}] on {nameof(AudioMixerGroup)} [{_audioMixerGroup.name}]."
+                    return;
+                }
+
+                var parameterName = AudioMixerGroupParameterName;
+
+                if (!_storedOriginals)
+                {
+                    _audioMixerGroup.audioMixer.GetFloat(parameterName, out _originalVolume);
+                    _storedOriginals = true;
+                }
+
+                var currentTime = playable.GetTime();
+                var duration = playable.GetDuration();
+                var percentage = currentTime / duration;
+
+                if ((_interpolation == null) || (_interpolation.mode != fadeMode))
+                {
+                    _interpolation = InterpolatorFactory.GetInterpolator(fadeMode);
+                }
+
+                var fadeValue = _interpolation.Interpolate(startVolume, endVolume, (float)percentage);
+
+                if (!_audioMixerGroup.audioMixer.SetFloat(parameterName, fadeValue))
+                {
+                    Context.Log.Error(
+                        ZString.Format(
+                            "Must initialize audio mixer parameter [{0}] on {1} [{2}].",
+                            parameterName,
+                            nameof(AudioMixerGroup),
+                            _audioMixerGroup.name
+                        )
                     );
                 }
             }
-
-            startVolume = 0f;
-            endVolume = 0f;
-            _interpolation = null;
-            _audioMixerGroup = null;
-            _storedOriginals = false;
-            _originalVolume = 0.0f;
         }
 
-        public override void ProcessFrame(Playable playable, FrameData info, object playerData)
+        private static readonly ProfilerMarker _PRF_ExecuteOnPlayableDestroy =
+            new ProfilerMarker(_PRF_PFX + nameof(ExecuteOnPlayableDestroy));
+
+        protected override void ExecuteOnPlayableDestroy(Playable playable)
         {
-            _audioMixerGroup = playerData as AudioMixerGroup;
-
-            if (_audioMixerGroup == null)
+            using (_PRF_ExecuteOnPlayableDestroy.Auto())
             {
-                return;
-            }
+                if (_audioMixerGroup != null)
+                {
+                    var parameterName = AudioMixerGroupParameterName;
+                    if (!_audioMixerGroup.audioMixer.SetFloat(parameterName, _originalVolume))
+                    {
+                        Context.Log.Error(
+                            ZString.Format(
+                                "Must initialize audio mixer parameter [{0}] on {1} [{2}].",
+                                parameterName,
+                                nameof(AudioMixerGroup),
+                                _audioMixerGroup.name
+                            )
+                        );
+                    }
+                }
 
-            var parameterName = AudioMixerGroupParameterName;
-
-            if (!_storedOriginals)
-            {
-                _audioMixerGroup.audioMixer.GetFloat(parameterName, out _originalVolume);
-                _storedOriginals = true;
-            }
-
-            var currentTime = playable.GetTime();
-            var duration = playable.GetDuration();
-            var percentage = currentTime / duration;
-
-            if ((_interpolation == null) || (_interpolation.mode != fadeMode))
-            {
-                _interpolation = InterpolatorFactory.GetInterpolator(fadeMode);
-            }
-
-            var fadeValue = _interpolation.Interpolate(startVolume, endVolume, (float)percentage);
-
-            if (!_audioMixerGroup.audioMixer.SetFloat(parameterName, fadeValue))
-            {            
-                AppaLog.Error(
-                    $"Must initialize audio mixer parameter [{parameterName}] on {nameof(AudioMixerGroup)} [{_audioMixerGroup.name}]."
-                );                
+                startVolume = 0f;
+                endVolume = 0f;
+                _interpolation = null;
+                _audioMixerGroup = null;
+                _storedOriginals = false;
+                _originalVolume = 0.0f;
             }
         }
     }

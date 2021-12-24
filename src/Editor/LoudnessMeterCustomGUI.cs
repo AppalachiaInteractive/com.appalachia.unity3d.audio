@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Appalachia.Utility.Strings;
 using UnityEditor;
 using UnityEngine;
 
@@ -177,7 +178,13 @@ namespace Appalachia.Audio
             {
                 var col2 = new Color(col.r, col.g, col.b, 0.7f);
                 GUIHelpers.DrawLine(r.x, peakPos, r.x + r.width, peakPos, col2);
-                GUIHelpers.DrawText((r.x + labeloffset) - 30, peakPos + 6, 60, $"{peakVal:F1} dB", col2);
+                GUIHelpers.DrawText(
+                    (r.x + labeloffset) - 30,
+                    peakPos + 6,
+                    60,
+                    ZString.Format("{0:F1} dB", peakVal),
+                    col2
+                );
             }
         }
     }

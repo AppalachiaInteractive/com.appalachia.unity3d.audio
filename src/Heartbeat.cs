@@ -1,8 +1,9 @@
-using Appalachia.Audio.Behaviours;
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Effects;
-using Appalachia.Core.Behaviours;
-using Appalachia.Utility.Logging;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
+using Appalachia.Utility.Strings;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Profiling;
@@ -10,7 +11,7 @@ using UnityEngine.Profiling;
 namespace Appalachia.Audio
 {
     [ExecuteAlways]
-    public class Heartbeat : AppalachiaBehaviour
+    public sealed class Heartbeat : AppalachiaBehaviour<Heartbeat>
     {
         #region Static Fields and Autoproperties
 
@@ -29,8 +30,9 @@ namespace Appalachia.Audio
 
         #region Event Functions
 
-        protected override void Awake()
+        protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
             base.Awake();
 
             hierarchyTransform = transform;
@@ -61,14 +63,16 @@ namespace Appalachia.Audio
                 var halfRadians = playerTransform.localEulerAngles.y * Mathf.Deg2Rad * 0.5f;
                 if (!audioMixer.SetFloat(rotationAngleParameter, halfRadians))
                 {
-                    AppaLog.Warn("Failed to set audio mixer parameter: " + rotationAngleParameter);
+                    Context.Log.Warn(
+                        ZString.Format("Failed to set audio mixer parameter: {0}", rotationAngleParameter)
+                    );
                 }
             }
         }
 
-        protected override void OnDestroy()
+        protected override async AppaTask WhenDestroyed()
         {
-            base.OnDestroy();
+            await base.WhenDestroyed();
 
             Sequencer.Reset();
             Synthesizer.Reset();
@@ -85,7 +89,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-                AppaLog.Warn("StartRecording: no listener");
+                Context.Log.Warn("StartRecording: no listener");
             }
             else
             {
@@ -103,7 +107,7 @@ namespace Appalachia.Audio
         {
             if (listenerTransform == null)
             {
-                AppaLog.Warn("StopRecording: no listener");
+                Context.Log.Warn("StopRecording: no listener");
                 return -1;
             }
 

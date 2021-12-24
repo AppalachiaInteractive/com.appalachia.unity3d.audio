@@ -3,8 +3,11 @@
 using System;
 using Appalachia.Audio.Contextual.Context.Contexts;
 using Appalachia.Core.Attributes.Editing;
-using Appalachia.Core.Scriptables;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
+using Unity.Profiling;
 
 #endregion
 
@@ -35,19 +38,6 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
         #endregion
 
-        #region Event Functions
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-#if UNITY_EDITOR
-            Refresh();
-#endif
-        }
-
-        #endregion
-
 #if UNITY_EDITOR
         [Button]
         [DisableIf(nameof(locked))]
@@ -68,5 +58,24 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 #endif
 
         protected abstract void AddOrUpdate(TContext context);
+
+        protected override async AppaTask Initialize(Initializer initializer)
+        {
+            using (_PRF_Initialize.Auto())
+            {
+                await base.Initialize(initializer);
+
+                Refresh();
+            }
+        }
+
+        #region Profiling
+
+        private const string _PRF_PFX = nameof(AudioContextCollection<TContext, TParams, T>) + ".";
+
+        private static readonly ProfilerMarker _PRF_Initialize =
+            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
+
+        #endregion
     }
 }

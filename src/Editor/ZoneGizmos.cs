@@ -98,7 +98,8 @@ namespace Appalachia.Audio
             }
         }
 
-        private static void DrawZ(Zone z, float inner, GizmoType t)
+        private static void DrawZ<T>(T z, float inner, GizmoType t)
+            where T : Zone<T>
         {
             var g = z.trigger;
             if (g is BoxCollider)

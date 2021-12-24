@@ -3,6 +3,7 @@ using System.Text;
 using Appalachia.Audio.Behaviours;
 using Appalachia.Audio.Core;
 using Appalachia.Editor.Windows;
+using Appalachia.Utility.Execution;
 using UnityEditor;
 using UnityEngine;
 
@@ -271,7 +272,7 @@ namespace Appalachia.Audio
             }
 
             var az = 0;
-            foreach (var i in Zone.allZones)
+            foreach (var i in AudioZone.allZones)
             {
                 if (i.IsActive())
                 {
@@ -366,7 +367,7 @@ namespace Appalachia.Audio
             Rect p;
             _scrollOcclusion = EditorGUILayout.BeginScrollView(_scrollOcclusion);
 
-            if (Application.isPlaying)
+            if (AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 _srcColors.Clear();
                 _srcInfo.Clear();
@@ -504,7 +505,7 @@ namespace Appalachia.Audio
             Rect p;
             _scrollSequencer = EditorGUILayout.BeginScrollView(_scrollSequencer);
 
-            if (Application.isPlaying)
+            if (AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 using (var enumerator = Sequencer.activeCues.GetEnumerator())
                 {
@@ -626,7 +627,7 @@ namespace Appalachia.Audio
             Rect p;
             _scrollSynthesizer = EditorGUILayout.BeginScrollView(_scrollSynthesizer);
 
-            if (Application.isPlaying && Heartbeat.listenerTransform)
+            if (AppalachiaApplication.IsPlayingOrWillPlay && Heartbeat.listenerTransform)
             {
                 _srcColors.Clear();
                 _srcInfo.Clear();
@@ -811,7 +812,7 @@ namespace Appalachia.Audio
         private void OnPlayModeStateChanged(PlayModeStateChange change)
         {
             EditorApplication.update -= Repaint;
-            if (Application.isPlaying)
+            if (AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 EditorApplication.update += Repaint;
             }

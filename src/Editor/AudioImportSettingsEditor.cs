@@ -3,14 +3,24 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.CI.Integration.FileSystem;
+using Appalachia.Core.Attributes;
+using Appalachia.Utility.Strings;
 using UnityEditor;
 using UnityEngine;
 
 namespace Appalachia.Audio
 {
     [CustomEditor(typeof(AudioImportSettings))]
+    [CallStaticConstructorInEditor]
     public class AudioImportSettingsEditor : UnityEditor.Editor
     {
+        static AudioImportSettingsEditor()
+        {
+            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+        }
+
+        private static AudioImportSettings _audioImportSettings;
+        
         #region Constants and Static Readonly
 
         public static readonly Dictionary<string, int> overridesTable = new();
@@ -60,6 +70,11 @@ namespace Appalachia.Audio
 
         public override void OnInspectorGUI()
         {
+            if (!AudioImportSettings.IsInstanceAvailable)
+            {
+                return;
+            }
+            
             GUI.color = ColorizeDrawer.GetColor(0);
 
             if (GUILayout.Button("Apply"))
@@ -70,7 +85,7 @@ namespace Appalachia.Audio
                     overrideProperty => { }
                 );
                 AssetDatabaseManager.ImportAsset(
-                    AudioImportSettings.instance.AssetPath,
+                    _audioImportSettings.AssetPath,
                     ImportAssetOptions.ForceUpdate | ImportAssetOptions.ImportRecursive
                 );
                 overridesTable.Clear();
@@ -340,7 +355,11 @@ namespace Appalachia.Audio
 
             _stopwatch.Stop();
 
-            _refreshText = $"Found {guids.Length} AudioClips in {_stopwatch.Elapsed.TotalSeconds:N2}s";
+            _refreshText = ZString.Format(
+                "Found {0} AudioClips in {1:N2}s",
+                guids.Length,
+                _stopwatch.Elapsed.TotalSeconds
+            );
         }
 
         private void ResetCaches()

@@ -1,4 +1,3 @@
-// #define SEQUENCER_PARANOIA
 
 #region
 

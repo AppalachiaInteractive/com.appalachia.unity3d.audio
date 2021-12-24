@@ -3,7 +3,11 @@
 using System.Text;
 using Appalachia.Audio.Utilities;
 using Appalachia.CI.Integration.Assets;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Utility.Async;
+using Appalachia.Utility.Strings;
 using Sirenix.OdinInspector;
+using Unity.Profiling;
 using UnityEngine;
 
 #endregion
@@ -11,7 +15,7 @@ using UnityEngine;
 namespace Appalachia.Audio.Behaviours
 {
     [ExecuteAlways]
-    public class AudioZone : Zone
+    public class AudioZone : Zone<AudioZone>
     {
         public enum Ownership
         {
@@ -21,13 +25,15 @@ namespace Appalachia.Audio.Behaviours
 
         #region Fields and Autoproperties
 
-        [MinMaxSlider(0, 1, true)] public Vector2 peripheralFade = new() { x = 1f, y = 1f };
+        [MinMaxSlider(0, 1, true)]
+        public Vector2 peripheralFade = new() { x = 1f, y = 1f };
+
         public LayerMask layerMask = -1;
 
         public Ownership ownership;
 
-        [ShowInInspector]
-        internal AudioEmitter[] emitters;
+        [ShowInInspector] internal AudioEmitter[] emitters;
+
         internal float sqrDistance;
         internal float sqrRadius;
         internal int lastFrame;
@@ -40,35 +46,41 @@ namespace Appalachia.Audio.Behaviours
 
         #region Event Functions
 
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            lastFrame = -1;
-        }
+        protected override async AppaTask WhenDisabled()
 
-        protected new void OnDisable()
         {
-            for (int i = 0, n = emitters.Length; i < n; ++i)
             {
-                emitters[i].enabled = false;
+                await base.WhenDisabled();
+                for (int i = 0, n = emitters.Length; i < n; ++i)
+                {
+                    emitters[i].enabled = false;
+                }
             }
-
-            base.OnDisable();
         }
 
         protected void OnTriggerEnter(Collider c)
         {
-            if ((_trigger != null) && ((layerMask & (1 << c.gameObject.layer)) != 0) && (_triggerRefs++ == 0))
+            using (_PRF_OnTriggerEnter.Auto())
             {
-                SetActive(true);
+                if ((_trigger != null) &&
+                    ((layerMask & (1 << c.gameObject.layer)) != 0) &&
+                    (_triggerRefs++ == 0))
+                {
+                    SetActive(true);
+                }
             }
         }
 
         protected void OnTriggerExit(Collider c)
         {
-            if ((_trigger != null) && ((layerMask & (1 << c.gameObject.layer)) != 0) && (--_triggerRefs == 0))
+            using (_PRF_OnTriggerExit.Auto())
             {
-                SetActive(false);
+                if ((_trigger != null) &&
+                    ((layerMask & (1 << c.gameObject.layer)) != 0) &&
+                    (--_triggerRefs == 0))
+                {
+                    SetActive(false);
+                }
             }
         }
 
@@ -76,46 +88,97 @@ namespace Appalachia.Audio.Behaviours
 
         public static AudioEmitter[] FindEmitters(AudioZone z)
         {
-            return z.ownership == Ownership.Local
-                ? z.GetComponents<AudioEmitter>()
-                : z.GetComponentsInChildren<AudioEmitter>();
+            using (_PRF_FindEmitters.Auto())
+            {
+                return z.ownership == Ownership.Local
+                    ? z.GetComponents<AudioEmitter>()
+                    : z.GetComponentsInChildren<AudioEmitter>();
+            }
+        }
+
+        protected override async AppaTask Initialize(Initializer initializer)
+        {
+            using (_PRF_Initialize.Auto())
+            {
+                await base.Initialize(initializer);
+
+                lastFrame = -1;
+            }
         }
 
         protected override void OnInit()
         {
-            base.OnInit();
-            emitters = FindEmitters(this);
-            for (int i = 0, n = emitters.Length; i < n; ++i)
+            using (_PRF_OnInit.Auto())
             {
-                emitters[i].zone = this;
+                base.OnInit();
+
+                emitters = FindEmitters(this);
+                for (int i = 0, n = emitters.Length; i < n; ++i)
+                {
+                    emitters[i].zone = this;
+                }
             }
         }
 
         protected override void OnProbe(Vector3 lpos, int thisFrame)
         {
-            if ((_trigger == null) && (lastFrame != thisFrame))
+            using (_PRF_OnProbe.Auto())
             {
-                lastFrame = thisFrame;
+                if ((_trigger == null) && (lastFrame != thisFrame))
+                {
+                    lastFrame = thisFrame;
 
-                var pos = transform.position;
-                sqrDistance = (lpos - pos).sqrMagnitude;
-                sqrRadius = radius * radius;
-                SetActive(sqrDistance <= sqrRadius);
+                    var pos = transform.position;
+                    sqrDistance = (lpos - pos).sqrMagnitude;
+                    sqrRadius = radius * radius;
+                    SetActive(sqrDistance <= sqrRadius);
+                }
             }
         }
 
         protected override void OnUpdateEmitters()
         {
-            var wantEnabledEmitters = (active == true) && (volumeExclusion < 1f);
-            if (hasEnabledEmitters != wantEnabledEmitters)
+            using (_PRF_OnUpdateEmitters.Auto())
             {
-                hasEnabledEmitters = wantEnabledEmitters;
-                for (int i = 0, n = emitters.Length; i < n; ++i)
+                var wantEnabledEmitters = (active == true) && (volumeExclusion < 1f);
+                if (hasEnabledEmitters != wantEnabledEmitters)
                 {
-                    emitters[i].enabled = wantEnabledEmitters;
+                    hasEnabledEmitters = wantEnabledEmitters;
+                    for (int i = 0, n = emitters.Length; i < n; ++i)
+                    {
+                        emitters[i].enabled = wantEnabledEmitters;
+                    }
                 }
             }
         }
+
+        #region Profiling
+
+        private const string _PRF_PFX = nameof(AudioZone) + ".";
+
+        private static readonly ProfilerMarker _PRF_Initialize =
+            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
+
+        private static readonly ProfilerMarker _PRF_OnTriggerEnter =
+            new ProfilerMarker(_PRF_PFX + nameof(OnTriggerEnter));
+
+        private static readonly ProfilerMarker _PRF_OnTriggerExit =
+            new ProfilerMarker(_PRF_PFX + nameof(OnTriggerExit));
+
+        private static readonly ProfilerMarker _PRF_OnDisable =
+            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
+
+        private static readonly ProfilerMarker _PRF_OnProbe = new ProfilerMarker(_PRF_PFX + nameof(OnProbe));
+
+        private static readonly ProfilerMarker _PRF_OnUpdateEmitters =
+            new ProfilerMarker(_PRF_PFX + nameof(OnUpdateEmitters));
+
+        private static readonly ProfilerMarker _PRF_FindEmitters =
+            new ProfilerMarker(_PRF_PFX + nameof(FindEmitters));
+
+        private static readonly ProfilerMarker _PRF_OnInit = new ProfilerMarker(_PRF_PFX + nameof(OnInit));
+
+        #endregion
 
 #if UNITY_EDITOR
 
@@ -129,7 +192,7 @@ namespace Appalachia.Audio.Behaviours
 
         protected void OnSceneGUI()
         {
-            var z = (Zone)this;
+            var z = this;
             var p = z.transform.position;
 
             DrawZoneLabel(z, p);
@@ -140,7 +203,7 @@ namespace Appalachia.Audio.Behaviours
                 var v = u.transform.position;
                 if (u is AudioZone)
                 {
-                    DrawZoneLabel((AudioZone)u, v);
+                    DrawZoneLabel(u, v);
                 }
             }
 
@@ -163,31 +226,28 @@ namespace Appalachia.Audio.Behaviours
 
         #endregion
 
-        public static void DrawZoneLabelStatic(Zone z, Vector3 p)
+        public static void DrawZoneLabelStatic(AudioZone z, Vector3 p)
         {
-            if (z is AudioZone zone)
+            var e = FindEmitters(z);
+            if (e.Length > 0)
             {
-                var e = FindEmitters(zone);
-                if (e.Length > 0)
+                var first = true;
+                foreach (var i in e)
                 {
-                    var first = true;
-                    foreach (var i in e)
+                    if (i.patches != null)
                     {
-                        if (i.patches != null)
+                        for (int j = 0, k = i.patches.Length; j < k; ++j)
                         {
-                            for (int j = 0, k = i.patches.Length; j < k; ++j)
+                            if (i.patches[j])
                             {
-                                if (i.patches[j])
+                                if (first)
                                 {
-                                    if (first)
-                                    {
-                                        first = false;
-                                        builder.Append('\n');
-                                    }
-
+                                    first = false;
                                     builder.Append('\n');
-                                    builder.Append(i.patches[j].name);
                                 }
+
+                                builder.Append('\n');
+                                builder.Append(i.patches[j].name);
                             }
                         }
                     }
@@ -228,14 +288,14 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
-        protected override void DrawZoneLabel(Zone z, Vector3 p)
+        protected override void DrawZoneLabel(AudioZone z, Vector3 p)
         {
             DrawZoneLabelStatic(z, p);
         }
 
-        protected static string GetZoneCaption(Zone z)
+        protected static string GetZoneCaption(AudioZone z)
         {
-            return $"{z.name} ({z.GetRadius():N2})";
+            return ZString.Format("{0} ({1:N2})", z.name, z.GetRadius());
         }
 
         #region Menu Items

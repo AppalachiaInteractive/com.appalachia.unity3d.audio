@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Appalachia.Core.Objects.Root;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace Appalachia.Audio.Analysis
 {
     [Serializable]
-    public class AudioSignalSmoothAnalyzer
+    public class AudioSignalSmoothAnalyzer : AppalachiaSimpleBase
     {
         #region Fields and Autoproperties
 

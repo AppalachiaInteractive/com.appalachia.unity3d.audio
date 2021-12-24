@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9193015945276594aa8496229852721f, type: 3}
+  m_Name: AudioImportSettings
+  m_EditorClassIdentifier: 
+  _initializationData:
+    _tags: []
+    _resetToken: 
+  _cachedName: 
+  _niceName: 
+  overrides:
+  - settings:
+    - loadType: 1
+      compressionFormat: 2
+      target: 0
+      quality: 1
+    visible: 0
+    filter: player
+  - settings:
+    - loadType: 1
+      compressionFormat: 3
+      target: 0
+      quality: 1
+    - loadType: 1
+      compressionFormat: 9
+      target: 1
+      quality: 1
+    - loadType: 1
+      compressionFormat: 6
+      target: 3
+      quality: 1
+    visible: 0
+    filter: wind;breeze
+  - settings:
+    - loadType: 1
+      compressionFormat: 3
+      target: 0
+      quality: 1
+    - loadType: 1
+      compressionFormat: 9
+      target: 1
+      quality: 1
+    - loadType: 1
+      compressionFormat: 6
+      target: 3
+      quality: 1
+    visible: 0
+    filter: music;tambu;drone;forest_cut;m_hits;structure
+  - settings:
+    - loadType: 1
+      compressionFormat: 2
+      target: 0
+      quality: 1
+    visible: 0
+    filter: 

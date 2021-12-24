@@ -1,4 +1,5 @@
 using System;
+using Appalachia.Utility.Strings;
 using UnityEditor;
 using UnityEngine;
 
@@ -66,7 +67,7 @@ namespace Appalachia.Audio
                 {
                     EditorGUI.DrawRect(new Rect(r.x, y, r.width, 1f), lineColor);
 
-                    var text = $"{t:F0} dB";
+                    var text = ZString.Format("{0:F0} dB", t);
                     GUI.Label(new Rect(r.x, y, 45f, 15f), text, textStyle10RightAligned);
 
                     py = y;
@@ -92,7 +93,9 @@ namespace Appalachia.Audio
                     EditorGUI.DrawRect(new Rect(x, r.yMax - 5f, 1f, 5f), col);
                     GUI.Label(
                         new Rect(x, r.yMax - 22f, 1, 15f),
-                        f < 1000.0f ? $"{f:F0} Hz" : $"{f * 0.001f:F1} kHz",
+                        f < 1000.0f
+                            ? ZString.Format("{0:F0} Hz",  f)
+                            : ZString.Format("{0:F1} kHz", f * 0.001f),
                         textStyle10
                     );
                     px = x;
@@ -130,7 +133,9 @@ namespace Appalachia.Audio
 
                     EditorGUI.DrawRect(new Rect(x, r.y, 1f, r.height), lineColor);
 
-                    var text = t0 > -1.0f ? $"{t0 * 1000.0f:F0} ms" : $"{t0:F1} s";
+                    var text = t0 > -1.0f
+                        ? ZString.Format("{0:F0} ms", t0 * 1000.0f)
+                        : ZString.Format("{0:F1} s",  t0);
                     GUI.Label(new Rect(x, r.y, 1f, 15f), text, textStyle10);
 
                     px = x;

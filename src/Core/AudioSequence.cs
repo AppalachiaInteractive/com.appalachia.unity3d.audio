@@ -2,7 +2,7 @@
 
 using System;
 using Appalachia.Audio.Scriptables;
-using Appalachia.Audio.Utilities;
+using Appalachia.Utility.Execution;
 using Appalachia.Utility.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,7 +30,7 @@ namespace Appalachia.Audio.Core
 
         public bool Activate(ActivationParams ap)
         {
-            if ((lastHandle != ap.handle) || !Application.isPlaying)
+            if ((lastHandle != ap.handle) || !AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 lastHandle = ap.handle;
                 return Synthesizer.Activate(this, ap);

@@ -3,100 +3,147 @@
 using System;
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Utilities;
-using Appalachia.Core.Scriptables;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
+using Unity.Profiling;
 using UnityEngine;
 
 #endregion
 
 namespace Appalachia.Audio.Scriptables
 {
-    public sealed class Patch : AppalachiaObject
+    public sealed class Patch : AppalachiaObject<Patch>
     {
         #region Fields and Autoproperties
 
-        [BoxGroup("Program"), HideLabel] public AudioProgram program;
+        [BoxGroup("Program"), HideLabel]
+        public AudioProgram program;
 
-        [BoxGroup("Sequence"), HideLabel] public AudioSequence sequence;
+        [BoxGroup("Sequence"), HideLabel]
+        public AudioSequence sequence;
 
         [NonSerialized] public bool hasTimings;
 
         #endregion
 
-        #region Event Functions
-
-        protected override void OnEnable()
+        public bool Activate(ActivationParams ap)
         {
-            base.OnEnable();
-            if (program != null)
+            using (_PRF_Activate.Auto())
             {
-                program.patch = this;
-                program.Initialize();
-            }
-
-            if (sequence != null)
-            {
-                sequence.patch = this;
-                hasTimings = (sequence.timing != null) && (sequence.timing.Length > 0);
+                return hasTimings
+                    ? sequence.Activate(ap)
+                    : program.Activate(
+                        ap
+#if UNITY_EDITOR
+                        ,
+                        this
+#endif
+                    );
             }
         }
 
-        #endregion
-
-        public bool Activate(ActivationParams ap)
+        public bool Activate(ActivationParams ap, AudioParameters.EnvelopeParams ep)
         {
-            return hasTimings
-                ? sequence.Activate(ap)
-                : program.Activate(
-                    ap
+            using (_PRF_Activate.Auto())
+            {
+                return program.Activate(
+                    ap,
+                    ep
 #if UNITY_EDITOR
                     ,
                     this
 #endif
                 );
-        }
-
-        public bool Activate(ActivationParams ap, AudioParameters.EnvelopeParams ep)
-        {
-            return program.Activate(
-                ap,
-                ep
-#if UNITY_EDITOR
-                ,
-                this
-#endif
-            );
+            }
         }
 
         public int GetClipIndex()
         {
-            return !program.randomize ? program.clipIndex : -1;
+            using (_PRF_GetClipIndex.Auto())
+            {
+                return !program.randomize ? program.clipIndex : -1;
+            }
         }
 
         public bool GetCueInfo(out float duration, out int repeats)
         {
-            if (hasTimings)
+            using (_PRF_GetCueInfo.Auto())
             {
-                return sequence.GetCueInfo(out duration, out repeats);
-            }
+                if (hasTimings)
+                {
+                    return sequence.GetCueInfo(out duration, out repeats);
+                }
 
-            duration = 0f;
-            repeats = 0;
-            return false;
+                duration = 0f;
+                repeats = 0;
+                return false;
+            }
         }
 
         public void SetClipIndex(int index)
         {
-            if (!program.randomize)
+            using (_PRF_SetClipIndex.Auto())
             {
-                program.clipIndex = index;
+                if (!program.randomize)
+                {
+                    program.clipIndex = index;
+                }
             }
         }
 
         internal float GetMaxDuration()
         {
-            return Mathf.Max(program.GetMaxDuration(), sequence.GetMaxDuration());
+            using (_PRF_GetMaxDuration.Auto())
+            {
+                return Mathf.Max(program.GetMaxDuration(), sequence.GetMaxDuration());
+            }
         }
+
+        protected override async AppaTask Initialize(Initializer initializer)
+        {
+            using (_PRF_Initialize.Auto())
+            {
+                await base.Initialize(initializer);
+
+                if (program != null)
+                {
+                    program.patch = this;
+                    program.Initialize();
+                }
+
+                if (sequence != null)
+                {
+                    sequence.patch = this;
+                    hasTimings = (sequence.timing != null) && (sequence.timing.Length > 0);
+                }
+            }
+        }
+
+        #region Profiling
+
+        private const string _PRF_PFX = nameof(Patch) + ".";
+
+        private static readonly ProfilerMarker
+            _PRF_Activate = new ProfilerMarker(_PRF_PFX + nameof(Activate));
+
+        private static readonly ProfilerMarker _PRF_GetClipIndex =
+            new ProfilerMarker(_PRF_PFX + nameof(GetClipIndex));
+
+        private static readonly ProfilerMarker _PRF_GetCueInfo =
+            new ProfilerMarker(_PRF_PFX + nameof(GetCueInfo));
+
+        private static readonly ProfilerMarker _PRF_SetClipIndex =
+            new ProfilerMarker(_PRF_PFX + nameof(SetClipIndex));
+
+        private static readonly ProfilerMarker _PRF_GetMaxDuration =
+            new ProfilerMarker(_PRF_PFX + nameof(GetMaxDuration));
+
+        private static readonly ProfilerMarker _PRF_Initialize =
+            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
+
+        #endregion
 
 #if UNITY_EDITOR
 

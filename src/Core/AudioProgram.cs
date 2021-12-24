@@ -4,6 +4,8 @@ using System;
 using Appalachia.Audio.Scriptables;
 using Appalachia.Audio.Utilities;
 using Appalachia.Core.Attributes.Editing;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Execution;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -13,7 +15,7 @@ using UnityEngine.Audio;
 namespace Appalachia.Audio.Core
 {
     [Serializable]
-    public class AudioProgram
+    public class AudioProgram : AppalachiaSimpleBase
     {
         #region Fields and Autoproperties
 
@@ -50,7 +52,7 @@ namespace Appalachia.Audio.Core
             if (delayed ||
                 (!randomize && !increment) ||
                 (lastFrame != Time.frameCount) ||
-                !Application.isPlaying)
+                !AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 if (!delayed)
                 {
@@ -83,7 +85,7 @@ namespace Appalachia.Audio.Core
             if (delayed ||
                 (!randomize && !increment) ||
                 (lastFrame != Time.frameCount) ||
-                !Application.isPlaying)
+                !AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 if (!delayed)
                 {

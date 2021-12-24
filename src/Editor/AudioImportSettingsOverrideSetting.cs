@@ -1,10 +1,11 @@
 using System;
+using Appalachia.Core.Objects.Root;
 using UnityEngine;
 
 namespace Appalachia.Audio
 {
     [Serializable]
-    public class AudioImportSettingsOverrideSetting
+    public class AudioImportSettingsOverrideSetting : AppalachiaSimpleBase
     {
         #region Fields and Autoproperties
 

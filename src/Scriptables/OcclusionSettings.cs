@@ -1,7 +1,6 @@
 #region
 
-using Appalachia.Audio.Utilities;
-using Appalachia.Core.Scriptables;
+using Appalachia.Core.Objects.Root;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -16,10 +15,14 @@ namespace Appalachia.Audio.Scriptables
         public float speedOfSound = 340f;
         public LayerMask layerMask = 1;
 
-        [MinMaxSlider(0, 22000, true)] public Vector2 highPassRange = new() {x = 0, y = 1100};
+        [MinMaxSlider(0, 22000, true)]
+        public Vector2 highPassRange = new() { x = 0, y = 1100 };
 
-        [MinMaxSlider(0, 22000, true)] public Vector2 lowPassRange = new() {x = 4400, y = 22000};
+        [MinMaxSlider(0, 22000, true)]
+        public Vector2 lowPassRange = new() { x = 4400, y = 22000 };
 
         #endregion
+
+        
     }
 }

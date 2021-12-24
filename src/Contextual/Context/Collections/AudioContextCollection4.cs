@@ -3,6 +3,7 @@
 using System;
 using Appalachia.Audio.Contextual.Context.Contexts;
 using Appalachia.Core.Collections.NonSerialized;
+using Appalachia.Utility.Strings;
 
 #endregion
 
@@ -50,8 +51,20 @@ namespace Appalachia.Audio.Contextual.Context.Collections
                       Equals((TEnumSecondary) (object) si.parameters.secondary.value, secondary) &&
                       Equals((TEnumTertiary) (object) si.parameters.tertiary.value,   tertiary) &&
                       si.defaultFallback,
-                $"No context patch found for [{primary}, {secondary}, {tertiary}, {quaternary}].",
-                $"No fallback context patch found for [{primary}, {secondary}, {tertiary}, {quaternary}]."
+                ZString.Format(
+                    "No context patch found for [{0}, {1}, {2}, {3}].",
+                    primary,
+                    secondary,
+                    tertiary,
+                    quaternary
+                ),
+                ZString.Format(
+                    "No fallback context patch found for [{0}, {1}, {2}, {3}].",
+                    primary,
+                    secondary,
+                    tertiary,
+                    quaternary
+                )
             );
 
             if (context == null)

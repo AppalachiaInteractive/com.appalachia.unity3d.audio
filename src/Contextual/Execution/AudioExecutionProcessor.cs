@@ -3,7 +3,7 @@ using Appalachia.Audio.Contextual.Context.Collections;
 using Appalachia.Audio.Contextual.Context.Contexts;
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Scriptables;
-using Appalachia.Core.Behaviours;
+using Appalachia.Core.Objects.Root;
 using UnityEngine;
 
 namespace Appalachia.Audio.Contextual.Execution
@@ -13,7 +13,7 @@ namespace Appalachia.Audio.Contextual.Execution
         where TCollection : AudioContextCollection<TContext, TParams, TCollection>
         where TContext : AudioContext<TParams>
         where TParams : AudioContextParameters, new()
-        where TOwner : AppalachiaBehaviour
+        where TOwner : AppalachiaBehaviour<TOwner>
     {
         #region Fields and Autoproperties
 

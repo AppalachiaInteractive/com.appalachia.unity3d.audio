@@ -1,14 +1,28 @@
 using System;
+using Appalachia.Core.Attributes;
 using UnityEditor;
 
 namespace Appalachia.Audio
 {
+    [CallStaticConstructorInEditor]
     public class AudioImporter : AssetPostprocessor
     {
+        static AudioImporter()
+        {
+            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+        }
+
+        private static AudioImportSettings _audioImportSettings;
+        
         #region Event Functions
 
         protected void OnPreprocessAudio()
         {
+            if (!AudioImportSettings.IsInstanceAvailable)
+            {
+                return;
+            }
+            
             int overrideIndex;
 
             if (!AudioImportSettingsEditor.overridesTable.TryGetValue(assetPath, out overrideIndex))
@@ -16,8 +30,7 @@ namespace Appalachia.Audio
                 return;
             }
 
-            var importSettings = AudioImportSettings.instance;
-            var @override = importSettings.overrides[overrideIndex];
+            var @override = _audioImportSettings.overrides[overrideIndex];
 
             var importer = (UnityEditor.AudioImporter) assetImporter;
 

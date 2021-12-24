@@ -1,8 +1,11 @@
 #region
 
+using System;
 using Appalachia.Audio.Behaviours;
 using Appalachia.Audio.Utilities;
+using Appalachia.CI.Constants;
 using Appalachia.Utility.Extensions;
+using Appalachia.Utility.Strings;
 using UnityEngine;
 
 #endregion
@@ -11,6 +14,20 @@ namespace Appalachia.Audio.Core
 {
     public struct Cue
     {
+        [NonSerialized] private static AppaContext _context;
+
+        private static AppaContext Context
+        {
+            get
+            {
+                if (_context == null)
+                {
+                    _context = new AppaContext(typeof(Cue));
+                }
+
+                return _context;
+            }
+        }
         #region Fields and Autoproperties
 
         public AudioEmitter emitter;
@@ -27,15 +44,24 @@ namespace Appalachia.Audio.Core
 
         #endregion
 
+        
+
         public void KeyOff(float release, EnvelopeMode mode)
         {
-#if SEQUENCER_PARANOIA
-        AppaLog.Info(string.Format(
-            Time.frameCount.ToString("X4") +
-            " Sequencer.KeyOff: {0} {1} : {2} {3}",
-            emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???",
-            release, mode);
-#endif
+            if (Synthesizer.SynthesizerLoggingEnabled)
+            {
+                Context.Log.Info(
+                    ZString.Format(
+                        "{0:X4} Sequencer.KeyOff: {1} {2} : {3} {4}",
+                        Time.frameCount,
+                        emitter.name,
+                        emitter.patches[index] ? emitter.patches[index].name : "???",
+                        release,
+                        mode
+                    )
+                );
+            }
+
             if (keyHandle != 0)
             {
                 Synthesizer.KeyOff(keyHandle, release, mode);
@@ -46,12 +72,17 @@ namespace Appalachia.Audio.Core
 
         public bool KeyOn()
         {
-#if SEQUENCER_PARANOIA
-        AppaLog.Info(string.Format(
-            Time.frameCount.ToString("X4") +
-            " Sequencer.KeyOn: {0} {1}",
-            emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???");
-#endif
+            if (Synthesizer.SynthesizerLoggingEnabled)
+            {
+                Context.Log.Info(
+                    ZString.Format(
+                        "{0:X4} Sequencer.KeyOn: {1} {2}",
+                        Time.frameCount,
+                        emitter.name,
+                        emitter.patches[index] ? emitter.patches[index].name : "???"
+                    )
+                );
+            }
             if (Randomizer.zeroToOne <= emitter.randomization.chance)
             {
                 if (emitter.auxiliary.source)
@@ -83,8 +114,7 @@ namespace Appalachia.Audio.Core
                         soundPosition.z = Mathf.Cos(randomAngle) * randomDistance;
                     }
 
-                    float v;
-                    UpdateModVolume(out v, 1000f);
+                    UpdateModVolume(out var v, 1000f);
                     keyHandle = Synthesizer.KeyOn(
                         out looping,
                         emitter.patches[index],
@@ -126,17 +156,25 @@ namespace Appalachia.Audio.Core
                     {
                         cueStatus = CueStatus.Repeating;
                     }
-#if SEQUENCER_PARANOIA
-                AppaLog.Info(string.Format(
-                    Time.frameCount.ToString("X4") +
-                    " Cue.Update: {0} {1} {2} {3}/{4} {5}/{6}",
-                    emitter.name, emitter.patches[index] ? emitter.patches[index].name : "???",
-                    s, currentTime, totalTime, repeatIndex, repeatCount);
-#endif
+
+                    if (Synthesizer.SynthesizerLoggingEnabled)
+                    {
+                        Context.Log.Info(
+                            ZString.Format(
+                                "{0:X4} Cue.Update: {1} {2} {3}/{4} {5}/{6}",
+                                Time.frameCount,
+                                emitter.name,
+                                emitter.patches[index] ? emitter.patches[index].name : "???",
+                                currentTime,
+                                totalTime,
+                                repeatIndex,
+                                repeatCount
+                            )
+                        );
+                    }
                 }
 
-                float v;
-                if (UpdateModVolume(out v, dt))
+                if (UpdateModVolume(out var v, dt))
                 {
                     if (keyHandle != 0)
                     {

@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using Appalachia.Audio.Scriptables;
 using Appalachia.Core.Attributes.Editing;
-using Appalachia.Core.Scriptables;
+using Appalachia.Core.Objects.Scriptables;
 using Sirenix.OdinInspector;
 
 #endregion
@@ -12,7 +12,7 @@ using Sirenix.OdinInspector;
 namespace Appalachia.Audio.Contextual
 {
     [Serializable]
-    public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject
+    public sealed class ContextualAudioPatch : IdentifiableAppalachiaObject<ContextualAudioPatch>
     {
         #region Fields and Autoproperties
 

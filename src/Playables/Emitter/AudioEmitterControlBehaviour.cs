@@ -5,7 +5,7 @@ using UnityEngine.Playables;
 namespace Appalachia.Audio.Playables.Emitter
 {
     [Serializable]
-    public class AudioEmitterControlBehaviour : PlayableBehaviour
+    public class AudioEmitterControlBehaviour : AppalachiaPlayable
     {
         #region Fields and Autoproperties
 
@@ -13,11 +13,7 @@ namespace Appalachia.Audio.Playables.Emitter
 
         #endregion
 
-        public override void OnPlayableDestroy(Playable playable)
-        {
-        }
-
-        public override void ProcessFrame(Playable playable, FrameData info, object playerData)
+        protected override void ExecuteFrame(Playable playable, FrameData info, object playerData)
         {
             var emitter = playerData as AudioEmitter;
 

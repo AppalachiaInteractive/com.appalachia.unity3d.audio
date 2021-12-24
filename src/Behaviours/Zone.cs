@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Utilities;
-using Appalachia.Core.Behaviours;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
 using Unity.Profiling;
 using UnityEngine;
@@ -14,16 +16,18 @@ using UnityEngine;
 namespace Appalachia.Audio.Behaviours
 {
     [ExecuteAlways]
-    public abstract class Zone : AppalachiaBehaviour
+    public abstract class Zone<T> : AppalachiaBehaviour<T>
+        where T : Zone<T>
     {
         #region Constants and Static Readonly
 
-        public static readonly List<Zone> allZones = new();
+        public static readonly List<T> allZones = new();
 
         #endregion
 
         #region Static Fields and Autoproperties
 
+        // ReSharper disable once StaticMemberInGenericType
         public static bool dontProbeZones;
 
         #endregion
@@ -33,17 +37,17 @@ namespace Appalachia.Audio.Behaviours
         [PropertyRange(0, 1)] public float parentExclusion;
 
         public float radius = 5f;
-        internal bool inited;
+        internal bool hasBeenInitialized;
         internal bool wantActive;
 
         internal float volumeExclusion;
         internal float volumeInfluence;
 
         internal int hash;
-        internal List<Zone> children;
+        internal List<T> children;
         internal TernaryBool active;
 
-        internal Zone parent;
+        internal T parent;
 
         protected Collider _trigger;
         protected int _triggerRefs;
@@ -52,19 +56,18 @@ namespace Appalachia.Audio.Behaviours
 
         public bool isVolumeExcluded => volumeExclusion > 0f;
 
-        public Collider trigger => inited ? _trigger : FindTrigger(this);
-
-        protected override bool InitializeAlways => true;
+        public Collider trigger => hasBeenInitialized ? _trigger : FindTrigger(this as T);
 
         #region Event Functions
 
-        protected override void OnDisable()
-        {
-            using (_PRF_OnDisable.Auto())
-            {
-                base.OnDisable();
+        protected override async AppaTask WhenDisabled()
 
-                allZones.Remove(this);
+        {
+            
+            {
+                await base.WhenDisabled();
+
+                allZones.Remove(this as T);
                 OnUpdateActivation(false);
                 _triggerRefs = 0;
             }
@@ -72,13 +75,13 @@ namespace Appalachia.Audio.Behaviours
 
         #endregion
 
-        public static Collider FindTrigger(Zone z)
+        public static Collider FindTrigger(T z)
         {
             var c = z.GetComponent<Collider>();
             return (c != null) && c.isTrigger ? c : null;
         }
 
-        public Zone FindParentZone()
+        public T FindParentZone()
         {
             return FindParentZoneRecursive(transform.parent);
         }
@@ -100,13 +103,13 @@ namespace Appalachia.Audio.Behaviours
 
         protected virtual void OnInit()
         {
-            if ((_trigger = FindTrigger(this)) == null)
+            if ((_trigger = FindTrigger(this as T)) == null)
             {
                 RegisterWithParentZone();
             }
 
             hash = (int)Synthesizer.GetNextHandle();
-            inited = true;
+            hasBeenInitialized = true;
         }
 
         protected virtual void OnProbe(Vector3 lpos, int thisFrame)
@@ -117,18 +120,22 @@ namespace Appalachia.Audio.Behaviours
         {
         }
 
-        protected override void Initialize()
+        protected override async AppaTask Initialize(Initializer initializer)
         {
             using (_PRF_Initialize.Auto())
             {
-                base.Initialize();
+                await base.Initialize(initializer);
 
-                if (!inited)
+                if (!hasBeenInitialized)
                 {
                     OnInit();
+                    await AppaTask.Yield();
                 }
 
-                allZones.Add(this);
+                allZones.Add(this as T);
+
+                await AppaTask.Yield();
+                
                 OnUpdateActivation(wantActive);
             }
         }
@@ -195,7 +202,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
-        private static void UpdateExclusionDepthFirst(Zone z, out float exclusion)
+        private static void UpdateExclusionDepthFirst(Zone<T> z, out float exclusion)
         {
             // calculate max exclusion of all children
             var e = 0f;
@@ -258,15 +265,25 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
-        private Zone FindParentZoneRecursive(Transform t)
+        private static T FindParentZoneRecursive(Transform t)
         {
-            if (t != null)
+            while (true)
             {
-                var z = t.GetComponent<Zone>();
-                return z != null ? z : FindParentZoneRecursive(t.parent);
-            }
+                if (t != null)
+                {
+                    var z = t.GetComponent<T>();
+                    if (z != null)
+                    {
+                        return z;
+                    }
 
-            return null;
+                    t = t.parent;
+                    continue;
+                }
+
+                return null;
+                break;
+            }
         }
 
         private void RegisterWithParentZone()
@@ -276,17 +293,17 @@ namespace Appalachia.Audio.Behaviours
             {
                 if (z.children == null)
                 {
-                    z.children = new List<Zone>(4);
+                    z.children = new List<T>(4);
                 }
 
-                z.children.Add(this);
+                z.children.Add(this as T);
                 parent = z;
             }
         }
 
         #region Profiling
 
-        private const string _PRF_PFX = nameof(Zone) + ".";
+        private const string _PRF_PFX = nameof(Zone<T>) + ".";
 
         private static readonly ProfilerMarker _PRF_Initialize =
             new ProfilerMarker(_PRF_PFX + nameof(Initialize));
@@ -322,7 +339,7 @@ namespace Appalachia.Audio.Behaviours
             return IsActive() ? gizmo.activeColor : gizmo.inactiveColor;
         }
 
-        protected virtual void DrawZoneLabel(Zone z, Vector3 p)
+        protected virtual void DrawZoneLabel(T z, Vector3 p)
         {
         }
 #endif

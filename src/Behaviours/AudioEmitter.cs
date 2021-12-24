@@ -4,7 +4,9 @@ using System;
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Scriptables;
 using Appalachia.CI.Integration.Assets;
-using Appalachia.Core.Behaviours;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
 using Unity.Profiling;
 using UnityEngine;
@@ -15,7 +17,7 @@ using UnityEngine.Serialization;
 namespace Appalachia.Audio.Behaviours
 {
     [AddComponentMenu(PKG.Menu.Appalachia.Components.Base + nameof(AudioEmitter))]
-    public class AudioEmitter : AppalachiaBehaviour
+    public sealed class AudioEmitter : AppalachiaBehaviour<AudioEmitter>
     {
         public enum Controller
         {
@@ -71,20 +73,13 @@ namespace Appalachia.Audio.Behaviours
 
         #region Event Functions
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+        protected override async AppaTask WhenDisabled()
 
-            if (autoCue)
+        {
             {
-                CueIn();
+                await base.WhenDisabled();
+                CueOut();
             }
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            CueOut();
         }
 
         #endregion
@@ -143,18 +138,23 @@ namespace Appalachia.Audio.Behaviours
             paused = p;
         }
 
-        protected override void Initialize()
+        protected override async AppaTask Initialize(Initializer initializer)
         {
             using (_PRF_Initialize.Auto())
             {
-                base.Initialize();
+                await base.Initialize(initializer);
 
                 if (controller == Controller.None)
                 {
-                    controller = !zone && !GetComponent<Zone>() ? Controller.User : Controller.Zone;
+                    controller = !zone && !GetComponent<AudioZone>() ? Controller.User : Controller.Zone;
                 }
 
                 enabled = controller != Controller.Zone;
+
+                if (autoCue)
+                {
+                    CueIn();
+                }
             }
         }
 
@@ -262,7 +262,7 @@ namespace Appalachia.Audio.Behaviours
 
 #if UNITY_EDITOR
 
-        protected void OnSceneGUI()
+        private void OnSceneGUI()
         {
             var t = transform;
             AudioZone z = null;

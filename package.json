@@ -29,11 +29,11 @@
     "com.appalachia.unity3d.rendering": "0.2.0",
     "com.appalachia.unity3d.third-party.sirenix": "0.2.0",
     "com.appalachia.unity3d.utility": "0.2.0",
-    "com.unity.addressables": "1.19.9",
-    "com.unity.collections": "1.0.0-pre.6",
+    "com.unity.addressables": "1.19.11",
+    "com.unity.collections": "1.1.0",
     "com.unity.inputsystem": "1.1.1",
-    "com.unity.mathematics": "1.2.4",
-    "com.unity.render-pipelines.core": "12.1.0",
+    "com.unity.mathematics": "1.2.5",
+    "com.unity.render-pipelines.core": "12.1.1",
     "com.unity.timeline": "1.6.2"
   },
   "scripts": {

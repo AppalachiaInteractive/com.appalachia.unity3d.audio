@@ -8,5 +8,6 @@ namespace Appalachia.Audio.Contextual.Sounds.Environment
     public class AmbienceSounds : AudioContextCollection4<Biome_AudioContexts, Season_AudioContexts,
         Weather_AudioContexts, TimeOfDay_AudioContexts, AmbienceSounds>
     {
+        
     }
 }

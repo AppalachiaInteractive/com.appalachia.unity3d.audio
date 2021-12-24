@@ -2,13 +2,16 @@
 
 using System.Collections.Generic;
 using Appalachia.CI.Integration.Assets;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Utility.Async;
+using Unity.Profiling;
 using UnityEngine;
 
 #endregion
 
 namespace Appalachia.Audio.Behaviours
 {
-    public class AudioSlapback : Zone
+    public class AudioSlapback : Zone<AudioSlapback>
     {
         #region Constants and Static Readonly
 
@@ -18,75 +21,95 @@ namespace Appalachia.Audio.Behaviours
 
         #region Event Functions
 
-        protected new void OnEnable()
-        {
-            base.OnEnable();
-            allSlapbacks.Add(this);
-        }
+        protected override async AppaTask WhenDisabled()
 
-        protected new void OnDisable()
         {
-            allSlapbacks.Remove(this);
-            base.OnDisable();
+            {
+                await base.WhenDisabled();
+
+                allSlapbacks.Remove(this);
+            }
         }
 
         #endregion
 
         public static AudioSlapback FindClosest(Vector3 p, out Vector3 rp, out Vector3 rd)
         {
-            var lp = Heartbeat.listenerTransform.position;
-            var dp = Mathf.Infinity;
-            AudioSlapback z = null;
-
-            rp = Vector3.zero;
-            rd = Vector3.zero;
-            p.y = 0f;
-
-            foreach (var i in allSlapbacks)
+            using (_PRF_FindClosest.Auto())
             {
-                var t = i.transform;
-                var qq = t.position;
-                var q = qq;
-                q.y = 0f;
+                var lp = Heartbeat.listenerTransform.position;
+                var dp = Mathf.Infinity;
+                AudioSlapback z = null;
 
-                var d = q - p;
-                var e = d.sqrMagnitude;
-                if (dp <= e)
+                rp = Vector3.zero;
+                rd = Vector3.zero;
+                p.y = 0f;
+
+                foreach (var i in allSlapbacks)
                 {
-                    continue;
+                    var t = i.transform;
+                    var qq = t.position;
+                    var q = qq;
+                    q.y = 0f;
+
+                    var d = q - p;
+                    var e = d.sqrMagnitude;
+                    if (dp <= e)
+                    {
+                        continue;
+                    }
+
+                    var fwd = t.forward;
+                    if (Vector3.Dot(d.normalized, fwd) >= 0f)
+                    {
+                        continue;
+                    }
+
+                    var ld = q - lp;
+                    if (Vector3.Dot(ld.normalized, fwd) >= 0f)
+                    {
+                        continue;
+                    }
+
+                    dp = e;
+                    rp = qq;
+                    rd = d;
+                    z = i;
                 }
 
-                var fwd = t.forward;
-                if (Vector3.Dot(d.normalized, fwd) >= 0f)
-                {
-                    continue;
-                }
-
-                var ld = q - lp;
-                if (Vector3.Dot(ld.normalized, fwd) >= 0f)
-                {
-                    continue;
-                }
-
-                dp = e;
-                rp = qq;
-                rd = d;
-                z = i;
+                return z;
             }
-
-            return z;
         }
 
-#if UNITY_EDITOR
-        
-        protected override void DrawZoneLabel(Zone z, Vector3 p)
+        protected override async AppaTask Initialize(Initializer initializer)
         {
-            if (!(z is AudioSlapback))
+            using (_PRF_Initialize.Auto())
             {
-                base.DrawZoneLabel(z, p);
-                return;
-            }
+                await base.Initialize(initializer);
 
+                allSlapbacks.Add(this);
+            }
+        }
+
+        #region Profiling
+
+        private const string _PRF_PFX = nameof(AudioSlapback) + ".";
+
+        private static readonly ProfilerMarker _PRF_OnDisable =
+            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
+
+        private static readonly ProfilerMarker _PRF_FindClosest =
+            new ProfilerMarker(_PRF_PFX + nameof(FindClosest));
+
+        private static readonly ProfilerMarker _PRF_Initialize =
+            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
+
+        #endregion
+
+#if UNITY_EDITOR
+
+        protected override void DrawZoneLabel(AudioSlapback z, Vector3 p)
+        {
             UnityEditor.Handles.BeginGUI();
             var c = GUI.color;
             GUI.color = Color.white;
@@ -136,6 +159,7 @@ namespace Appalachia.Audio.Behaviours
         }
 
         #endregion
+
 #endif
     }
 }
