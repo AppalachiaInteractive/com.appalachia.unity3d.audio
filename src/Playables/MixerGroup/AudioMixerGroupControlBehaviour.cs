@@ -1,4 +1,7 @@
 using System;
+using Appalachia.Core.Objects.Initialization;
+using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Async;
 using Appalachia.Utility.Interpolation;
 using Appalachia.Utility.Interpolation.Modes;
 using Appalachia.Utility.Strings;
@@ -10,7 +13,7 @@ using UnityEngine.Playables;
 namespace Appalachia.Audio.Playables.MixerGroup
 {
     [Serializable]
-    public class AudioMixerGroupControlBehaviour : AppalachiaPlayable
+    public class AudioMixerGroupControlBehaviour : AppalachiaPlayable<AudioMixerGroupControlBehaviour>
     {
         #region Fields and Autoproperties
 
@@ -46,14 +49,22 @@ namespace Appalachia.Audio.Playables.MixerGroup
             }
         }
 
-        private static readonly ProfilerMarker _PRF_ExecuteFrame =
-            new ProfilerMarker(_PRF_PFX + nameof(ExecuteFrame));
-
-        private const string _PRF_PFX = nameof(AudioMixerGroupControlBehaviour) + ".";
-
-        protected override void ExecuteFrame(Playable playable, FrameData info, object playerData)
+        protected override async AppaTask Initialize(Initializer initializer)
         {
-            using (_PRF_ExecuteFrame.Auto())
+            await AppaTask.CompletedTask;
+        }
+
+        protected override void OnPause(Playable playable, FrameData info)
+        {
+        }
+
+        protected override void OnPlay(Playable playable, FrameData info)
+        {
+        }
+
+        protected override void Update(Playable playable, FrameData info, object playerData)
+        {
+            using (_PRF_Update.Auto())
             {
                 _audioMixerGroup = playerData as AudioMixerGroup;
 
@@ -95,12 +106,9 @@ namespace Appalachia.Audio.Playables.MixerGroup
             }
         }
 
-        private static readonly ProfilerMarker _PRF_ExecuteOnPlayableDestroy =
-            new ProfilerMarker(_PRF_PFX + nameof(ExecuteOnPlayableDestroy));
-
-        protected override void ExecuteOnPlayableDestroy(Playable playable)
+        protected override void WhenDestroyed(Playable playable)
         {
-            using (_PRF_ExecuteOnPlayableDestroy.Auto())
+            using (_PRF_WhenDestroyed.Auto())
             {
                 if (_audioMixerGroup != null)
                 {
@@ -126,5 +134,24 @@ namespace Appalachia.Audio.Playables.MixerGroup
                 _originalVolume = 0.0f;
             }
         }
+
+        protected override void WhenStarted(Playable playable)
+        {
+        }
+
+        protected override void WhenStopped(Playable playable)
+        {
+        }
+
+        #region Profiling
+
+        private const string _PRF_PFX = nameof(AudioMixerGroupControlBehaviour) + ".";
+
+        private static readonly ProfilerMarker _PRF_Update = new ProfilerMarker(_PRF_PFX + nameof(Update));
+
+        private static readonly ProfilerMarker _PRF_WhenDestroyed =
+            new ProfilerMarker(_PRF_PFX + nameof(WhenDestroyed));
+
+        #endregion
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 namespace Appalachia.Audio.Playables.MixerGroup
-{//BokBok_Attentuation_Volume
+{
     public class AudioMixerGroupClip : PlayableAsset, ITimelineClipAsset
     {
         #region Fields and Autoproperties

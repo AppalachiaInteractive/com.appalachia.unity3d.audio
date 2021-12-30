@@ -1,5 +1,6 @@
 using Appalachia.Audio.Core;
 using Appalachia.Audio.Scriptables;
+using Appalachia.Core.Attributes;
 using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
@@ -8,16 +9,20 @@ using UnityEngine;
 
 namespace Appalachia.Audio.Effects
 {
+    [CallStaticConstructorInEditor]
     public sealed class Occlusion : AppalachiaBehaviour<Occlusion>
     {
-        // [CallStaticConstructorInEditor] should be added to the class (initsingletonattribute)
         static Occlusion()
         {
             RegisterDependency<OcclusionSettings>(i => _occlusionSettings = i);
         }
 
+        #region Static Fields and Autoproperties
+
         private static OcclusionSettings _occlusionSettings;
-        
+
+        #endregion
+
         #region Fields and Autoproperties
 
         public AudioParameters.OcclusionParams occlusion;
