@@ -282,7 +282,6 @@ namespace Appalachia.Audio.Behaviours
                 }
 
                 return null;
-                break;
             }
         }
 

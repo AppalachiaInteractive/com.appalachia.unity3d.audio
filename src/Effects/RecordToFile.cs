@@ -25,6 +25,11 @@ namespace Appalachia.Audio.Effects
 
         private void Update()
         {
+            if (!DependenciesAreReady || !FullyInitialized)
+            {
+                return;
+            }
+            
             if (_recording)
             {
                 lock (_locker)

@@ -1,6 +1,6 @@
 namespace Appalachia.Audio.Contextual.Context
 {
-    public enum Weather_AudioContexts : short
+    public enum WeatherAudioContext : short
     {
         Normal = 0,
         BeforeInclementWeather = 10,

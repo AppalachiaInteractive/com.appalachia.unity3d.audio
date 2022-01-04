@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9a7c050aebc345911b77c9ff20638, type: 3}
   m_Name: Patch_20211202-083432113
   m_EditorClassIdentifier: 
-  _initializationData:
-    _nonSerializedTags: []
-    _tags: []
-    _resetToken: 
   _cachedName: 
   _niceName: 
+  _initializer:
+    _tags: []
+    _resetToken: 
   program:
     clips: []
     mixerGroup: {fileID: 0}
@@ -27,18 +26,10 @@ MonoBehaviour:
         attack: 0
         release: 0
       panning: 0
-      pitch:
-        max: 1.05
-        min: 0.95
-      volume:
-        max: 1
-        min: 0.9
       occlusion:
         function: 0
       randomization:
-        distance:
-          max: 0
-          min: 0
+        distance: {x: 0, y: 0}
       runtime:
         priority: 128
       slapback:
@@ -46,15 +37,13 @@ MonoBehaviour:
       spatial:
         blend: 1
         doppler: 0.8
-        distance:
-          max: 40
-          min: 1
+        distance: {x: 1, y: 40}
+      pitch: {x: 0.95, y: 1.05}
+      volume: {x: 0.9, y: 1}
     increment: 1
     randomize: 1
   sequence:
-    duration:
-      max: 0
-      min: 0
+    duration: {x: 0, y: 0}
     repeat:
       forever: 1
       count: 0

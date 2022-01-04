@@ -2,7 +2,6 @@
 
 using System;
 using Appalachia.Audio.Scriptables;
-using Appalachia.Audio.Utilities;
 using Appalachia.Utility.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,7 +21,7 @@ namespace Appalachia.Audio.Core
         [FormerlySerializedAs("asset")]
         public Patch patch;
 
-        [Colorize(order = 0)] public RandomizationParams randomization = new() {chance = 1f};
+        public RandomizationParams randomization = new() { chance = 1f };
 
         #endregion
 

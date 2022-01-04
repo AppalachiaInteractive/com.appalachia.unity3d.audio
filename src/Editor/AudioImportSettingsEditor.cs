@@ -14,18 +14,22 @@ namespace Appalachia.Audio
     [CallStaticConstructorInEditor]
     public class AudioImportSettingsEditor : UnityEditor.Editor
     {
+        #region Constants and Static Readonly
+
+        public static readonly Dictionary<string, int> overridesTable = new();
+
+        private static readonly char[] splitSeparators = { ';' };
+
+        #endregion
+
         static AudioImportSettingsEditor()
         {
             AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
         }
 
+        #region Static Fields and Autoproperties
+
         private static AudioImportSettings _audioImportSettings;
-        
-        #region Constants and Static Readonly
-
-        public static readonly Dictionary<string, int> overridesTable = new();
-
-        private static readonly char[] splitSeparators = {';'};
 
         #endregion
 
@@ -74,8 +78,6 @@ namespace Appalachia.Audio
             {
                 return;
             }
-            
-            GUI.color = ColorizeDrawer.GetColor(0);
 
             if (GUILayout.Button("Apply"))
             {
@@ -91,12 +93,9 @@ namespace Appalachia.Audio
                 overridesTable.Clear();
             }
 
-            GUI.color = Color.white;
             GUI.enabled = true;
 
             DrawLine();
-
-            GUI.color = ColorizeDrawer.GetColor(1);
 
             const int w = 40;
 
@@ -113,8 +112,6 @@ namespace Appalachia.Audio
                 RefreshAudioClips();
             }
 
-            GUI.color = Color.white;
-
             EditorGUI.BeginChangeCheck();
 
             _moveCommand = -1;
@@ -125,8 +122,6 @@ namespace Appalachia.Audio
                 (overrideProperty, overrideIndex, overrideCount, matchCount) =>
                 {
                     DrawLine();
-
-                    GUI.color = ColorizeDrawer.GetColor(2);
 
                     var buttonRect = EditorGUILayout.GetControlRect();
                     buttonRect.x += buttonRect.width - w;
@@ -154,7 +149,6 @@ namespace Appalachia.Audio
                     }
 
                     GUI.enabled = true;
-                    GUI.color = ColorizeDrawer.GetColor(3);
 
                     var visibleProperty = overrideProperty.FindPropertyRelative("visible");
                     var filterProperty = overrideProperty.FindPropertyRelative("filter");
@@ -222,8 +216,6 @@ namespace Appalachia.Audio
 
             DrawLine();
 
-            GUI.color = ColorizeDrawer.GetColor(2);
-
             var addButtonRect = EditorGUILayout.GetControlRect();
             var addButtonRect2 = addButtonRect;
             addButtonRect2.x += addButtonRect2.width - w;
@@ -260,8 +252,6 @@ namespace Appalachia.Audio
             EditorGUI.indentLevel--;
             GUI.enabled = true;
 
-            GUI.color = Color.white;
-
             if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
@@ -274,13 +264,8 @@ namespace Appalachia.Audio
             var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
             if (Event.current.type == EventType.Repaint)
             {
-                GUI.color = EditorGUIUtility.isProSkin
-                    ? new Color(0.157f, 0.157f, 0.157f)
-                    : new Color(0.5f,   0.5f,   0.5f);
                 _lineStyle.Draw(p, false, false, false, false);
             }
-
-            GUI.color = c;
         }
 
         private void InitLine()
@@ -333,8 +318,8 @@ namespace Appalachia.Audio
             _audioClipPaths.Clear();
             _nameCount.Clear();
 
-            var digits = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-            var delimeters = new[] {'_', '-', ' '};
+            var digits = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var delimeters = new[] { '_', '-', ' ' };
             var guids = AssetDatabaseManager.FindAssets("t:AudioClip");
 
             foreach (var guid in guids)

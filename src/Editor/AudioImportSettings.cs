@@ -1,4 +1,3 @@
-using Appalachia.Audio.Utilities;
 using Appalachia.Core.Objects.Root;
 
 namespace Appalachia.Audio
@@ -8,7 +7,7 @@ namespace Appalachia.Audio
          
         #region Fields and Autoproperties
 
-        [Colorize] public AudioImportSettingsOverride[] overrides;
+        public AudioImportSettingsOverride[] overrides;
 
         #endregion
     }

@@ -1,6 +1,6 @@
 namespace Appalachia.Audio.Contextual.Context
 {
-    public enum TimeOfDay_AudioContexts : short
+    public enum TimeOfDayAudioContext : short
     {
         Dawn = 0,
         Morning = 10,

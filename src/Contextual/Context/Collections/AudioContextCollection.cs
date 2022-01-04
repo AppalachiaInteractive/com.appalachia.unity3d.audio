@@ -38,25 +38,6 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
         #endregion
 
-#if UNITY_EDITOR
-        [Button]
-        [DisableIf(nameof(locked))]
-        public void Refresh()
-        {
-            if (locked)
-            {
-                return;
-            }
-
-            for (var i = 0; i < contexts.Length; i++)
-            {
-                var ctx = contexts[i];
-
-                AddOrUpdate(ctx);
-            }
-        }
-#endif
-
         protected abstract void AddOrUpdate(TContext context);
 
         protected override async AppaTask Initialize(Initializer initializer)
@@ -65,7 +46,9 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             {
                 await base.Initialize(initializer);
 
+#if UNITY_EDITOR
                 Refresh();
+#endif
             }
         }
 
@@ -77,5 +60,30 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             new ProfilerMarker(_PRF_PFX + nameof(Initialize));
 
         #endregion
+
+#if UNITY_EDITOR
+
+        private static readonly ProfilerMarker _PRF_Refresh = new ProfilerMarker(_PRF_PFX + nameof(Refresh));
+
+        [Button]
+        [DisableIf(nameof(locked))]
+        public void Refresh()
+        {
+            using (_PRF_Refresh.Auto())
+            {
+                if (locked)
+                {
+                    return;
+                }
+
+                for (var i = 0; i < contexts.Length; i++)
+                {
+                    var ctx = contexts[i];
+
+                    AddOrUpdate(ctx);
+                }
+            }
+        }
+#endif
     }
 }

@@ -33,13 +33,13 @@ namespace Appalachia.Audio.Contextual
         public const string NeutralResourcesLanguage = "en";
         public const string AssemblyVersion = "0.2.0.0";
         public const string AssemblyFileVersion = "0.2.0.0";
-        public const int Priority = -360000;
+        public const int Priority = -359000;
         public const string Name = "Audio/Contextual";
         public const string Prefix = Root + Name + "/";
         public const string Root = "Appalachia/";
         public const string Version = "0.2.0";
         public const int VersionInt = 2000;
-        public const string BuildDate = "2021-12-21T00:29:23.5013798Z";
+        public const string BuildDate = "2021-12-30T17:59:49.7060560Z";
         
         public static partial class Prefs
         {
@@ -256,9 +256,9 @@ namespace Appalachia.Audio.Contextual
             {
                 var majorInt = version / 1_000_000;
                 var minorInt = (version / 1_000) % 1_000;
-                var patchInt = version % 1_000; 
+                var patchInt = version % 1_000;
 
-                var result = $"{majorInt}.{minorInt}.{patchInt}";
+                var result = string.Format("0.1.2", majorInt, minorInt, patchInt);
 
                 return result;
             }

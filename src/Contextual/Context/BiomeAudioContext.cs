@@ -1,6 +1,6 @@
 namespace Appalachia.Audio.Contextual.Context
 {
-    public enum Biome_AudioContexts : short
+    public enum BiomeAudioContext : short
     {
         Default = 0,
         Underwater = 1,

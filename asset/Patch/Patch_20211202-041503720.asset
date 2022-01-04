@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9a7c050aebc345911b77c9ff20638, type: 3}
   m_Name: Patch_20211202-041503720
   m_EditorClassIdentifier: 
-  _initializationData:
-    _nonSerializedTags: []
-    _tags: []
-    _resetToken: 
   _cachedName: 
   _niceName: 
+  _initializer:
+    _tags: []
+    _resetToken: 
   program:
     clips: []
     mixerGroup: {fileID: 0}

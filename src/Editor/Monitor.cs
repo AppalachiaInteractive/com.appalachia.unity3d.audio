@@ -49,7 +49,7 @@ namespace Appalachia.Audio
 
             _lineStyle = new GUIStyle
             {
-                normal = {background = EditorGUIUtility.whiteTexture},
+                normal = { background = EditorGUIUtility.whiteTexture },
                 stretchWidth = true,
                 margin = new RectOffset(0, 0, 7, 7)
             };
@@ -66,7 +66,6 @@ namespace Appalachia.Audio
 
         protected void OnGUI()
         {
-            ColorizeDrawer.Reset();
             GUILayout.BeginHorizontal();
 
             GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(110), GUILayout.ExpandHeight(true));
@@ -136,7 +135,7 @@ namespace Appalachia.Audio
                     if (i.Current.keyOn <= 0f)
                     {
                         var j = GetSourceColor(i.Current.info.audioSource.name);
-                        Handles.color = ColorizeDrawer.GetColor(j);
+                        Handles.color = Color.cyan;
                         var q = i.Current.info.audioSource.transform.position;
                         var d = p - q;
                         if (d.magnitude < 1f)
@@ -165,8 +164,7 @@ namespace Appalachia.Audio
                         _builder.Length = 0;
 
                         Handles.BeginGUI();
-                        var k = GUI.color;
-                        GUI.color = Handles.color;
+
                         var a = p - (d * 0.5f);
                         var x = new GUIContent(i.Current.info.audioSource.name);
                         var y = new GUIContent(s);
@@ -181,7 +179,7 @@ namespace Appalachia.Audio
                         m.y = l.y + 1f;
                         EditorGUI.HelpBox(m, y.text, MessageType.None);
                         EditorGUI.DropShadowLabel(l, x);
-                        GUI.color = k;
+
                         Handles.EndGUI();
                     }
                 }
@@ -336,17 +334,11 @@ namespace Appalachia.Audio
 
         private void DrawLine()
         {
-            var c = GUI.color;
             var p = GUILayoutUtility.GetRect(GUIContent.none, _lineStyle, GUILayout.Height(1));
             if (Event.current.type == EventType.Repaint)
             {
-                GUI.color = EditorGUIUtility.isProSkin
-                    ? new Color(0.157f, 0.157f, 0.157f)
-                    : new Color(0.5f,   0.5f,   0.5f);
                 _lineStyle.Draw(p, false, false, false, false);
             }
-
-            GUI.color = c;
         }
 
         private void DrawOcclusionGUI()
@@ -363,7 +355,6 @@ namespace Appalachia.Audio
             EditorGUILayout.EndHorizontal();
 
             var i = 0;
-            var c = GUI.color;
             Rect p;
             _scrollOcclusion = EditorGUILayout.BeginScrollView(_scrollOcclusion);
 
@@ -384,7 +375,7 @@ namespace Appalachia.Audio
                 {
                     for (var x = enumerator; x.MoveNext();)
                     {
-                        _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
+                        _srcInfo.Add(new Synthesizer.ActiveSource { info = x.Current });
                     }
                 }
 
@@ -408,14 +399,14 @@ namespace Appalachia.Audio
                         var dis = (z.handle == 0) || (z.keyOn > 0f);
                         {
                             _srcColors[z.info.audioSource.name] = i;
-                            if (dis)
+                            /*if (dis)
                             {
                                 GUI.color = ColorizeDrawer.disabledColor;
                             }
                             else
                             {
                                 GUI.color = ColorizeDrawer.GetColor(i);
-                            }
+                            }*/
 
                             // Mute
                             if (z.info.audioSource != null)
@@ -485,7 +476,6 @@ namespace Appalachia.Audio
                 }
             }
 
-            GUI.color = c;
             EditorGUILayout.EndScrollView();
         }
 
@@ -501,7 +491,6 @@ namespace Appalachia.Audio
             EditorGUILayout.EndHorizontal();
 
             var i = 0;
-            var c = GUI.color;
             Rect p;
             _scrollSequencer = EditorGUILayout.BeginScrollView(_scrollSequencer);
 
@@ -511,7 +500,6 @@ namespace Appalachia.Audio
                 {
                     for (var x = enumerator; x.MoveNext();)
                     {
-                        GUI.color = ColorizeDrawer.GetColor(i);
                         var z = x.Current;
                         EditorGUILayout.BeginHorizontal();
 
@@ -580,7 +568,7 @@ namespace Appalachia.Audio
                                 EditorStyles.label,
                                 GUILayout.Width(70)
                             );
-                            EditorGUI.ProgressBar(p, z.repeatIndex / (float) z.repeatCount, ris);
+                            EditorGUI.ProgressBar(p, z.repeatIndex / (float)z.repeatCount, ris);
                         }
                         else
                         {
@@ -597,11 +585,8 @@ namespace Appalachia.Audio
                         ++i;
                     }
                 }
-
-                GUI.color = c;
             }
 
-            GUI.color = c;
             EditorGUILayout.EndScrollView();
         }
 
@@ -623,7 +608,6 @@ namespace Appalachia.Audio
             EditorGUILayout.EndHorizontal();
 
             var i = 0;
-            var c = GUI.color;
             Rect p;
             _scrollSynthesizer = EditorGUILayout.BeginScrollView(_scrollSynthesizer);
 
@@ -643,7 +627,7 @@ namespace Appalachia.Audio
                 {
                     for (var x = enumerator; x.MoveNext();)
                     {
-                        _srcInfo.Add(new Synthesizer.ActiveSource {info = x.Current});
+                        _srcInfo.Add(new Synthesizer.ActiveSource { info = x.Current });
                     }
                 }
 
@@ -661,14 +645,6 @@ namespace Appalachia.Audio
                         var dis = (z.handle == 0) || (z.keyOn > 0f);
                         {
                             _srcColors[z.info.audioSource.name] = i;
-                            if (dis)
-                            {
-                                GUI.color = ColorizeDrawer.disabledColor;
-                            }
-                            else
-                            {
-                                GUI.color = ColorizeDrawer.GetColor(i);
-                            }
 
                             // Mute
                             if (z.info.audioSource != null)
@@ -796,7 +772,6 @@ namespace Appalachia.Audio
                 }
             }
 
-            GUI.color = c;
             EditorGUILayout.EndScrollView();
         }
 
@@ -823,7 +798,7 @@ namespace Appalachia.Audio
         [MenuItem(PKG.Menu.Appalachia.Windows.Base + nameof(Monitor))]
         private static void Open()
         {
-            ((Monitor) GetWindow(typeof(Monitor))).Show();
+            ((Monitor)GetWindow(typeof(Monitor))).Show();
         }
 
         #endregion

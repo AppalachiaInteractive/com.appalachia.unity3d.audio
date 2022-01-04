@@ -42,6 +42,11 @@ namespace Appalachia.Audio
         {
             using (_PRF_Update.Auto())
             {
+                if (!DependenciesAreReady || !FullyInitialized)
+                {
+                    return;
+                }
+                
                 var dt = Time.deltaTime;
                 var tf = Time.frameCount;
 

@@ -1,6 +1,6 @@
 namespace Appalachia.Audio.Contextual.Context
 {
-    public enum Season_AudioContexts : short
+    public enum SeasonAudioContext : short
     {
         Spring = 00,
         Summer = 10,
