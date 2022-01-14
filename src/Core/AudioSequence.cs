@@ -16,15 +16,15 @@ namespace Appalachia.Audio.Core
     {
         #region Fields and Autoproperties
 
-        [MinMaxSlider(0, 600, true)]
-        public Vector2 duration;
-
         [NonSerialized] public Patch patch;
 
         public RepeatParams repeat = new() { forever = true };
         public Timing[] timing;
 
         [NonSerialized] public uint lastHandle;
+
+        [MinMaxSlider(0, 600, true)]
+        public Vector2 duration;
 
         #endregion
 

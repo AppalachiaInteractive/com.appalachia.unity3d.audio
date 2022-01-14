@@ -103,10 +103,10 @@ namespace Appalachia.Audio.Scriptables
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
                 if (program != null)
                 {
                     program.patch = this;
@@ -123,8 +123,6 @@ namespace Appalachia.Audio.Scriptables
 
         #region Profiling
 
-        private const string _PRF_PFX = nameof(Patch) + ".";
-
         private static readonly ProfilerMarker
             _PRF_Activate = new ProfilerMarker(_PRF_PFX + nameof(Activate));
 
@@ -139,9 +137,6 @@ namespace Appalachia.Audio.Scriptables
 
         private static readonly ProfilerMarker _PRF_GetMaxDuration =
             new ProfilerMarker(_PRF_PFX + nameof(GetMaxDuration));
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
 
         #endregion
 

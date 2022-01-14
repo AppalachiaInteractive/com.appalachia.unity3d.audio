@@ -44,7 +44,7 @@ namespace Appalachia.Audio
 
             plugin.GetFloatParameter("Instance", out var instance);
 
-            var i = GAC.ChannelMonitor_GetLoudnessData_dB((int) instance);
+            var i = GAC.ChannelMonitor_GetLoudnessData_dB((int)instance);
 
             loudness.Add(GAC.dBToNormalized(i));
 

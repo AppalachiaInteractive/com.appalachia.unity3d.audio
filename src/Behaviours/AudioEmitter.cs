@@ -8,7 +8,6 @@ using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
-using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -36,14 +35,17 @@ namespace Appalachia.Audio.Behaviours
 
         [FoldoutGroup("Execution"), PropertyOrder(-3)]
         public bool autoCue = true;
-        
-        [FoldoutGroup("Execution"), PropertyOrder(-2)]
-        [FormerlySerializedAs("singleShot")] public bool playOnceOnly;
 
-        [ReadOnly, FoldoutGroup("Control")] public Controller controller;
+        [FoldoutGroup("Execution"), PropertyOrder(-2)]
+        [FormerlySerializedAs("singleShot")]
+        public bool playOnceOnly;
+
+        [ReadOnly, FoldoutGroup("Control")]
+        public Controller controller;
 
         [FoldoutGroup("Execution"), PropertyOrder(-1)]
-        [PropertyRange(0, 1)] public float volume = 1f;
+        [PropertyRange(0, 1)]
+        public float volume = 1f;
 
         [FoldoutGroup("Gizmo"), HideLabel, InlineProperty]
         public GizmoParams gizmo = new() { color = Color.red };
@@ -53,16 +55,16 @@ namespace Appalachia.Audio.Behaviours
 
         [FormerlySerializedAs("assets")]
         public Patch[] patches;
-        
+
         [FoldoutGroup("Randomization"), HideLabel, InlineProperty]
         public RandomizationParams randomization = new() { chance = 1f };
-        
+
         [ReadOnly, FoldoutGroup("Control")]
         public AudioZone zone;
-        
+
         [ReadOnly, FoldoutGroup("Control")]
         internal bool paused;
-        
+
         private bool _wasAlreadyCued;
 
         private uint[] cueHandles;
@@ -70,19 +72,6 @@ namespace Appalachia.Audio.Behaviours
         #endregion
 
         public bool isModulated => (modulation.custom != null) || (modulation.period > 0f);
-
-        #region Event Functions
-
-        protected override async AppaTask WhenDisabled()
-
-        {
-            {
-                await base.WhenDisabled();
-                CueOut();
-            }
-        }
-
-        #endregion
 
         [ButtonGroup("Cues"), PropertyOrder(-10)]
         public void CueIn()
@@ -140,10 +129,10 @@ namespace Appalachia.Audio.Behaviours
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
                 if (controller == Controller.None)
                 {
                     controller = !zone && !GetComponent<AudioZone>() ? Controller.User : Controller.Zone;
@@ -156,6 +145,12 @@ namespace Appalachia.Audio.Behaviours
                     CueIn();
                 }
             }
+        }
+
+        protected override async AppaTask WhenDisabled()
+        {
+            await base.WhenDisabled();
+            CueOut();
         }
 
         #region Nested type: AttachmentParams
@@ -245,18 +240,6 @@ namespace Appalachia.Audio.Behaviours
 
             #endregion
         }
-
-        #endregion
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioEmitter) + ".";
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
-
-        private static readonly ProfilerMarker _PRF_OnDisable =
-            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
 
         #endregion
 

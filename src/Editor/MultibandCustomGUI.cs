@@ -102,9 +102,9 @@ namespace Appalachia.Audio
             var x = evt.mousePosition.x - r.x;
             if ((evtType == EventType.MouseDown) && r.Contains(evt.mousePosition) && (evt.button == 0))
             {
-                var lf = (float) GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) *
+                var lf = (float)GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) *
                          r.width;
-                var hf = (float) GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) *
+                var hf = (float)GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) *
                          r.width;
                 dragOperation = DragOperation.Mid;
                 if (x < (lf + thr))
@@ -125,7 +125,7 @@ namespace Appalachia.Audio
                 if ((dragOperation == DragOperation.Low) || (dragOperation == DragOperation.Mid))
                 {
                     lowFreq = Mathf.Clamp(
-                        (float) GUIHelpers.MapNormalizedFrequency(
+                        (float)GUIHelpers.MapNormalizedFrequency(
                             GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) +
                             (evt.delta.x / r.width),
                             samplerate,
@@ -150,7 +150,7 @@ namespace Appalachia.Audio
                 if ((dragOperation == DragOperation.Mid) || (dragOperation == DragOperation.High))
                 {
                     highFreq = Mathf.Clamp(
-                        (float) GUIHelpers.MapNormalizedFrequency(
+                        (float)GUIHelpers.MapNormalizedFrequency(
                             GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) +
                             (evt.delta.x / r.width),
                             samplerate,
@@ -190,7 +190,7 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) *
+                    (float)GUIHelpers.MapNormalizedFrequency(lowFreq, samplerate, useLogScale, false) *
                     r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) &&
@@ -200,7 +200,7 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) *
+                    (float)GUIHelpers.MapNormalizedFrequency(highFreq, samplerate, useLogScale, false) *
                     r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) &&
@@ -292,7 +292,7 @@ namespace Appalachia.Audio
 
                 if (showSpectrum)
                 {
-                    var specLen = (int) r.width;
+                    var specLen = (int)r.width;
                     float[] spec;
 
                     plugin.GetFloatBuffer("InputSpec", out spec, specLen);
@@ -376,7 +376,7 @@ namespace Appalachia.Audio
                 );
                 var h = (lpf * lowGain).Mag2() + (bpf1 * bpf2 * midGain).Mag2() + (hpf * highGain).Mag2();
                 var mag = masterGain + (10.0 * Math.Log10(h));
-                return (float) (mag * magScale);
+                return (float)(mag * magScale);
             };
 
             if (filled)

@@ -54,7 +54,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
         {
             context.parameters.primary.type = typeof(TEnumPrimary);
 
-            index.AddOrUpdate((TEnumPrimary) (object) context.parameters.primary.value, context);
+            index.AddOrUpdate((TEnumPrimary)(object)context.parameters.primary.value, context);
         }
     }
 }

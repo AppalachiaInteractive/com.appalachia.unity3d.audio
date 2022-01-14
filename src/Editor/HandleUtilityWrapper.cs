@@ -17,7 +17,7 @@ namespace Appalachia.Audio
             {
                 if (s_Mat == null)
                 {
-                    s_Mat = (Material) EditorGUIUtility.LoadRequired("SceneView/HandleLines.mat");
+                    s_Mat = (Material)EditorGUIUtility.LoadRequired("SceneView/HandleLines.mat");
                 }
 
                 return s_Mat;

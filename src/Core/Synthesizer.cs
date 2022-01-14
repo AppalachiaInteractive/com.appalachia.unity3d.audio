@@ -27,7 +27,8 @@ namespace Appalachia.Audio.Core
             OcclusionSettings.InstanceAvailable += i => _occlusionSettings = i;
         }
 
-        private static OcclusionSettings _occlusionSettings;
+        #region Preferences
+
         private static PREF<bool> _synthesizerLoggingEnabled;
 
         public static PREF<bool> SynthesizerLoggingEnabled
@@ -49,7 +50,9 @@ namespace Appalachia.Audio.Core
                 _synthesizerLoggingEnabled.v = value;
             }
         }
-        
+
+        #endregion
+
         #region Static Fields and Autoproperties
 
 #if UNITY_EDITOR
@@ -63,6 +66,8 @@ namespace Appalachia.Audio.Core
 
         [NonSerialized] private static AppaContext _context;
         private static float _masterVolume = 1f;
+
+        private static OcclusionSettings _occlusionSettings;
 
         #endregion
 
@@ -132,6 +137,7 @@ namespace Appalachia.Audio.Core
                                 )
                             );
                         }
+
                         switch (mode)
                         {
                             case EnvelopeMode.Exact:
@@ -352,7 +358,7 @@ namespace Appalachia.Audio.Core
             {
                 return false;
             }
-            
+
             var r = p.randomization.distance.RandomValue();
             if (!Mathf.Approximately(r, 0f))
             {
@@ -694,6 +700,7 @@ namespace Appalachia.Audio.Core
                                         )
                                     );
                                 }
+
                                 z.info.audioSource.Stop();
                             }
                         }
@@ -711,6 +718,7 @@ namespace Appalachia.Audio.Core
                                     )
                                 );
                             }
+
                             z.info.Disable();
                             freeSources.Push(z.info);
                         }

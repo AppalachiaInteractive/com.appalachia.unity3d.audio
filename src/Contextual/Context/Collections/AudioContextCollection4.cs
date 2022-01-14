@@ -47,9 +47,9 @@ namespace Appalachia.Audio.Contextual.Context.Collections
                 tertiary,
                 quaternary,
                 out var context,
-                si => Equals((TEnumPrimary) (object) si.parameters.primary.value,     primary) &&
-                      Equals((TEnumSecondary) (object) si.parameters.secondary.value, secondary) &&
-                      Equals((TEnumTertiary) (object) si.parameters.tertiary.value,   tertiary) &&
+                si => Equals((TEnumPrimary)(object)si.parameters.primary.value,     primary) &&
+                      Equals((TEnumSecondary)(object)si.parameters.secondary.value, secondary) &&
+                      Equals((TEnumTertiary)(object)si.parameters.tertiary.value,   tertiary) &&
                       si.defaultFallback,
                 ZString.Format(
                     "No context patch found for [{0}, {1}, {2}, {3}].",
@@ -88,10 +88,10 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             context.parameters.quaternary.type = typeof(TEnumQuaternary);
 
             index.AddOrUpdate(
-                (TEnumPrimary) (object) context.parameters.primary.value,
-                (TEnumSecondary) (object) context.parameters.secondary.value,
-                (TEnumTertiary) (object) context.parameters.tertiary.value,
-                (TEnumQuaternary) (object) context.parameters.quaternary.value,
+                (TEnumPrimary)(object)context.parameters.primary.value,
+                (TEnumSecondary)(object)context.parameters.secondary.value,
+                (TEnumTertiary)(object)context.parameters.tertiary.value,
+                (TEnumQuaternary)(object)context.parameters.quaternary.value,
                 context
             );
         }

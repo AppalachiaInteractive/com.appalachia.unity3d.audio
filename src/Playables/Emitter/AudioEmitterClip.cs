@@ -3,7 +3,8 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 namespace Appalachia.Audio.Playables.Emitter
-{//BokBok_Attentuation_Volume
+{
+    //BokBok_Attentuation_Volume
     public class AudioEmitterClip : PlayableAsset, ITimelineClipAsset
     {
         #region Fields and Autoproperties

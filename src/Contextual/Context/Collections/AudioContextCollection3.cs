@@ -43,8 +43,8 @@ namespace Appalachia.Audio.Contextual.Context.Collections
                 secondary,
                 tertiary,
                 out var context,
-                si => Equals((TEnumPrimary) (object) si.parameters.primary.value,     primary) &&
-                      Equals((TEnumSecondary) (object) si.parameters.secondary.value, secondary) &&
+                si => Equals((TEnumPrimary)(object)si.parameters.primary.value,     primary) &&
+                      Equals((TEnumSecondary)(object)si.parameters.secondary.value, secondary) &&
                       si.defaultFallback,
                 ZString.Format("No context patch found for [{0}, {1}, {2}].", primary, secondary, tertiary),
                 ZString.Format(
@@ -75,9 +75,9 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             context.parameters.tertiary.type = typeof(TEnumTertiary);
 
             index.AddOrUpdate(
-                (TEnumPrimary) (object) context.parameters.primary.value,
-                (TEnumSecondary) (object) context.parameters.secondary.value,
-                (TEnumTertiary) (object) context.parameters.tertiary.value,
+                (TEnumPrimary)(object)context.parameters.primary.value,
+                (TEnumSecondary)(object)context.parameters.secondary.value,
+                (TEnumTertiary)(object)context.parameters.tertiary.value,
                 context
             );
         }

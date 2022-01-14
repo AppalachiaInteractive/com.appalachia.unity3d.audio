@@ -14,20 +14,12 @@ namespace Appalachia.Audio.Core
 {
     public struct Cue
     {
+        #region Static Fields and Autoproperties
+
         [NonSerialized] private static AppaContext _context;
 
-        private static AppaContext Context
-        {
-            get
-            {
-                if (_context == null)
-                {
-                    _context = new AppaContext(typeof(Cue));
-                }
+        #endregion
 
-                return _context;
-            }
-        }
         #region Fields and Autoproperties
 
         public AudioEmitter emitter;
@@ -44,7 +36,18 @@ namespace Appalachia.Audio.Core
 
         #endregion
 
-        
+        private static AppaContext Context
+        {
+            get
+            {
+                if (_context == null)
+                {
+                    _context = new AppaContext(typeof(Cue));
+                }
+
+                return _context;
+            }
+        }
 
         public void KeyOff(float release, EnvelopeMode mode)
         {
@@ -83,6 +86,7 @@ namespace Appalachia.Audio.Core
                     )
                 );
             }
+
             if (Randomizer.zeroToOne <= emitter.randomization.chance)
             {
                 if (emitter.auxiliary.source)

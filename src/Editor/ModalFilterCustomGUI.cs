@@ -50,14 +50,14 @@ namespace Appalachia.Audio
                     (numModes < 1000))
                 {
                     float[] coeffs;
-                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int) numModes * 3) && (coeffs != null))
+                    if (plugin.GetFloatBuffer("Coeffs", out coeffs, (int)numModes * 3) && (coeffs != null))
                     {
                         // Draw filled curve
                         DrawFilterCurve(
                             r,
                             coeffs,
                             ScaleAlpha(AudioCurveRendering.kAudioOrange, blend),
-                            (int) numModes,
+                            (int)numModes,
                             useLogScale,
                             false,
                             samplerate,
@@ -78,7 +78,7 @@ namespace Appalachia.Audio
                     float spectrumOffset;
                     plugin.GetFloatParameter("SpectrumOffset", out spectrumOffset);
 
-                    var specLen = (int) r.width;
+                    var specLen = (int)r.width;
                     float[] spec;
 
                     plugin.GetFloatBuffer("InputSpec", out spec, specLen);
@@ -142,7 +142,7 @@ namespace Appalachia.Audio
                 }
 
                 var mag = 10.0 * Math.Log10(h.Mag2());
-                return (float) (mag * magScale);
+                return (float)(mag * magScale);
             };
 
             if (filled)

@@ -16,12 +16,13 @@ namespace Appalachia.Audio.Core
     {
         #region Fields and Autoproperties
 
-        [MinMaxSlider(0, 600, true)] public Vector2 delay;
-
         [FormerlySerializedAs("asset")]
         public Patch patch;
 
         public RandomizationParams randomization = new() { chance = 1f };
+
+        [MinMaxSlider(0, 600, true)]
+        public Vector2 delay;
 
         #endregion
 

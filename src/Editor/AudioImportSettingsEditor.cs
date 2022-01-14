@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Appalachia.CI.Integration.Assets;
-using Appalachia.CI.Integration.FileSystem;
 using Appalachia.Core.Attributes;
 using Appalachia.Utility.Strings;
 using UnityEditor;
@@ -14,6 +13,16 @@ namespace Appalachia.Audio
     [CallStaticConstructorInEditor]
     public class AudioImportSettingsEditor : UnityEditor.Editor
     {
+        private delegate void EndFunction(SerializedProperty overrideProperty);
+
+        private delegate bool OverrideFunction(
+            SerializedProperty overrideProperty,
+            int overrideIndex,
+            int overrideCount,
+            int matchCount);
+
+        private delegate void PathFunction(string path, string name, int overrideIndex);
+
         #region Constants and Static Readonly
 
         public static readonly Dictionary<string, int> overridesTable = new();
@@ -325,11 +334,11 @@ namespace Appalachia.Audio
             foreach (var guid in guids)
             {
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
-                var fileName = AppaPath.GetFileNameWithoutExtension(path);
+                var fileName = path.fileNameWithoutExtension;
                 fileName = fileName.Trim(digits);
                 fileName = fileName.Trim(delimeters);
 
-                _audioClipPaths.Add(path, fileName);
+                _audioClipPaths.Add(path.relativePath, fileName);
 
                 int count;
                 _nameCount.TryGetValue(fileName, out count);
@@ -400,27 +409,5 @@ namespace Appalachia.Audio
 
             _unfilteredText = _unfilteredPaths.Count + " AudioClips left unmodified";
         }
-
-        #region Nested type: EndFunction
-
-        private delegate void EndFunction(SerializedProperty overrideProperty);
-
-        #endregion
-
-        #region Nested type: OverrideFunction
-
-        private delegate bool OverrideFunction(
-            SerializedProperty overrideProperty,
-            int overrideIndex,
-            int overrideCount,
-            int matchCount);
-
-        #endregion
-
-        #region Nested type: PathFunction
-
-        private delegate void PathFunction(string path, string name, int overrideIndex);
-
-        #endregion
     }
 }

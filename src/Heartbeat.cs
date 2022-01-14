@@ -42,11 +42,11 @@ namespace Appalachia.Audio
         {
             using (_PRF_Update.Auto())
             {
-                if (!DependenciesAreReady || !FullyInitialized)
+                if (ShouldSkipUpdate)
                 {
                     return;
                 }
-                
+
                 var dt = Time.deltaTime;
                 var tf = Time.frameCount;
 
@@ -120,17 +120,24 @@ namespace Appalachia.Audio
         {
             await base.Initialize(initializer);
 
-            hierarchyTransform = transform;
-
-            var zoneTypes = typeof(Zone<>).GetAllConcreteInheritors();
-
-            _zoneUpdateActions = new List<Action<int>>();
-
-            foreach (var zoneType in zoneTypes)
+            using (_PRF_Initialize.Auto())
             {
-                var routine = StaticRoutine.CreateDelegate<int>(zoneType, "UpdateZone", BindingFlags.Static);
+                hierarchyTransform = transform;
 
-                _zoneUpdateActions.Add(routine);
+                var zoneTypes = typeof(Zone<>).GetAllConcreteInheritors();
+
+                _zoneUpdateActions = new List<Action<int>>();
+
+                foreach (var zoneType in zoneTypes)
+                {
+                    var routine = StaticRoutine.CreateDelegate<int>(
+                        zoneType,
+                        "UpdateZone",
+                        BindingFlags.Static
+                    );
+
+                    _zoneUpdateActions.Add(routine);
+                }
             }
         }
 
@@ -149,18 +156,11 @@ namespace Appalachia.Audio
 
         #region Profiling
 
-        private const string _PRF_PFX = nameof(Heartbeat) + ".";
-
-        private static readonly ProfilerMarker _PRF_LateUpdate =
-            new ProfilerMarker(_PRF_PFX + nameof(LateUpdate));
-
         private static readonly ProfilerMarker _PRF_StartRecording =
             new ProfilerMarker(_PRF_PFX + nameof(StartRecording));
 
         private static readonly ProfilerMarker _PRF_StopRecording =
             new ProfilerMarker(_PRF_PFX + nameof(StopRecording));
-
-        private static readonly ProfilerMarker _PRF_Update = new ProfilerMarker(_PRF_PFX + nameof(Update));
 
         #endregion
     }

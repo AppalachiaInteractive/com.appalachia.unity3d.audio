@@ -6,6 +6,13 @@ namespace Appalachia.Audio
 {
     public abstract class FilterCurveUi : IAudioEffectPluginGUI
     {
+        protected enum DragOperation
+        {
+            Low,
+            Mid,
+            High
+        }
+
         #region Fields and Autoproperties
 
         protected DragOperation dragOperation = DragOperation.Low;
@@ -47,10 +54,10 @@ namespace Appalachia.Audio
                 delegate(float x)
                 {
                     var f = GUIHelpers.MapNormalizedFrequency(x, samplerate, useLogScale, true) * xscale;
-                    var i = (int) Math.Floor(f);
+                    var i = (int)Math.Floor(f);
                     var h = data[i] + ((data[i + 1] - data[i]) * (f - i));
                     var mag = h > 0.0 ? (20.0f * Math.Log10(h)) + gainOffsetDB : -120.0;
-                    return (float) (yscale * mag);
+                    return (float)(yscale * mag);
                 },
                 new Color(colR, colG, colB, colA)
             );
@@ -60,16 +67,5 @@ namespace Appalachia.Audio
         {
             return new(col.r, col.g, col.b, col.a * blend);
         }
-
-        #region Nested type: DragOperation
-
-        protected enum DragOperation
-        {
-            Low,
-            Mid,
-            High
-        }
-
-        #endregion
     }
 }

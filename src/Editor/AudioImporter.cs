@@ -12,8 +12,12 @@ namespace Appalachia.Audio
             AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
         }
 
+        #region Static Fields and Autoproperties
+
         private static AudioImportSettings _audioImportSettings;
-        
+
+        #endregion
+
         #region Event Functions
 
         protected void OnPreprocessAudio()
@@ -22,7 +26,7 @@ namespace Appalachia.Audio
             {
                 return;
             }
-            
+
             int overrideIndex;
 
             if (!AudioImportSettingsEditor.overridesTable.TryGetValue(assetPath, out overrideIndex))
@@ -32,10 +36,10 @@ namespace Appalachia.Audio
 
             var @override = _audioImportSettings.overrides[overrideIndex];
 
-            var importer = (UnityEditor.AudioImporter) assetImporter;
+            var importer = (UnityEditor.AudioImporter)assetImporter;
 
             var targets = Enum.GetNames(typeof(AudioImportTarget));
-            var values = (int[]) Enum.GetValues(typeof(AudioImportTarget));
+            var values = (int[])Enum.GetValues(typeof(AudioImportTarget));
 
             for (int i = 0, n = targets.Length; i < n; ++i)
             {
@@ -43,7 +47,7 @@ namespace Appalachia.Audio
 
                 foreach (var settings in @override.settings)
                 {
-                    if ((int) settings.target == values[i])
+                    if ((int)settings.target == values[i])
                     {
                         var sampleSettings = new AudioImporterSampleSettings
                         {

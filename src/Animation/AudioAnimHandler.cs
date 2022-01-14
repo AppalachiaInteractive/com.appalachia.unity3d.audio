@@ -3,7 +3,6 @@
 using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
-using Unity.Profiling;
 using UnityEngine;
 
 #endregion
@@ -19,10 +18,41 @@ namespace Appalachia.Audio.Animation
 
         #endregion
 
-        #region Event Functions
+        protected override async AppaTask Initialize(Initializer initializer)
+        {
+            await base.Initialize(initializer);
+
+            using (_PRF_Initialize.Auto())
+            {
+                initializer.Do(
+                    this,
+                    nameof(Animator),
+                    _animator == null,
+                    () =>
+                    {
+                        using (_PRF_Initialize.Auto())
+                        {
+                            _animator = GetComponent<Animator>();
+                        }
+                    }
+                );
+
+                initializer.Do(
+                    this,
+                    nameof(AudioAnimEvent),
+                    events == null,
+                    () =>
+                    {
+                        using (_PRF_Initialize.Auto())
+                        {
+                            events = _animator.GetBehaviours<AudioAnimEvent>();
+                        }
+                    }
+                );
+            }
+        }
 
         protected override async AppaTask WhenDisabled()
-
         {
             await base.WhenDisabled();
 
@@ -31,36 +61,5 @@ namespace Appalachia.Audio.Animation
                 e.KeyOff();
             }
         }
-
-        #endregion
-
-        protected override async AppaTask Initialize(Initializer initializer)
-        {
-            using (_PRF_Initialize.Auto())
-            {
-                await initializer.Do(
-                    this,
-                    nameof(Animator),
-                    _animator == null,
-                    () => { _animator = GetComponent<Animator>(); }
-                );
-
-                await initializer.Do(
-                    this,
-                    nameof(AudioAnimEvent),
-                    events == null,
-                    () => { events = _animator.GetBehaviours<AudioAnimEvent>(); }
-                );
-            }
-        }
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioAnimHandler) + ".";
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
-
-        #endregion
     }
 }

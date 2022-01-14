@@ -10,7 +10,18 @@ namespace Appalachia.Audio
 {
     public static class Tools
     {
+        #region Constants and Static Readonly
+
+        private const string FIND_PATCHES_WITHOUT_CLIPS = "Find Patches Without AudioClips";
+        private const string FIND_UNUSED_AUDIOCLIPS = "Find Unused AudioClips";
+
+        #endregion
+
+        #region Static Fields and Autoproperties
+
         [NonSerialized] private static AppaContext _context;
+
+        #endregion
 
         private static AppaContext Context
         {
@@ -24,13 +35,6 @@ namespace Appalachia.Audio
                 return _context;
             }
         }
-        
-        #region Constants and Static Readonly
-
-        private const string FIND_PATCHES_WITHOUT_CLIPS = "Find Patches Without AudioClips";
-        private const string FIND_UNUSED_AUDIOCLIPS = "Find Unused AudioClips";
-
-        #endregion
 
         #region Menu Items
 
@@ -38,7 +42,7 @@ namespace Appalachia.Audio
         private static void FindPatchWithoutAudioClips()
         {
             var root = "Assets/Audio";
-            var guids = AssetDatabaseManager.FindAssets("t:Object", new[] {root});
+            var guids = AssetDatabaseManager.FindAssets("t:Object", new[] { root });
             var count = 0;
 
             Context.Log.Info(
@@ -92,7 +96,7 @@ namespace Appalachia.Audio
         private static void FindUnusedAudioClips()
         {
             var root = "Assets/Audio";
-            var guids = AssetDatabaseManager.FindAssets("t:Object", new[] {root});
+            var guids = AssetDatabaseManager.FindAssets("t:Object", new[] { root });
             var clips = new HashSet<string>();
             var patchCount = 0;
             int clipCount;
@@ -124,13 +128,13 @@ namespace Appalachia.Audio
                 }
             }
 
-            guids = AssetDatabaseManager.FindAssets("t:AudioClip", new[] {root});
+            guids = AssetDatabaseManager.FindAssets("t:AudioClip", new[] { root });
             clipCount = guids.Length;
 
             foreach (var guid in guids)
             {
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
-                if (!clips.Contains(path))
+                if (!clips.Contains(path.relativePath))
                 {
                     Context.Log.Warn(
                         ZString.Format("[{0}]: Found ", FIND_PATCHES_WITHOUT_CLIPS) + path,

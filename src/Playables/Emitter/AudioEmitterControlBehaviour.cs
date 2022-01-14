@@ -77,13 +77,5 @@ namespace Appalachia.Audio.Playables.Emitter
         protected override void WhenStopped(Playable playable)
         {
         }
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioEmitterControlBehaviour) + ".";
-
-        private static readonly ProfilerMarker _PRF_Update = new ProfilerMarker(_PRF_PFX + nameof(Update));
-
-        #endregion
     }
 }

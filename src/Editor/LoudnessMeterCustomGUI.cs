@@ -120,7 +120,7 @@ namespace Appalachia.Audio
                     GUIHelpers.DrawTimeTickMarks(r, window, textColor, lineColor);
 
                     // Curves
-                    var numsamples = (int) r.width;
+                    var numsamples = (int)r.width;
                     float[] mcurve;
                     plugin.GetFloatBuffer("MomentaryRMS", out mcurve, numsamples);
                     float[] scurve;
@@ -164,7 +164,7 @@ namespace Appalachia.Audio
                     var f = Mathf.Clamp(x * xscale, 0.0f, xscale);
                     color = col;
                     color.a = col.a * Mathf.Clamp(x - x0, 0, xr);
-                    var i = (int) Mathf.Floor(f);
+                    var i = (int)Mathf.Floor(f);
                     var mag = curve[i] + ((curve[i + 1] - curve[i]) * (f - i));
                     var mag_dB = mag < thr_lin ? thr_dB : 20.0f * Mathf.Log10(mag);
                     var pos = (mag_dB - yoffset) * yscale;

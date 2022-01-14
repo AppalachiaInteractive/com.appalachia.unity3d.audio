@@ -42,24 +42,15 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
-            using (_PRF_Initialize.Auto())
-            {
-                await base.Initialize(initializer);
+            await base.Initialize(initializer);
 
 #if UNITY_EDITOR
+            using (_PRF_Initialize.Auto())
+            {
                 Refresh();
-#endif
             }
+#endif
         }
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioContextCollection<TContext, TParams, T>) + ".";
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
-
-        #endregion
 
 #if UNITY_EDITOR
 

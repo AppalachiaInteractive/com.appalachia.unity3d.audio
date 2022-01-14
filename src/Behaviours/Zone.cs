@@ -8,7 +8,6 @@ using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
 using Sirenix.OdinInspector;
-using Unity.Profiling;
 using UnityEngine;
 
 #endregion
@@ -58,23 +57,6 @@ namespace Appalachia.Audio.Behaviours
 
         public Collider trigger => hasBeenInitialized ? _trigger : FindTrigger(this as T);
 
-        #region Event Functions
-
-        protected override async AppaTask WhenDisabled()
-
-        {
-            
-            {
-                await base.WhenDisabled();
-
-                allZones.Remove(this as T);
-                OnUpdateActivation(false);
-                _triggerRefs = 0;
-            }
-        }
-
-        #endregion
-
         public static Collider FindTrigger(T z)
         {
             var c = z.GetComponent<Collider>();
@@ -122,22 +104,28 @@ namespace Appalachia.Audio.Behaviours
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
                 if (!hasBeenInitialized)
                 {
                     OnInit();
-                    await AppaTask.Yield();
                 }
 
                 allZones.Add(this as T);
 
-                await AppaTask.Yield();
-                
                 OnUpdateActivation(wantActive);
             }
+        }
+
+        protected override async AppaTask WhenDisabled()
+        {
+            await base.WhenDisabled();
+
+            allZones.Remove(this as T);
+            OnUpdateActivation(false);
+            _triggerRefs = 0;
         }
 
         protected bool OnUpdateActivation(bool state)
@@ -162,6 +150,26 @@ namespace Appalachia.Audio.Behaviours
         protected void SetActive(bool state)
         {
             wantActive = state;
+        }
+
+        private static T FindParentZoneRecursive(Transform t)
+        {
+            while (true)
+            {
+                if (t != null)
+                {
+                    var z = t.GetComponent<T>();
+                    if (z != null)
+                    {
+                        return z;
+                    }
+
+                    t = t.parent;
+                    continue;
+                }
+
+                return null;
+            }
         }
 
         private static float GetTriggerRadius(Collider c)
@@ -265,26 +273,6 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
-        private static T FindParentZoneRecursive(Transform t)
-        {
-            while (true)
-            {
-                if (t != null)
-                {
-                    var z = t.GetComponent<T>();
-                    if (z != null)
-                    {
-                        return z;
-                    }
-
-                    t = t.parent;
-                    continue;
-                }
-
-                return null;
-            }
-        }
-
         private void RegisterWithParentZone()
         {
             var z = FindParentZone();
@@ -299,18 +287,6 @@ namespace Appalachia.Audio.Behaviours
                 parent = z;
             }
         }
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(Zone<T>) + ".";
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
-
-        private static readonly ProfilerMarker _PRF_OnDisable =
-            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
-
-        #endregion
 
 #if UNITY_EDITOR
         [Serializable]

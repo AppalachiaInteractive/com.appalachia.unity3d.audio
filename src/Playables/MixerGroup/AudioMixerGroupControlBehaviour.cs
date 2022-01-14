@@ -142,16 +142,5 @@ namespace Appalachia.Audio.Playables.MixerGroup
         protected override void WhenStopped(Playable playable)
         {
         }
-
-        #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioMixerGroupControlBehaviour) + ".";
-
-        private static readonly ProfilerMarker _PRF_Update = new ProfilerMarker(_PRF_PFX + nameof(Update));
-
-        private static readonly ProfilerMarker _PRF_WhenDestroyed =
-            new ProfilerMarker(_PRF_PFX + nameof(WhenDestroyed));
-
-        #endregion
     }
 }

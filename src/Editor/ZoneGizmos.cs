@@ -106,10 +106,10 @@ namespace Appalachia.Audio
             {
                 var m = Gizmos.matrix;
                 Gizmos.matrix = z.transform.localToWorldMatrix;
-                Gizmos.DrawCube(Vector3.zero, ((BoxCollider) g).size);
+                Gizmos.DrawCube(Vector3.zero, ((BoxCollider)g).size);
                 if ((t & GizmoType.Selected) != 0)
                 {
-                    Gizmos.DrawWireCube(Vector3.zero, ((BoxCollider) g).size);
+                    Gizmos.DrawWireCube(Vector3.zero, ((BoxCollider)g).size);
                 }
 
                 Gizmos.matrix = m;

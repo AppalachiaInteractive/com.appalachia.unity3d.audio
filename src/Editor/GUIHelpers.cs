@@ -86,7 +86,7 @@ namespace Appalachia.Audio
             float px = r.x, w = 60.0f;
             for (float normFreq = 0; normFreq < 1.0f; normFreq += 0.01f)
             {
-                var f = (float) MapNormalizedFrequency(normFreq, samplerate, logScale, true);
+                var f = (float)MapNormalizedFrequency(normFreq, samplerate, logScale, true);
                 var x = r.x + (normFreq * r.width);
                 if ((x - px) > w)
                 {

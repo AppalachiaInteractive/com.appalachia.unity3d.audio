@@ -61,13 +61,13 @@ namespace Appalachia.Audio.Effects
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
-                _source = await initializer.GetOrCreate<AudioSource>(this);
-                _lowPassFilter = await initializer.GetOrCreate<AudioLowPassFilter>(this);
-                _highPassFilter = await initializer.GetOrCreate<AudioHighPassFilter>(this);
+                _source = initializer.GetOrCreate(this,         _source);
+                _lowPassFilter = initializer.GetOrCreate(this,  _lowPassFilter);
+                _highPassFilter = initializer.GetOrCreate(this, _highPassFilter);
 
                 _lastFrame = -1;
                 Test(Mathf.Infinity);
@@ -151,14 +151,6 @@ namespace Appalachia.Audio.Effects
         }
 
         #region Profiling
-
-        private const string _PRF_PFX = nameof(Occlusion) + ".";
-
-        private static readonly ProfilerMarker _PRF_LateUpdate =
-            new ProfilerMarker(_PRF_PFX + nameof(LateUpdate));
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
 
         private static readonly ProfilerMarker _PRF_Test = new ProfilerMarker(_PRF_PFX + nameof(Test));
 

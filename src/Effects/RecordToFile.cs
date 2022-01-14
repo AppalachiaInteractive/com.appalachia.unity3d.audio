@@ -25,11 +25,11 @@ namespace Appalachia.Audio.Effects
 
         private void Update()
         {
-            if (!DependenciesAreReady || !FullyInitialized)
+            if (ShouldSkipUpdate)
             {
                 return;
             }
-            
+
             if (_recording)
             {
                 lock (_locker)
@@ -55,13 +55,6 @@ namespace Appalachia.Audio.Effects
 
                 _proc.Clear();
             }
-        }
-
-        protected override async AppaTask WhenDestroyed()
-        {
-            await base.WhenDestroyed();
-            
-            StopRecording();
         }
 
         private void OnAudioFilterRead(float[] data, int channels)
@@ -97,7 +90,7 @@ namespace Appalachia.Audio.Effects
                 _writer = new BinaryWriter(new FileStream(path, FileMode.Create));
                 for (var i = 0; i < 44; ++i)
                 {
-                    _writer.Write((byte) 0x00);
+                    _writer.Write((byte)0x00);
                 }
 
                 _recording = true;
@@ -111,18 +104,18 @@ namespace Appalachia.Audio.Effects
             {
                 lock (_locker)
                 {
-                    len = (int) _writer.BaseStream.Length;
+                    len = (int)_writer.BaseStream.Length;
                     _recording = false;
 
                     short format = 3;
                     short channels = 2;
                     var sampleRate = AudioSettings.outputSampleRate;
                     var byteRate = sampleRate * sizeof(float) * channels;
-                    var blockAlign = (short) (sizeof(float) * channels);
+                    var blockAlign = (short)(sizeof(float) * channels);
                     short bitsPerSample = sizeof(float) * 8;
                     _writer.Seek(0, SeekOrigin.Begin);
                     _writer.Write(Encoding.ASCII.GetBytes("RIFF"));
-                    _writer.Write((int) (_writer.BaseStream.Length - 8));
+                    _writer.Write((int)(_writer.BaseStream.Length - 8));
                     _writer.Write(Encoding.ASCII.GetBytes("WAVE"));
                     _writer.Write(Encoding.ASCII.GetBytes("fmt "));
                     _writer.Write(16);
@@ -133,12 +126,19 @@ namespace Appalachia.Audio.Effects
                     _writer.Write(blockAlign);
                     _writer.Write(bitsPerSample);
                     _writer.Write(Encoding.ASCII.GetBytes("data"));
-                    _writer.Write((int) (_writer.BaseStream.Length - 44));
+                    _writer.Write((int)(_writer.BaseStream.Length - 44));
                     _writer.Close();
                 }
             }
 
             return len;
+        }
+
+        protected override async AppaTask WhenDestroyed()
+        {
+            await base.WhenDestroyed();
+
+            StopRecording();
         }
     }
 }

@@ -73,21 +73,11 @@ namespace Appalachia.Audio
             var x = evt.mousePosition.x - r.x;
             if ((evtType == EventType.MouseDown) && r.Contains(evt.mousePosition) && (evt.button == 0))
             {
-                var lf = (float) GUIHelpers.MapNormalizedFrequency(
-                             _lowFreq,
-                             samplerate,
-                             _useLogScale,
-                             false
-                         ) *
+                var lf = (float)GUIHelpers.MapNormalizedFrequency(_lowFreq, samplerate, _useLogScale, false) *
                          r.width;
-                var mf = (float) GUIHelpers.MapNormalizedFrequency(
-                             _midFreq,
-                             samplerate,
-                             _useLogScale,
-                             false
-                         ) *
+                var mf = (float)GUIHelpers.MapNormalizedFrequency(_midFreq, samplerate, _useLogScale, false) *
                          r.width;
-                var hf = (float) GUIHelpers.MapNormalizedFrequency(
+                var hf = (float)GUIHelpers.MapNormalizedFrequency(
                              _highFreq,
                              samplerate,
                              _useLogScale,
@@ -121,7 +111,7 @@ namespace Appalachia.Audio
                 {
                     case DragOperation.Low:
                         _lowFreq = Mathf.Clamp(
-                            (float) GUIHelpers.MapNormalizedFrequency(
+                            (float)GUIHelpers.MapNormalizedFrequency(
                                 GUIHelpers.MapNormalizedFrequency(_lowFreq, samplerate, _useLogScale, false) +
                                 (evt.delta.x / r.width),
                                 samplerate,
@@ -143,7 +133,7 @@ namespace Appalachia.Audio
                         break;
                     case DragOperation.Mid:
                         _midFreq = Mathf.Clamp(
-                            (float) GUIHelpers.MapNormalizedFrequency(
+                            (float)GUIHelpers.MapNormalizedFrequency(
                                 GUIHelpers.MapNormalizedFrequency(_midFreq, samplerate, _useLogScale, false) +
                                 (evt.delta.x / r.width),
                                 samplerate,
@@ -165,7 +155,7 @@ namespace Appalachia.Audio
                         break;
                     case DragOperation.High:
                         _highFreq = Mathf.Clamp(
-                            (float) GUIHelpers.MapNormalizedFrequency(
+                            (float)GUIHelpers.MapNormalizedFrequency(
                                 GUIHelpers.MapNormalizedFrequency(
                                     _highFreq,
                                     samplerate,
@@ -212,7 +202,7 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(_lowFreq, samplerate, _useLogScale, false) *
+                    (float)GUIHelpers.MapNormalizedFrequency(_lowFreq, samplerate, _useLogScale, false) *
                     r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) && (dragOperation == DragOperation.Low),
@@ -221,7 +211,7 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(_midFreq, samplerate, _useLogScale, false) *
+                    (float)GUIHelpers.MapNormalizedFrequency(_midFreq, samplerate, _useLogScale, false) *
                     r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) && (dragOperation == DragOperation.Mid),
@@ -230,7 +220,7 @@ namespace Appalachia.Audio
                 DrawBandSplitMarker(
                     plugin,
                     r,
-                    (float) GUIHelpers.MapNormalizedFrequency(_highFreq, samplerate, _useLogScale, false) *
+                    (float)GUIHelpers.MapNormalizedFrequency(_highFreq, samplerate, _useLogScale, false) *
                     r.width,
                     thr,
                     (GUIUtility.hotControl == controlID) && (dragOperation == DragOperation.High),
@@ -277,7 +267,7 @@ namespace Appalachia.Audio
 
                 if (_showSpectrum)
                 {
-                    var specLen = (int) r.width;
+                    var specLen = (int)r.width;
                     float[] spec;
 
                     plugin.GetFloatBuffer("InputSpec", out spec, specLen);
@@ -356,7 +346,7 @@ namespace Appalachia.Audio
                       ((w * ((w * coeffs[13]) + coeffs[14])) + 1.0f);
                 var h = hh * hp * hl;
                 var mag = masterGain + (10.0 * Math.Log10(h.Mag2()));
-                return (float) (mag * magScale);
+                return (float)(mag * magScale);
             };
 
             if (filled)

@@ -64,7 +64,7 @@ namespace Appalachia.Audio
                 }
 
                 float[] corr;
-                var numsamples = (int) window;
+                var numsamples = (int)window;
                 plugin.GetFloatBuffer("Correlation", out corr, 2 * numsamples);
                 numsamples = corr.Length;
 

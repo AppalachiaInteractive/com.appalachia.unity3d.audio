@@ -22,7 +22,5 @@ namespace Appalachia.Audio.Scriptables
         public Vector2 lowPassRange = new() { x = 4400, y = 22000 };
 
         #endregion
-
-        
     }
 }

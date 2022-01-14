@@ -19,20 +19,6 @@ namespace Appalachia.Audio.Behaviours
 
         #endregion
 
-        #region Event Functions
-
-        protected override async AppaTask WhenDisabled()
-
-        {
-            {
-                await base.WhenDisabled();
-
-                allSlapbacks.Remove(this);
-            }
-        }
-
-        #endregion
-
         public static AudioSlapback FindClosest(Vector3 p, out Vector3 rp, out Vector3 rd)
         {
             using (_PRF_FindClosest.Auto())
@@ -83,26 +69,25 @@ namespace Appalachia.Audio.Behaviours
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
                 allSlapbacks.Add(this);
             }
         }
 
+        protected override async AppaTask WhenDisabled()
+        {
+            await base.WhenDisabled();
+
+            allSlapbacks.Remove(this);
+        }
+
         #region Profiling
-
-        private const string _PRF_PFX = nameof(AudioSlapback) + ".";
-
-        private static readonly ProfilerMarker _PRF_OnDisable =
-            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
 
         private static readonly ProfilerMarker _PRF_FindClosest =
             new ProfilerMarker(_PRF_PFX + nameof(FindClosest));
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
 
         #endregion
 

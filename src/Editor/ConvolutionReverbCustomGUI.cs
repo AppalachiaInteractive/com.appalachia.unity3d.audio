@@ -38,7 +38,7 @@ namespace Appalachia.Audio
             {
                 var blend = plugin.IsPluginEditableAndEnabled() ? 1.0f : 0.5f;
 
-                var numsamples = (int) r.width;
+                var numsamples = (int)r.width;
                 float[] imp1;
                 plugin.GetFloatBuffer("Impulse0", out imp1, numsamples);
                 float[] imp2;
@@ -61,7 +61,7 @@ namespace Appalachia.Audio
                 DrawCurve(r2, imp2, 1.0f, m_Impulse2Color, 150, wet, gain);
 
                 var name = "Impulse: " +
-                           Marshal.PtrToStringAnsi(ConvolutionReverb_GetSampleName((int) useSample));
+                           Marshal.PtrToStringAnsi(ConvolutionReverb_GetSampleName((int)useSample));
                 GUIHelpers.DrawText(r2.x + 5, r2.y - 5, r2.width, name, Color.white);
             }
 
@@ -95,7 +95,7 @@ namespace Appalachia.Audio
                 delegate(float x, out Color color)
                 {
                     var f = Mathf.Clamp(x * xscale, 0.0f, xscale);
-                    var i = (int) Mathf.Floor(f);
+                    var i = (int)Mathf.Floor(f);
                     color = new Color(col.r, col.g, col.b, col.a * wetLevel);
                     return (curve[i] + ((curve[i + 1] - curve[i]) * (f - i))) * yscale;
                 }

@@ -21,7 +21,7 @@ namespace Appalachia.Audio.Utilities
         [DebuggerStepThrough]
         public static implicit operator TernaryBool(bool b)
         {
-            return new() {value = b ? 1 : -1};
+            return new() { value = b ? 1 : -1 };
         }
 
         [DebuggerStepThrough]
@@ -33,7 +33,7 @@ namespace Appalachia.Audio.Utilities
         [DebuggerStepThrough]
         public override bool Equals(object o)
         {
-            return o is TernaryBool ? ((TernaryBool) o).value == value : false;
+            return o is TernaryBool ? ((TernaryBool)o).value == value : false;
         }
 
         [DebuggerStepThrough]

@@ -68,7 +68,7 @@ namespace Appalachia.Audio
                 plugin.GetFloatParameter("Mode",   out mode);
 
                 float[] buffer;
-                var numsamples = mode >= 1.0f ? maxspeclen : (int) (window * samplerate);
+                var numsamples = mode >= 1.0f ? maxspeclen : (int)(window * samplerate);
                 plugin.GetFloatBuffer("Channel" + channel, out buffer, numsamples);
                 numsamples = buffer.Length;
 
@@ -83,7 +83,7 @@ namespace Appalachia.Audio
                             delegate(float x)
                             {
                                 var f = Mathf.Clamp(x * (numsamples - 2) * window * 0.5f, 0, numsamples - 2);
-                                var i = (int) Mathf.Floor(f);
+                                var i = (int)Mathf.Floor(f);
                                 var s1 = 20.0f * Mathf.Log10(buffer[i] + 0.0001f);
                                 var s2 = 20.0f * Mathf.Log10(buffer[i + 1] + 0.0001f);
                                 return (s1 + ((s2 - s1) * (f - i))) * scale;
@@ -105,7 +105,7 @@ namespace Appalachia.Audio
                             r,
                             delegate(float x)
                             {
-                                return scale * buffer[(int) Mathf.Floor(x * (numsamples - 2))];
+                                return scale * buffer[(int)Mathf.Floor(x * (numsamples - 2))];
                             },
                             lineColor
                         );

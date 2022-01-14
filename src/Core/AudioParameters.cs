@@ -55,14 +55,14 @@ namespace Appalachia.Audio.Core
 
         #region Fields and Autoproperties
 
-        [BoxGroup("General")]
-        public bool loop;
+        [BoxGroup("General")] public bool loop;
 
         [FoldoutGroup("Envelope"), HideLabel, InlineProperty]
         public EnvelopeParams envelope;
 
         [BoxGroup("General")]
-        [PropertyRange(-1, 1)] public float panning;
+        [PropertyRange(-1, 1)]
+        public float panning;
 
         [FoldoutGroup("Occlusion"), HideLabel, InlineProperty]
         public OcclusionParams occlusion;
@@ -80,10 +80,12 @@ namespace Appalachia.Audio.Core
         public SpatialParams spatial;
 
         [BoxGroup("General")]
-        [MinMaxSlider(0, 10, true)] public Vector2 pitch;
+        [MinMaxSlider(0, 10, true)]
+        public Vector2 pitch;
 
         [BoxGroup("General")]
-        [MinMaxSlider(0, 1, true)] public Vector2 volume;
+        [MinMaxSlider(0, 1, true)]
+        public Vector2 volume;
 
         #endregion
 
@@ -133,7 +135,8 @@ namespace Appalachia.Audio.Core
         {
             #region Fields and Autoproperties
 
-            [MinMaxSlider(0, 1, true)] public Vector2 distance;
+            [MinMaxSlider(0, 1, true)]
+            public Vector2 distance;
 
             #endregion
         }
@@ -178,7 +181,9 @@ namespace Appalachia.Audio.Core
 
             [PropertyRange(0, 1)] public float blend;
             [PropertyRange(0, 5)] public float doppler;
-            [MinMaxSlider(0, 1000, true)] public Vector2 distance;
+
+            [MinMaxSlider(0, 1000, true)]
+            public Vector2 distance;
 
             #endregion
         }

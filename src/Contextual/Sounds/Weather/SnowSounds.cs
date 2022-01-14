@@ -8,6 +8,5 @@ namespace Appalachia.Audio.Contextual.Sounds.Weather
     public class SnowSounds : AudioContextCollection2<Exposure_AudioContexts, SnowStrength_AudioContexts,
         SnowSounds>
     {
-        
     }
 }

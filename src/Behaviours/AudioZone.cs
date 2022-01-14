@@ -46,18 +46,6 @@ namespace Appalachia.Audio.Behaviours
 
         #region Event Functions
 
-        protected override async AppaTask WhenDisabled()
-
-        {
-            {
-                await base.WhenDisabled();
-                for (int i = 0, n = emitters.Length; i < n; ++i)
-                {
-                    emitters[i].enabled = false;
-                }
-            }
-        }
-
         protected void OnTriggerEnter(Collider c)
         {
             using (_PRF_OnTriggerEnter.Auto())
@@ -98,10 +86,10 @@ namespace Appalachia.Audio.Behaviours
 
         protected override async AppaTask Initialize(Initializer initializer)
         {
+            await base.Initialize(initializer);
+
             using (_PRF_Initialize.Auto())
             {
-                await base.Initialize(initializer);
-
                 lastFrame = -1;
             }
         }
@@ -152,23 +140,24 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        protected override async AppaTask WhenDisabled()
+        {
+            await base.WhenDisabled();
+            for (int i = 0, n = emitters.Length; i < n; ++i)
+            {
+                emitters[i].enabled = false;
+            }
+        }
+
         #region Profiling
 
-        private const string _PRF_PFX = nameof(AudioZone) + ".";
-
-        private static readonly ProfilerMarker _PRF_Initialize =
-            new ProfilerMarker(_PRF_PFX + nameof(Initialize));
+        private static readonly ProfilerMarker _PRF_OnProbe = new ProfilerMarker(_PRF_PFX + nameof(OnProbe));
 
         private static readonly ProfilerMarker _PRF_OnTriggerEnter =
             new ProfilerMarker(_PRF_PFX + nameof(OnTriggerEnter));
 
         private static readonly ProfilerMarker _PRF_OnTriggerExit =
             new ProfilerMarker(_PRF_PFX + nameof(OnTriggerExit));
-
-        private static readonly ProfilerMarker _PRF_OnDisable =
-            new ProfilerMarker(_PRF_PFX + nameof(OnDisable));
-
-        private static readonly ProfilerMarker _PRF_OnProbe = new ProfilerMarker(_PRF_PFX + nameof(OnProbe));
 
         private static readonly ProfilerMarker _PRF_OnUpdateEmitters =
             new ProfilerMarker(_PRF_PFX + nameof(OnUpdateEmitters));
