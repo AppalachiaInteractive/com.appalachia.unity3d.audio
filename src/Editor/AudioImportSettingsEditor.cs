@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.Core.Attributes;
+using Appalachia.Core.Objects.Availability;
 using Appalachia.Utility.Strings;
 using UnityEditor;
 using UnityEngine;
@@ -33,7 +34,9 @@ namespace Appalachia.Audio
 
         static AudioImportSettingsEditor()
         {
-            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+            RegisterInstanceCallbacks.WithoutSorting()
+                                     .When.Object<AudioImportSettings>()
+                                     .IsAvailableThen(i => _audioImportSettings = i);
         }
 
         #region Static Fields and Autoproperties

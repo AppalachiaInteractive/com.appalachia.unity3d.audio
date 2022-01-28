@@ -5,6 +5,7 @@ using Appalachia.Audio.Scriptables;
 using Appalachia.CI.Integration.Assets;
 using Appalachia.CI.Integration.FileSystem;
 using Appalachia.Core.Attributes;
+using Appalachia.Core.Objects.Availability;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Strings;
 using UnityEngine;
@@ -18,7 +19,9 @@ namespace Appalachia.Audio
 
         static Factory()
         {
-            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+            RegisterInstanceCallbacks.WithoutSorting()
+                                     .When.Object<AudioImportSettings>()
+                                     .IsAvailableThen(i => _audioImportSettings = i);
         }
 
         #region Static Fields and Autoproperties

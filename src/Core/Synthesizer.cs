@@ -8,6 +8,7 @@ using Appalachia.Audio.Scriptables;
 using Appalachia.Audio.Utilities;
 using Appalachia.CI.Constants;
 using Appalachia.Core.Attributes;
+using Appalachia.Core.Objects.Availability;
 using Appalachia.Core.Preferences;
 using Appalachia.Utility.Execution;
 using Appalachia.Utility.Extensions;
@@ -24,7 +25,9 @@ namespace Appalachia.Audio.Core
     {
         static Synthesizer()
         {
-            OcclusionSettings.InstanceAvailable += i => _occlusionSettings = i;
+            RegisterInstanceCallbacks.WithoutSorting()
+                                     .When.Object<OcclusionSettings>()
+                                     .IsAvailableThen(i => _occlusionSettings = i);
         }
 
         #region Preferences

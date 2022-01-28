@@ -1,5 +1,6 @@
 using System;
 using Appalachia.Core.Attributes;
+using Appalachia.Core.Objects.Availability;
 using UnityEditor;
 
 namespace Appalachia.Audio
@@ -9,7 +10,9 @@ namespace Appalachia.Audio
     {
         static AudioImporter()
         {
-            AudioImportSettings.InstanceAvailable += i => _audioImportSettings = i;
+            RegisterInstanceCallbacks.WithoutSorting()
+                                     .When.Object<AudioImportSettings>()
+                                     .IsAvailableThen(i => _audioImportSettings = i);
         }
 
         #region Static Fields and Autoproperties

@@ -1,5 +1,6 @@
 using System;
 using Appalachia.Core.Objects.Root;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Appalachia.Audio
@@ -12,7 +13,7 @@ namespace Appalachia.Audio
         public AudioClipLoadType loadType = AudioClipLoadType.CompressedInMemory;
         public AudioCompressionFormat compressionFormat = AudioCompressionFormat.ADPCM;
         public AudioImportTarget target = AudioImportTarget.Standalone;
-        [Range(0f, 1f)] public float quality = 1f;
+        [PropertyRange(0f, 1f)] public float quality = 1f;
 
         #endregion
     }
