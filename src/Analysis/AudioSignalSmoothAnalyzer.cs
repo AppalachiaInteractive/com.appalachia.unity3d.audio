@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Appalachia.Core.Objects.Root;
+using Appalachia.Utility.Timing;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -104,12 +105,12 @@ namespace Appalachia.Audio.Analysis
             if (value < last)
             {
                 bufferTarget = bufferSizeDown;
-                maxStepTarget = maxStepDown * Time.deltaTime;
+                maxStepTarget = maxStepDown * CoreClock.Instance.DeltaTime;
             }
             else if (value == 0.0f)
             {
                 bufferTarget = bufferSizeUp;
-                maxStepTarget = maxStepUp * Time.deltaTime;
+                maxStepTarget = maxStepUp * CoreClock.Instance.DeltaTime;
             }
             else if (Math.Abs(value - last) < float.Epsilon)
             {
@@ -117,7 +118,7 @@ namespace Appalachia.Audio.Analysis
             else
             {
                 bufferTarget = bufferSizeUp;
-                maxStepTarget = maxStepUp * Time.deltaTime;
+                maxStepTarget = maxStepUp * CoreClock.Instance.DeltaTime;
             }
 
             if (buffer == null)

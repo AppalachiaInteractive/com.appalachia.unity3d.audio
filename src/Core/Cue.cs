@@ -6,6 +6,7 @@ using Appalachia.Audio.Utilities;
 using Appalachia.CI.Constants;
 using Appalachia.Utility.Extensions;
 using Appalachia.Utility.Strings;
+using Appalachia.Utility.Timing;
 using UnityEngine;
 
 #endregion
@@ -56,7 +57,7 @@ namespace Appalachia.Audio.Core
                 Context.Log.Info(
                     ZString.Format(
                         "{0:X4} Sequencer.KeyOff: {1} {2} : {3} {4}",
-                        Time.frameCount,
+                        CoreClock.Instance.FrameCount,
                         emitter.name,
                         emitter.patches[index] ? emitter.patches[index].name : "???",
                         release,
@@ -80,7 +81,7 @@ namespace Appalachia.Audio.Core
                 Context.Log.Info(
                     ZString.Format(
                         "{0:X4} Sequencer.KeyOn: {1} {2}",
-                        Time.frameCount,
+                        CoreClock.Instance.FrameCount,
                         emitter.name,
                         emitter.patches[index] ? emitter.patches[index].name : "???"
                     )
@@ -144,12 +145,12 @@ namespace Appalachia.Audio.Core
         public CueStatus Update(float dt)
         {
             var cueStatus = CueStatus.Playing;
-            if (lastFrame == Time.frameCount)
+            if (lastFrame == CoreClock.Instance.FrameCount)
             {
                 return cueStatus;
             }
 
-            lastFrame = Time.frameCount;
+            lastFrame = CoreClock.Instance.FrameCount;
             if (!emitter.paused)
             {
                 currentTime += dt;
@@ -166,7 +167,7 @@ namespace Appalachia.Audio.Core
                         Context.Log.Info(
                             ZString.Format(
                                 "{0:X4} Cue.Update: {1} {2} {3}/{4} {5}/{6}",
-                                Time.frameCount,
+                                CoreClock.Instance.FrameCount,
                                 emitter.name,
                                 emitter.patches[index] ? emitter.patches[index].name : "???",
                                 currentTime,

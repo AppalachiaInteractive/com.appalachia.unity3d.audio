@@ -13,6 +13,7 @@ using Appalachia.Core.Preferences;
 using Appalachia.Utility.Execution;
 using Appalachia.Utility.Extensions;
 using Appalachia.Utility.Strings;
+using Appalachia.Utility.Timing;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -131,7 +132,7 @@ namespace Appalachia.Audio.Core
                         {
                             Context.Log.Info(
                                 ZString.Format(
-                                    Time.frameCount.ToString("X4") +
+                                    CoreClock.Instance.FrameCount.ToString("X4") +
                                     " Synthesizer.KeyOff: {0} ({1}) : {2} {3}",
                                     z.info.audioSource.clip.name,
                                     z.info.audioSource.name,
@@ -305,7 +306,7 @@ namespace Appalachia.Audio.Core
                         {
                             Context.Log.Info(
                                 ZString.Format(
-                                    Time.frameCount.ToString("X4") +
+                                    CoreClock.Instance.FrameCount.ToString("X4") +
                                     " Synthesizer.Update: {0} ({1}) : stopped by envelope",
                                     z.info.audioSource.clip.name,
                                     z.info.audioSource.name
@@ -578,10 +579,10 @@ namespace Appalachia.Audio.Core
             if (!AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 UnityEditor.EditorApplication.CallbackFunction f = null;
-                var n = Time.realtimeSinceStartup;
+                var n = CoreClock.Instance.RealtimeSinceStartup;
                 f = () =>
                 {
-                    if ((Time.realtimeSinceStartup - n) >= ap.delay)
+                    if ((CoreClock.Instance.RealtimeSinceStartup - n) >= ap.delay)
                     {
                         UnityEditor.EditorApplication.update -= f;
                         AudioUtil.PlayPreviewClip(c, 0, p.loop);
@@ -616,7 +617,8 @@ namespace Appalachia.Audio.Core
             {
                 Context.Log.Info(
                     ZString.Format(
-                        Time.frameCount.ToString("X4") + " Synthesizer.ActivateInternal: {0} {1} ({2})",
+                        CoreClock.Instance.FrameCount.ToString("X4") +
+                        " Synthesizer.ActivateInternal: {0} {1} ({2})",
                         g,
                         c.name,
                         z.target
@@ -696,7 +698,7 @@ namespace Appalachia.Audio.Core
                                 {
                                     Context.Log.Info(
                                         ZString.Format(
-                                            Time.frameCount.ToString("X4") +
+                                            CoreClock.Instance.FrameCount.ToString("X4") +
                                             " Synthesizer.Update: {0} ({1}) : stopped by envelope",
                                             z.info.audioSource.clip.name,
                                             z.info.audioSource.name
@@ -714,7 +716,7 @@ namespace Appalachia.Audio.Core
                             {
                                 Context.Log.Info(
                                     ZString.Format(
-                                        Time.frameCount.ToString("X4") +
+                                        CoreClock.Instance.FrameCount.ToString("X4") +
                                         " Synthesizer.Update: {0} ({1}) : freed",
                                         z.info.audioSource.clip.name,
                                         z.info.audioSource.name
@@ -744,7 +746,7 @@ namespace Appalachia.Audio.Core
         {
             s.clip = c;
             s.volume = volume;
-            s.pitch = p.GetPitch() * pitch * Time.timeScale;
+            s.pitch = p.GetPitch() * pitch * CoreClock.Instance.TimeScale;
             s.panStereo = p.panning;
             s.loop = p.loop;
             s.spatialBlend = p.spatial.blend;
@@ -767,7 +769,7 @@ namespace Appalachia.Audio.Core
             {
                 Context.Log.Info(
                     ZString.Format(
-                        Time.frameCount.ToString("X4") +
+                        CoreClock.Instance.FrameCount.ToString("X4") +
                         " Synthesizer.ActivateStatic: {0} {1} ({2}) : {3:N2} {4:N2} {5:N2} -> {6}",
                         g,
                         c.name,

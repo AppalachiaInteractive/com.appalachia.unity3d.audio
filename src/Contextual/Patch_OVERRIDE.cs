@@ -2,7 +2,7 @@
 
 using System;
 using Appalachia.Audio.Scriptables;
-using Appalachia.Core.Overrides;
+using Appalachia.Core.Objects.Models;
 
 #endregion
 
@@ -11,7 +11,7 @@ namespace Appalachia.Audio.Contextual
     [Serializable]
     public class OverridablePatch : Overridable<Patch, OverridablePatch>
     {
-        public OverridablePatch(bool overrideEnabled, Patch value) : base(overrideEnabled, value)
+        public OverridablePatch(bool overriding, Patch value) : base(overriding, value)
         {
         }
 

@@ -6,6 +6,7 @@ using Appalachia.Audio.Utilities;
 using Appalachia.Core.Attributes.Editing;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Execution;
+using Appalachia.Utility.Timing;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -51,12 +52,12 @@ namespace Appalachia.Audio.Core
             var delayed = !Mathf.Approximately(ap.delay, 0f);
             if (delayed ||
                 (!randomize && !increment) ||
-                (lastFrame != Time.frameCount) ||
+                (lastFrame != CoreClock.Instance.FrameCount) ||
                 !AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 if (!delayed)
                 {
-                    lastFrame = Time.frameCount;
+                    lastFrame = CoreClock.Instance.FrameCount;
                 }
 
                 return Synthesizer.Activate(
@@ -84,12 +85,12 @@ namespace Appalachia.Audio.Core
             var delayed = !Mathf.Approximately(ap.delay, 0f);
             if (delayed ||
                 (!randomize && !increment) ||
-                (lastFrame != Time.frameCount) ||
+                (lastFrame != CoreClock.Instance.FrameCount) ||
                 !AppalachiaApplication.IsPlayingOrWillPlay)
             {
                 if (!delayed)
                 {
-                    lastFrame = Time.frameCount;
+                    lastFrame = CoreClock.Instance.FrameCount;
                 }
 
                 return Synthesizer.Activate(

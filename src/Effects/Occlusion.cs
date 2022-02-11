@@ -4,6 +4,7 @@ using Appalachia.Core.Attributes;
 using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
+using Appalachia.Utility.Timing;
 using Unity.Profiling;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace Appalachia.Audio.Effects
         {
             using (_PRF_LateUpdate.Auto())
             {
-                Test(Time.deltaTime);
+                Test(CoreClock.Instance.DeltaTime);
             }
         }
 
@@ -83,9 +84,9 @@ namespace Appalachia.Audio.Effects
                     return;
                 }
 
-                if (_lastFrame != Time.frameCount)
+                if (_lastFrame != CoreClock.Instance.FrameCount)
                 {
-                    _lastFrame = Time.frameCount;
+                    _lastFrame = CoreClock.Instance.FrameCount;
                     var l = Heartbeat.listenerTransform;
                     if (l != null)
                     {

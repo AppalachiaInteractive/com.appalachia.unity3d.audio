@@ -10,6 +10,7 @@ using Appalachia.Utility.Async;
 using Appalachia.Utility.Reflection.Delegated;
 using Appalachia.Utility.Reflection.Extensions;
 using Appalachia.Utility.Strings;
+using Appalachia.Utility.Timing;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -47,8 +48,8 @@ namespace Appalachia.Audio
                     return;
                 }
 
-                var dt = Time.deltaTime;
-                var tf = Time.frameCount;
+                var dt = CoreClock.Instance.DeltaTime;
+                var tf = CoreClock.Instance.FrameCount;
 
                 foreach (var zoneUpdateAction in _zoneUpdateActions)
                 {
