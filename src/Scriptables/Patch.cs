@@ -101,6 +101,7 @@ namespace Appalachia.Audio.Scriptables
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -132,11 +133,11 @@ namespace Appalachia.Audio.Scriptables
         private static readonly ProfilerMarker _PRF_GetCueInfo =
             new ProfilerMarker(_PRF_PFX + nameof(GetCueInfo));
 
-        private static readonly ProfilerMarker _PRF_SetClipIndex =
-            new ProfilerMarker(_PRF_PFX + nameof(SetClipIndex));
-
         private static readonly ProfilerMarker _PRF_GetMaxDuration =
             new ProfilerMarker(_PRF_PFX + nameof(GetMaxDuration));
+
+        private static readonly ProfilerMarker _PRF_SetClipIndex =
+            new ProfilerMarker(_PRF_PFX + nameof(SetClipIndex));
 
         #endregion
 

@@ -1,11 +1,10 @@
 using System;
 using System.Diagnostics;
-using Appalachia.Core.Objects.Root;
 
 namespace Appalachia.Audio
 {
     // System.Numerics is not available
-    public class ComplexD : AppalachiaSimpleBase
+    public class ComplexD
     {
         public ComplexD(double real, double imag)
         {

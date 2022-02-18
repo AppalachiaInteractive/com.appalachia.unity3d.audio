@@ -9,13 +9,15 @@ namespace Appalachia.Audio.Utilities
     {
         #region Constants and Static Readonly
 
-        private const string TYPE_NAME = "UnityEditor.AudioUtil";
+        private const string TYPE_NAME = "AudioUtil";
+
+        private const string TYPE_NAMESPACE = "UnityEditor";
 
         #endregion
 
         #region Static Fields and Autoproperties
 
-        private static Type TargetedType = ReflectionExtensions.GetByName(TYPE_NAME);
+        private static Type TargetedType = ReflectionExtensions.GetByName(TYPE_NAMESPACE, TYPE_NAME);
 
         private static InternalStaticFunction<string[]> _GetAmbisonicDecoderPluginNames =
             new(TargetedType, nameof(GetAmbisonicDecoderPluginNames));

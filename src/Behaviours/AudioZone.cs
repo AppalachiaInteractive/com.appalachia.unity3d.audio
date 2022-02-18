@@ -84,6 +84,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -94,6 +95,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override void OnInit()
         {
             using (_PRF_OnInit.Auto())
@@ -108,6 +110,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override void OnProbe(Vector3 lpos, int thisFrame)
         {
             using (_PRF_OnProbe.Auto())
@@ -124,6 +127,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override void OnUpdateEmitters()
         {
             using (_PRF_OnUpdateEmitters.Auto())
@@ -140,12 +144,16 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDisabled()
         {
             await base.WhenDisabled();
-            for (int i = 0, n = emitters.Length; i < n; ++i)
+            using (_PRF_WhenDisabled.Auto())
             {
-                emitters[i].enabled = false;
+                for (int i = 0, n = emitters.Length; i < n; ++i)
+                {
+                    emitters[i].enabled = false;
+                }
             }
         }
 
@@ -277,6 +285,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override void DrawZoneLabel(AudioZone z, Vector3 p)
         {
             DrawZoneLabelStatic(z, p);

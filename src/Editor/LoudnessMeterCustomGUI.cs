@@ -7,12 +7,16 @@ namespace Appalachia.Audio
 {
     public class LoudnessMeterCustomGUI : IAudioEffectPluginGUI
     {
+        /// <inheritdoc />
         public override string Description => "Loudness meter demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo LoudnessMeter";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             GUILayout.Space(5f);

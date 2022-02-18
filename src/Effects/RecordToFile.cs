@@ -134,6 +134,7 @@ namespace Appalachia.Audio.Effects
             return len;
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDestroyed()
         {
             await base.WhenDestroyed();

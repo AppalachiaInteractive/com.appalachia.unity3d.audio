@@ -13,6 +13,7 @@ namespace Appalachia.Audio.Playables.Emitter
 
         #endregion
 
+        /// <inheritdoc />
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
             var playable = ScriptPlayable<AudioEmitterControlBehaviour>.Create(graph, template);

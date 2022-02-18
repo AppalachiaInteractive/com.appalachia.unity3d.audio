@@ -6,12 +6,16 @@ namespace Appalachia.Audio
 {
     public class ModalFilterCustomGUI : FilterCurveUi
     {
+        /// <inheritdoc />
         public override string Description => "Modal filter demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo ModalFilter";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             GUILayout.Space(5f);

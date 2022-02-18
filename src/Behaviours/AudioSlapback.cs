@@ -67,6 +67,7 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -77,11 +78,15 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDisabled()
         {
             await base.WhenDisabled();
 
-            allSlapbacks.Remove(this);
+            using (_PRF_WhenDisabled.Auto())
+            {
+                allSlapbacks.Remove(this);
+            }
         }
 
         #region Profiling
@@ -93,6 +98,7 @@ namespace Appalachia.Audio.Behaviours
 
 #if UNITY_EDITOR
 
+        /// <inheritdoc />
         protected override void DrawZoneLabel(AudioSlapback z, Vector3 p)
         {
             UnityEditor.Handles.BeginGUI();

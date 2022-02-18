@@ -12,6 +12,7 @@ namespace Appalachia.Audio.Playables.MixerGroup
 
         #endregion
 
+        /// <inheritdoc />
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
             var playable = ScriptPlayable<AudioMixerGroupControlBehaviour>.Create(graph, template);

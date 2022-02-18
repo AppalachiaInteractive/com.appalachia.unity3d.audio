@@ -20,7 +20,7 @@ namespace Appalachia.Audio.Behaviours
     {
         #region Constants and Static Readonly
 
-        public static readonly List<T> allZones = new();
+        public static readonly System.Collections.Generic.List<T> allZones = new();
 
         #endregion
 
@@ -102,6 +102,7 @@ namespace Appalachia.Audio.Behaviours
         {
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -119,13 +120,16 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDisabled()
         {
             await base.WhenDisabled();
-
-            allZones.Remove(this as T);
-            OnUpdateActivation(false);
-            _triggerRefs = 0;
+            using (_PRF_WhenDisabled.Auto())
+            {
+                allZones.Remove(this as T);
+                OnUpdateActivation(false);
+                _triggerRefs = 0;
+            }
         }
 
         protected bool OnUpdateActivation(bool state)

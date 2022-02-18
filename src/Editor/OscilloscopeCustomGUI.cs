@@ -20,12 +20,16 @@ namespace Appalachia.Audio
 
         #endregion
 
+        /// <inheritdoc />
         public override string Description => "Oscilloscope demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo Oscilloscope";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             float active, window, scale, mode;

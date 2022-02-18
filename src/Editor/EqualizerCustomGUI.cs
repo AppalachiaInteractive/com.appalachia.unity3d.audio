@@ -17,12 +17,16 @@ namespace Appalachia.Audio
 
         #endregion
 
+        /// <inheritdoc />
         public override string Description => "3-band equalizer demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo Equalizer";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             float useLogScaleFloat;

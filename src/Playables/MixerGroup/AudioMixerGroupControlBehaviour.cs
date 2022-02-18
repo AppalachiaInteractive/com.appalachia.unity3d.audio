@@ -6,7 +6,6 @@ using Appalachia.Utility.Interpolation;
 using Appalachia.Utility.Interpolation.Modes;
 using Appalachia.Utility.Strings;
 using Sirenix.OdinInspector;
-using Unity.Profiling;
 using UnityEngine.Audio;
 using UnityEngine.Playables;
 
@@ -49,19 +48,23 @@ namespace Appalachia.Audio.Playables.MixerGroup
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await AppaTask.CompletedTask;
         }
 
+        /// <inheritdoc />
         protected override void OnPause(Playable playable, FrameData info)
         {
         }
 
+        /// <inheritdoc />
         protected override void OnPlay(Playable playable, FrameData info)
         {
         }
 
+        /// <inheritdoc />
         protected override void Update(Playable playable, FrameData info, object playerData)
         {
             using (_PRF_Update.Auto())
@@ -106,6 +109,7 @@ namespace Appalachia.Audio.Playables.MixerGroup
             }
         }
 
+        /// <inheritdoc />
         protected override void WhenDestroyed(Playable playable)
         {
             using (_PRF_WhenDestroyed.Auto())
@@ -135,10 +139,12 @@ namespace Appalachia.Audio.Playables.MixerGroup
             }
         }
 
+        /// <inheritdoc />
         protected override void WhenStarted(Playable playable)
         {
         }
 
+        /// <inheritdoc />
         protected override void WhenStopped(Playable playable)
         {
         }

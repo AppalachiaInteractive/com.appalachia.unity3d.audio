@@ -26,11 +26,13 @@ namespace Appalachia.Audio.Animation
 
         #region Event Functions
 
+        /// <inheritdoc />
         public override void OnStateEnter(Animator animator, AnimatorStateInfo info, int layer)
         {
             KeyOn(animator);
         }
 
+        /// <inheritdoc />
         public override void OnStateExit(Animator animator, AnimatorStateInfo info, int layer)
         {
             KeyOff();

@@ -40,6 +40,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
 
         protected abstract void AddOrUpdate(TContext context);
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);

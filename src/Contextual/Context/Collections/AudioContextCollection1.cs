@@ -50,6 +50,7 @@ namespace Appalachia.Audio.Contextual.Context.Collections
             return context.patch;
         }
 
+        /// <inheritdoc />
         protected override void AddOrUpdate(AudioContext1 context)
         {
             context.parameters.primary.type = typeof(TEnumPrimary);

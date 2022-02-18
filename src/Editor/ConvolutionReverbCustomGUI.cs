@@ -14,13 +14,17 @@ namespace Appalachia.Audio
 
         #endregion
 
+        /// <inheritdoc />
         public override string Description =>
             "Convolution reverb demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo ConvolutionReverb";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             GUILayout.Space(5f);

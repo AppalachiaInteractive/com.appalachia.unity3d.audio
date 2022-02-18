@@ -60,6 +60,7 @@ namespace Appalachia.Audio.Effects
             return _target;
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);

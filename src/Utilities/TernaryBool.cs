@@ -30,12 +30,14 @@ namespace Appalachia.Audio.Utilities
             return !a.ToBool(b);
         }
 
+        /// <inheritdoc />
         [DebuggerStepThrough]
         public override bool Equals(object o)
         {
             return o is TernaryBool ? ((TernaryBool)o).value == value : false;
         }
 
+        /// <inheritdoc />
         [DebuggerStepThrough]
         public override int GetHashCode()
         {

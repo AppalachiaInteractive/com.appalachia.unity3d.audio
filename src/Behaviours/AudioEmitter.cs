@@ -127,6 +127,7 @@ namespace Appalachia.Audio.Behaviours
             paused = p;
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -147,10 +148,14 @@ namespace Appalachia.Audio.Behaviours
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDisabled()
         {
             await base.WhenDisabled();
-            CueOut();
+            using (_PRF_WhenDisabled.Auto())
+            {
+                CueOut();
+            }
         }
 
         #region Nested type: AttachmentParams

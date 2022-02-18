@@ -117,6 +117,7 @@ namespace Appalachia.Audio
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -142,6 +143,7 @@ namespace Appalachia.Audio
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDestroyed()
         {
             await base.WhenDestroyed();

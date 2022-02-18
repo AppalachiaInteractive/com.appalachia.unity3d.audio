@@ -29,13 +29,17 @@ namespace Appalachia.Audio
 
         #endregion
 
+        /// <inheritdoc />
         public override string Description =>
             "Granular synthesizer demo plugin for Unity's audio plugin system";
 
+        /// <inheritdoc />
         public override string Name => "Demo Granulator";
 
+        /// <inheritdoc />
         public override string Vendor => "Unity";
 
+        /// <inheritdoc />
         public override bool OnGUI(IAudioEffectPlugin plugin)
         {
             GUILayout.Space(5f);

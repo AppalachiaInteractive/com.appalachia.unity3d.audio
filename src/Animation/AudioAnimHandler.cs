@@ -18,6 +18,7 @@ namespace Appalachia.Audio.Animation
 
         #endregion
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await base.Initialize(initializer);
@@ -52,13 +53,17 @@ namespace Appalachia.Audio.Animation
             }
         }
 
+        /// <inheritdoc />
         protected override async AppaTask WhenDisabled()
         {
             await base.WhenDisabled();
 
-            foreach (var e in events)
+            using (_PRF_WhenDisabled.Auto())
             {
-                e.KeyOff();
+                foreach (var e in events)
+                {
+                    e.KeyOff();
+                }
             }
         }
     }

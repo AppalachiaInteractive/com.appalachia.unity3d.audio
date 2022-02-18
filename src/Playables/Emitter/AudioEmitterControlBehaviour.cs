@@ -3,7 +3,6 @@ using Appalachia.Audio.Behaviours;
 using Appalachia.Core.Objects.Initialization;
 using Appalachia.Core.Objects.Root;
 using Appalachia.Utility.Async;
-using Unity.Profiling;
 using UnityEngine.Playables;
 
 namespace Appalachia.Audio.Playables.Emitter
@@ -17,19 +16,23 @@ namespace Appalachia.Audio.Playables.Emitter
 
         #endregion
 
+        /// <inheritdoc />
         protected override async AppaTask Initialize(Initializer initializer)
         {
             await AppaTask.CompletedTask;
         }
 
+        /// <inheritdoc />
         protected override void OnPause(Playable playable, FrameData info)
         {
         }
 
+        /// <inheritdoc />
         protected override void OnPlay(Playable playable, FrameData info)
         {
         }
 
+        /// <inheritdoc />
         protected override void Update(Playable playable, FrameData info, object playerData)
         {
             using (_PRF_Update.Auto())
@@ -66,14 +69,17 @@ namespace Appalachia.Audio.Playables.Emitter
             }
         }
 
+        /// <inheritdoc />
         protected override void WhenDestroyed(Playable playable)
         {
         }
 
+        /// <inheritdoc />
         protected override void WhenStarted(Playable playable)
         {
         }
 
+        /// <inheritdoc />
         protected override void WhenStopped(Playable playable)
         {
         }
