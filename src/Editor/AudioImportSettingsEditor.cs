@@ -338,11 +338,11 @@ namespace Appalachia.Audio
             foreach (var guid in guids)
             {
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
-                var fileName = path.fileNameWithoutExtension;
+                var fileName = path.FileNameWithoutExtension;
                 fileName = fileName.Trim(digits);
                 fileName = fileName.Trim(delimeters);
 
-                _audioClipPaths.Add(path.relativePath, fileName);
+                _audioClipPaths.Add(path.RelativePath, fileName);
 
                 int count;
                 _nameCount.TryGetValue(fileName, out count);

@@ -135,7 +135,7 @@ namespace Appalachia.Audio
                     var routine = StaticRoutine.CreateDelegate<int>(
                         zoneType,
                         "UpdateZone",
-                        BindingFlags.Static
+                        BindingFlags.Static|BindingFlags.NonPublic
                     );
 
                     _zoneUpdateActions.Add(routine);

@@ -134,7 +134,7 @@ namespace Appalachia.Audio
             foreach (var guid in guids)
             {
                 var path = AssetDatabaseManager.GUIDToAssetPath(guid);
-                if (!clips.Contains(path.relativePath))
+                if (!clips.Contains(path.RelativePath))
                 {
                     Context.Log.Warn(
                         ZString.Format("[{0}]: Found ", FIND_PATCHES_WITHOUT_CLIPS) + path,
